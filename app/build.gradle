@@ -66,8 +66,11 @@ android {
         mock {
             applicationIdSuffix = ".mock"
         }
+        dev {
+            versionName "${versionNumber}-BETA"
+        }
         prod {
-
+            versionName "${versionNumber}.${versionBuild}-RELEASE"
         }
     }
 
@@ -108,6 +111,7 @@ dependencies {
     compile "com.google.firebase:firebase-database:$rootProject.firebaseLibraryVersion"
     compile "com.google.firebase:firebase-messaging:$rootProject.firebaseLibraryVersion"
     compile "com.google.firebase:firebase-storage:$rootProject.firebaseLibraryVersion"
+
     //firebase UI
     compile "com.firebaseui:firebase-ui-database:$rootProject.firebaseUILibraryVersion"
     compile "com.firebaseui:firebase-ui-storage:$rootProject.firebaseUILibraryVersion"
