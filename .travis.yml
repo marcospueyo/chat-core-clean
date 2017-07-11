@@ -6,7 +6,8 @@ env:
     - ANDROID_ABI=x86
 dependencies:
   pre:
-    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;constraint-layout;1.0.2"
+      - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
+      - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
 android:
   components:
     - tools
