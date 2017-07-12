@@ -136,6 +136,13 @@ dependencies {
     provided "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
 
+    //dagger
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger-android:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+
 
      //Local unit tests
     testCompile "junit:junit:$rootProject.ext.jUnitVersion"
