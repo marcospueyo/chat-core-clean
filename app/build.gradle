@@ -125,11 +125,16 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttpVersion"
 
+    //eventbus
     compile "org.greenrobot:eventbus:$rootProject.eventbusVersion"
 
+    //butterknife
     compile "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
 
+    //autovalue
+    provided "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
+    annotationProcessor "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
 
 
      //Local unit tests
