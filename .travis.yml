@@ -21,14 +21,12 @@ android:
     - android-26
     - extra-google-m2repository
     - extra-android-m2repository
-    - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
-
-before_install:
-  - export EMULATOR=\"system-images;android-${API};${TAG};${ABI}\"
-  - echo 'count=0' > /home/travis/.android/repositories.cfg
 
 env:
   global:
+    - API=26
+    - TAG=google_apis
+    - EMULATOR_ABI=armeabi-v7a
     - ANDROID_TARGET=android-26
     - ANDROID_ABI=x86
     - PROJECT_DIR=${TRAVIS_BUILD_DIR}
