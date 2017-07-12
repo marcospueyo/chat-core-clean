@@ -29,7 +29,7 @@ ext {
     firebaseLibraryVersion = '11.0.2'
     firebaseUILibraryVersion = '2.0.1'
     playServicesLibraryVersion = '11.0.2'
-    guavaVersion = '22.0'
+    guavaVersion = '22.0-android'
     glideVersion = '3.8.0'
     glideTransVersion = '2.0.1'
     retrofitVersion = '2.3.0'

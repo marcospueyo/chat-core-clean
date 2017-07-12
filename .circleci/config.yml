@@ -1,0 +1,32 @@
+#
+# Build configuration for Circle CI
+#
+
+general:
+    artifacts:
+        - /home/ubuntu/your-app-name/app/build/outputs/apk/
+
+machine:
+    java:
+        version: oraclejdk8
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
+
+dependencies:
+  pre:
+    - chmod +x gradlew
+    override:
+        - echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
+        - echo y | android update sdk --no-ui --all --filter "android-26, build-tools-25.0.3"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-support"
+        - echo y | android update sdk --no-ui --all --filter "extra-google-google_play_services"
+        - echo y | android update sdk --no-ui --all --filter "constraint-layout"
+        - echo y | android update sdk --no-ui --all --filter "constraint-layout-solver"
+        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+
+test:
+    override:
+        - (./gradlew assemble):
+            timeout: 360

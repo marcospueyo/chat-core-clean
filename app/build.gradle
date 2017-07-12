@@ -132,7 +132,7 @@ dependencies {
 
 
 
-    // Local unit tests
+     //Local unit tests
     testCompile "junit:junit:$rootProject.ext.jUnitVersion"
     testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
