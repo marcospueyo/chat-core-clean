@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Chat-control</string>
+
+    <string name="active_chats">Activos</string>
+    <string name="archived_chats">Archivados</string>
+    <string name="guests">Huéspedes</string>
+    <string name="config">Configuración</string>
 </resources>
