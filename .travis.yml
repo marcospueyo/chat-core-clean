@@ -1,25 +1,54 @@
 language: android
 jdk: oraclejdk8
+sudo: required
+
+before_cache:
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/modules-2/modules-2.lock
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/3.3/classAnalysis/classAnalysis.lock
+  - rm -f ${TRAVIS_BUILD_DIR}/gradle/caches/3.3/jarSnapshots/jarSnapshots.lock
+
+cache:
+  directories:
+    - ${TRAVIS_BUILD_DIR}/gradle/caches/
+    - ${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/
+
+android:
+  components:
+    - tools
+    - build-tools-25.0.3
+    - platform-tools
+    - tools
+    - android-26
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+
+before_install:
+  - export EMULATOR=\"system-images;android-${API};${TAG};${ABI}\"
+  - echo 'count=0' > /home/travis/.android/repositories.cfg
+
 env:
   global:
     - ANDROID_TARGET=android-26
     - ANDROID_ABI=x86
-android:
-  components:
-    - tools
-    - platform-tools
-    - build-tools-25.0.3
-    - android-26
+    - PROJECT_DIR=${TRAVIS_BUILD_DIR}
+    - GRADLE_USER_HOME="${TRAVIS_BUILD_DIR}/gradle
+    - QEMU_AUDIO_DRV=none
+    - DIR=constraint-layout-start
+    - ANDROID_HOME=/usr/local/android-sdk-24.0.2
+    - TOOLS=${ANDROID_HOME}/tools
+    - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
 
-    - extra-google-m2repository
-    - extra-android-m2repository
-
-    - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 install:
-    - echo yes | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
-    - echo yes | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+    - sdkmanager --list || true
+    - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
+    - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
 before_script:
     - wget http://services.gradle.org/distributions/gradle-3.3-all.zip
     - unzip -qq gradle-3.3-all.zip
     - export GRADLE_HOME=$PWD/gradle-3.3
     - export PATH=$GRADLE_HOME/bin:$PATH
+
+group: stable
+dist: precise
+os: linux
