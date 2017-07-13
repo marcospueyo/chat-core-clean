@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import com.mph.chatcontrol.MainActivity;
+import com.mph.chatcontrol.main.MainActivity;
 import com.mph.chatcontrol.R;
 
 import butterknife.BindView;
