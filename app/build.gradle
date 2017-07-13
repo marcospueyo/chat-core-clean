@@ -14,8 +14,7 @@ android {
         versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
         versionProps['VERSION_BUILD'] = versionBuild.toString()
         versionProps.store(versionPropsFile.newWriter(), null)
-    }
-    else {
+    } else {
         throw new GradleException("Could not read version.properties!")
     }
 
@@ -76,7 +75,7 @@ android {
 
     // Remove mockRelease as it's not needed.
     android.variantFilter { variant ->
-        if(variant.buildType.name.equals('release')
+        if (variant.buildType.name.equals('release')
                 && variant.getFlavors().get(0).name.equals('mock')) {
             variant.setIgnore(true);
         }
@@ -143,8 +142,7 @@ dependencies {
     compile "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
-
-     //Local unit tests
+    //Local unit tests
     testCompile "junit:junit:$rootProject.ext.jUnitVersion"
     testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
@@ -170,4 +168,5 @@ dependencies {
     androidTestCompile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     androidTestCompile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     androidTestCompile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

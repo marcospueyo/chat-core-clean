@@ -5,4 +5,9 @@
     <string name="archived_chats">Archivados</string>
     <string name="guests">Huéspedes</string>
     <string name="config">Configuración</string>
+    <string name="email">E-mail</string>
+    <string name="password">Contraseña</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="email_error">Dirección de correo electrónico no válida</string>
+    <string name="password_error">Contraseña incorrecta</string>
 </resources>
