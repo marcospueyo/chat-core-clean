@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.chatlist.ChatlistFragment;
+import com.mph.chatcontrol.chatlist.TestBFragment;
+import com.mph.chatcontrol.chatlist.TestCFragment;
 import com.mph.chatcontrol.utils.CCUtils;
 
 import butterknife.BindView;
@@ -22,6 +25,10 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.bottom_nav_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.content_frame) FrameLayout mFrameLayout;
     private MainPresenter mPresenter;
+
+    private ChatlistFragment fragmentA, fragmentD;
+    private TestBFragment fragmentB;
+    private TestCFragment fragmentC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,28 +54,55 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Log.d(TAG, "onNavigationItemSelected: order = " + item.getOrder());
-        mPresenter.onMenuOptionSelected(item.getOrder());
+        int order = 0;
+        switch (item.getItemId()) {
+            case R.id.action_active:
+                order = 0;
+                break;
+            case R.id.action_archived:
+                order = 1;
+                break;
+            case R.id.action_guests:
+                order = 2;
+                break;
+            case R.id.action_config:
+                order = 3;
+                break;
+        }
+        mPresenter.onMenuOptionSelected(order);
         return true;
     }
 
     @Override public void showActiveChatView() {
         Log.d(TAG, "showActiveChatView: ");
-//        CCUtils.startFragment(this, new Fragment(), mFrameLayout.getId());
+        if (fragmentA == null) {
+            fragmentA = new ChatlistFragment();
+        }
+        CCUtils.startFragment(this, fragmentA, mFrameLayout.getId());
     }
 
     @Override public void showArchivedChatView() {
         Log.d(TAG, "showArchivedChatView: ");
-//        CCUtils.startFragment(this, new Fragment(), mFrameLayout.getId());
+        if (fragmentB == null) {
+            fragmentB = new TestBFragment();
+        }
+        CCUtils.startFragment(this, fragmentB, mFrameLayout.getId());
     }
 
     @Override public void showGuestlistView() {
         Log.d(TAG, "showGuestlistView: ");
-//        CCUtils.startFragment(this, new Fragment(), mFrameLayout.getId());
+        if (fragmentC == null) {
+            fragmentC = new TestCFragment();
+        }
+        CCUtils.startFragment(this, fragmentC, mFrameLayout.getId());
     }
 
     @Override public void showConfigView() {
         Log.d(TAG, "showConfigView: ");
-//        CCUtils.startFragment(this, new Fragment(), mFrameLayout.getId());
+        if (fragmentD == null) {
+            fragmentD = new ChatlistFragment();
+        }
+        CCUtils.startFragment(this, fragmentD, mFrameLayout.getId());
     }
 
     @Override public void showProgress() {

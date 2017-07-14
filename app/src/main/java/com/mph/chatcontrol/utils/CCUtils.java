@@ -10,8 +10,7 @@ import android.app.FragmentTransaction;
 public class CCUtils {
     public static void startFragment(Activity activity, Fragment fragment, int res) {
         FragmentManager fragmentManager = activity.getFragmentManager();
-        while (fragmentManager.popBackStackImmediate()) {
-        }
+        //while (fragmentManager.popBackStackImmediate()) {}
         fragmentManager.beginTransaction()
                 .replace(res, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
