@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_active"
+        icon="@android:drawable/ic_delete"
+        title="@string/active_chats" />
+    <tab
+        id="@+id/tab_archived"
+        icon="@android:drawable/ic_delete"
+        title="@string/archived_chats" />
+    <tab
+        id="@+id/tab_guests"
+        icon="@android:drawable/ic_delete"
+        title="@string/guests" />
+    <tab
+        id="@+id/tab_config"
+        icon="@android:drawable/ic_delete"
+        title="@string/config" />
+</tabs>

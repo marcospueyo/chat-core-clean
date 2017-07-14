@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -45,23 +46,28 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.d(TAG, "onNavigationItemSelected: order = " + item.getOrder());
         mPresenter.onMenuOptionSelected(item.getOrder());
         return true;
     }
 
     @Override public void showActiveChatView() {
+        Log.d(TAG, "showActiveChatView: ");
 //        CCUtils.startFragment(this, new Fragment(), mFrameLayout.getId());
     }
 
     @Override public void showArchivedChatView() {
+        Log.d(TAG, "showArchivedChatView: ");
 //        CCUtils.startFragment(this, new Fragment(), mFrameLayout.getId());
     }
 
     @Override public void showGuestlistView() {
+        Log.d(TAG, "showGuestlistView: ");
 //        CCUtils.startFragment(this, new Fragment(), mFrameLayout.getId());
     }
 
     @Override public void showConfigView() {
+        Log.d(TAG, "showConfigView: ");
 //        CCUtils.startFragment(this, new Fragment(), mFrameLayout.getId());
     }
 

@@ -10,4 +10,7 @@
     <string name="login">Iniciar sesión</string>
     <string name="email_error">Dirección de correo electrónico no válida</string>
     <string name="password_error">Contraseña incorrecta</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
