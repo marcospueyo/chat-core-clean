@@ -34,8 +34,12 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
-    @Override public void onResume() {
+    @Override public void onStart() {
+        if (mainView != null)
+            mainView.showActiveChatView();
+    }
 
+    @Override public void onResume() {
     }
 
     @Override public void onDestroy() {

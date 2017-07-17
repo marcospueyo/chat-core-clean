@@ -3,6 +3,7 @@ package com.mph.chatcontrol.main;
 
 public interface MainPresenter {
     void onMenuOptionSelected(Integer order);
+    void onStart();
     void onResume();
     void onDestroy();
 }

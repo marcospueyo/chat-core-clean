@@ -3,6 +3,7 @@ package com.mph.chatcontrol.chatlist;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,13 @@ import android.view.ViewGroup;
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.base.BaseFragment;
 
+import butterknife.BindView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ChatlistFragment extends BaseFragment {
-
+    @BindView(R.id.rv_elements) RecyclerView mListView;
 
     public ChatlistFragment() {
         // Required empty public constructor

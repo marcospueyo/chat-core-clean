@@ -1,6 +1,5 @@
 package com.mph.chatcontrol.main;
 
-import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
     protected void onDestroy() {
         mPresenter.onDestroy();
         super.onDestroy();
@@ -48,8 +53,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onResume() {
-        mPresenter.onResume();
         super.onResume();
+        mPresenter.onResume();
+        Log.d(TAG, "onResume: ");
     }
 
     @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -78,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
         if (fragmentA == null) {
             fragmentA = new ChatlistFragment();
         }
-        CCUtils.startFragment(this, fragmentA, mFrameLayout.getId());
+        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentA, mFrameLayout.getId());
     }
 
     @Override public void showArchivedChatView() {
@@ -86,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements
         if (fragmentB == null) {
             fragmentB = new TestBFragment();
         }
-        CCUtils.startFragment(this, fragmentB, mFrameLayout.getId());
+        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentB, mFrameLayout.getId());
     }
 
     @Override public void showGuestlistView() {
@@ -94,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements
         if (fragmentC == null) {
             fragmentC = new TestCFragment();
         }
-        CCUtils.startFragment(this, fragmentC, mFrameLayout.getId());
+        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentC, mFrameLayout.getId());
     }
 
     @Override public void showConfigView() {
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements
         if (fragmentD == null) {
             fragmentD = new ChatlistFragment();
         }
-        CCUtils.startFragment(this, fragmentD, mFrameLayout.getId());
+        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentD, mFrameLayout.getId());
     }
 
     @Override public void showProgress() {
