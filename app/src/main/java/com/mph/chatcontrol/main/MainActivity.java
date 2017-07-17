@@ -9,7 +9,10 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.chatlist.ChatListPresenter;
+import com.mph.chatcontrol.chatlist.ChatListPresenterImpl;
 import com.mph.chatcontrol.chatlist.ChatlistFragment;
+import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
 import com.mph.chatcontrol.chatlist.TestBFragment;
 import com.mph.chatcontrol.chatlist.TestCFragment;
 import com.mph.chatcontrol.utils.CCUtils;
@@ -25,7 +28,9 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.content_frame) FrameLayout mFrameLayout;
     private MainPresenter mPresenter;
 
-    private ChatlistFragment fragmentA, fragmentD;
+    // TODO: 17/07/2017 Add fragments with tags using fragment manager. Check whether they exist
+    private ChatlistFragment activeChatListFragment, fragmentD;
+    private ChatListPresenter mActiveChatListPresenter;
     private TestBFragment fragmentB;
     private TestCFragment fragmentC;
 
@@ -55,11 +60,10 @@ public class MainActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         mPresenter.onResume();
-        Log.d(TAG, "onResume: ");
     }
 
-    @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Log.d(TAG, "onNavigationItemSelected: order = " + item.getOrder());
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int order = 0;
         switch (item.getItemId()) {
             case R.id.action_active:
@@ -79,15 +83,17 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override public void showActiveChatView() {
-        Log.d(TAG, "showActiveChatView: ");
-        if (fragmentA == null) {
-            fragmentA = new ChatlistFragment();
+    @Override
+    public void showActiveChatView() {
+        if (activeChatListFragment == null) {
+            activeChatListFragment = ChatlistFragment.newInstance();
         }
-        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentA, mFrameLayout.getId());
+        mActiveChatListPresenter = new ChatListPresenterImpl(activeChatListFragment, new FindChatsInteractorImpl());
+        CCUtils.addFragmentToActivity(getFragmentManager(), activeChatListFragment, mFrameLayout.getId());
     }
 
-    @Override public void showArchivedChatView() {
+    @Override
+    public void showArchivedChatView() {
         Log.d(TAG, "showArchivedChatView: ");
         if (fragmentB == null) {
             fragmentB = new TestBFragment();
@@ -95,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements
         CCUtils.addFragmentToActivity(getFragmentManager(), fragmentB, mFrameLayout.getId());
     }
 
-    @Override public void showGuestlistView() {
+    @Override
+    public void showGuestlistView() {
         Log.d(TAG, "showGuestlistView: ");
         if (fragmentC == null) {
             fragmentC = new TestCFragment();
@@ -103,19 +110,13 @@ public class MainActivity extends AppCompatActivity implements
         CCUtils.addFragmentToActivity(getFragmentManager(), fragmentC, mFrameLayout.getId());
     }
 
-    @Override public void showConfigView() {
+    @Override
+    public void showConfigView() {
         Log.d(TAG, "showConfigView: ");
-        if (fragmentD == null) {
+        /*if (fragmentD == null) {
             fragmentD = new ChatlistFragment();
         }
-        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentD, mFrameLayout.getId());
-    }
-
-    @Override public void showProgress() {
-    }
-
-    @Override public void hideProgress() {
-
+        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentD, mFrameLayout.getId());*/
     }
 
     @Override
