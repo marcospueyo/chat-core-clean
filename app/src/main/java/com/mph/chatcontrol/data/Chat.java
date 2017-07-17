@@ -14,7 +14,7 @@ public abstract class Chat {
         return new AutoValue_Chat(title, description, UUID.randomUUID().toString());
     }
 
-    abstract String title();
-    abstract String description();
-    abstract String id();
+    public abstract String title();
+    public abstract String description();
+    public abstract String id();
 }

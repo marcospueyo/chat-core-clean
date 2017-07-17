@@ -3,12 +3,17 @@ package com.mph.chatcontrol.chatlist;
 
 import android.os.Handler;
 
+import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
 import com.mph.chatcontrol.data.Chat;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class FindChatsInteractorImpl implements FindChatsInteractor {
+
+    // TODO: 17/07/2017 Implement ChatsDataSource
+    //@NonNull
+    //private final ChatsDataSource mChatsRepository;
 
     @Override
     public void findChats(final OnFinishedListener listener) {

@@ -3,4 +3,7 @@
     <color name="blue">#3F51B5</color>
     <color name="blue_dark">#303F9F</color>
     <color name="accentColor">#8ebf34</color>
+
+    <color name="gray_dark">@android:color/darker_gray</color>
+    <color name="black">@android:color/black</color>
 </resources>

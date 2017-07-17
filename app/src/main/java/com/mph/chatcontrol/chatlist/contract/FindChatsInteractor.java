@@ -1,4 +1,4 @@
-package com.mph.chatcontrol.chatlist;
+package com.mph.chatcontrol.chatlist.contract;
 import com.mph.chatcontrol.data.Chat;
 
 import java.util.List;

@@ -9,12 +9,13 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.mph.chatcontrol.R;
-import com.mph.chatcontrol.chatlist.ChatListPresenter;
+import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.ChatListPresenterImpl;
 import com.mph.chatcontrol.chatlist.ChatlistFragment;
 import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
 import com.mph.chatcontrol.chatlist.TestBFragment;
 import com.mph.chatcontrol.chatlist.TestCFragment;
+import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.utils.CCUtils;
 
 import butterknife.BindView;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements
     private MainPresenter mPresenter;
 
     // TODO: 17/07/2017 Add fragments with tags using fragment manager. Check whether they exist
+    // https://stackoverflow.com/questions/9294603/get-currently-displayed-fragment
     private ChatlistFragment activeChatListFragment, fragmentD;
     private ChatListPresenter mActiveChatListPresenter;
     private TestBFragment fragmentB;
@@ -88,8 +90,10 @@ public class MainActivity extends AppCompatActivity implements
         if (activeChatListFragment == null) {
             activeChatListFragment = ChatlistFragment.newInstance();
         }
-        mActiveChatListPresenter = new ChatListPresenterImpl(activeChatListFragment, new FindChatsInteractorImpl());
-        CCUtils.addFragmentToActivity(getFragmentManager(), activeChatListFragment, mFrameLayout.getId());
+        mActiveChatListPresenter = new ChatListPresenterImpl(activeChatListFragment,
+                new ChatViewModelToChatMapper(), new FindChatsInteractorImpl());
+        CCUtils.addFragmentToActivity(getFragmentManager(), activeChatListFragment,
+                mFrameLayout.getId());
     }
 
     @Override
