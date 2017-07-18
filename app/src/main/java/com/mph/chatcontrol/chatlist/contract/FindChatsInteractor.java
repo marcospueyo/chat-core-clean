@@ -11,5 +11,6 @@ public interface FindChatsInteractor {
         void onDataNotAvailable();
     }
 
-    void findChats(OnFinishedListener listener);
+    void findActiveChats(OnFinishedListener listener);
+    void findArchivedChats(OnFinishedListener listener);
 }

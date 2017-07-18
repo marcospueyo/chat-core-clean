@@ -5,6 +5,12 @@ public class ChatViewModel {
 
     private String title;
     private String description;
+    private String initial;
+    private int pendingCount;
+    private String checkoutDate;
+
+    public ChatViewModel() {
+    }
 
     public String getTitle() {
         return title;
@@ -20,5 +26,29 @@ public class ChatViewModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getInitial() {
+        return initial;
+    }
+
+    public void setInitial(String initial) {
+        this.initial = initial;
+    }
+
+    public int getPendingCount() {
+        return pendingCount;
+    }
+
+    public void setPendingCount(int pendingCount) {
+        this.pendingCount = pendingCount;
+    }
+
+    public String getCheckoutDate() {
+        return checkoutDate;
+    }
+
+    public void setCheckoutDate(String checkoutDate) {
+        this.checkoutDate = checkoutDate;
     }
 }

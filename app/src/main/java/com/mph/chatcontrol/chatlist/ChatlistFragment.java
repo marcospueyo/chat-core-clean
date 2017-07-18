@@ -26,12 +26,16 @@ import butterknife.BindView;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ChatlistFragment extends BaseFragment implements ChatListView {
+
+    public static final String SHOULD_LOAD_ACTIVE_CHATS = "SHOULD_LOAD_ACTIVE_CHATS_KEY";
+
     @BindView(R.id.rv_elements) RecyclerView mListView;
     @BindView(R.id.ll_progress) View mProgressView;
     @BindView(R.id.ll_content) View mContentView;
 
     private ChatListPresenter mPresenter;
     private ChatsAdapter mAdapter;
+    private boolean mShouldShowActiveChat;
 
     public static ChatlistFragment newInstance() {
         return new ChatlistFragment();
@@ -62,6 +66,7 @@ public class ChatlistFragment extends BaseFragment implements ChatListView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = super.init(inflater, R.layout.fragment_chatlist, container);
+        loadBundleInfo();
         initializeAdapter();
         initializeRecyclerView();
         return view;
@@ -90,8 +95,16 @@ public class ChatlistFragment extends BaseFragment implements ChatListView {
         Snackbar.make(mContentView, R.string.chat_load_error, Snackbar.LENGTH_LONG).show();
     }
 
+    private void loadBundleInfo() {
+        Bundle bundle = this.getArguments();
+        if (bundle != null)
+            mShouldShowActiveChat = bundle.getBoolean(SHOULD_LOAD_ACTIVE_CHATS, false);
+        else
+            mShouldShowActiveChat = false;
+    }
+
     private void initializeAdapter() {
-        mAdapter = new ChatsAdapter(mPresenter);
+        mAdapter = new ChatsAdapter(mPresenter, mContext);
     }
 
     private void initializeRecyclerView() {

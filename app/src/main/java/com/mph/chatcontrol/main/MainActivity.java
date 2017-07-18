@@ -32,8 +32,10 @@ public class MainActivity extends AppCompatActivity implements
     // TODO: 17/07/2017 Add fragments with tags using fragment manager. Check whether they exist
     // https://stackoverflow.com/questions/9294603/get-currently-displayed-fragment
     private ChatlistFragment activeChatListFragment, fragmentD;
+    private ChatlistFragment archivedChatListFragment;
+
     private ChatListPresenter mActiveChatListPresenter;
-    private TestBFragment fragmentB;
+    private ChatListPresenter mArchivedChatListPresenter;
     private TestCFragment fragmentC;
 
     @Override
@@ -90,8 +92,11 @@ public class MainActivity extends AppCompatActivity implements
         if (activeChatListFragment == null) {
             activeChatListFragment = ChatlistFragment.newInstance();
         }
-        mActiveChatListPresenter = new ChatListPresenterImpl(activeChatListFragment,
-                new ChatViewModelToChatMapper(), new FindChatsInteractorImpl());
+        mActiveChatListPresenter = new ChatListPresenterImpl(
+                activeChatListFragment,
+                new ChatViewModelToChatMapper(),
+                new FindChatsInteractorImpl(),
+                true /* should load active chats */);
         CCUtils.addFragmentToActivity(getFragmentManager(), activeChatListFragment,
                 mFrameLayout.getId());
     }
@@ -99,10 +104,19 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void showArchivedChatView() {
         Log.d(TAG, "showArchivedChatView: ");
-        if (fragmentB == null) {
-            fragmentB = new TestBFragment();
+        if (archivedChatListFragment == null) {
+            archivedChatListFragment = new ChatlistFragment();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(ChatlistFragment.SHOULD_LOAD_ACTIVE_CHATS, false);
+            archivedChatListFragment.setArguments(bundle);
         }
-        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentB, mFrameLayout.getId());
+        mArchivedChatListPresenter = new ChatListPresenterImpl(
+                archivedChatListFragment,
+                new ChatViewModelToChatMapper(),
+                new FindChatsInteractorImpl(),
+                false /* should NOT load active chats */);
+        CCUtils.addFragmentToActivity(getFragmentManager(), archivedChatListFragment,
+                mFrameLayout.getId());
     }
 
     @Override

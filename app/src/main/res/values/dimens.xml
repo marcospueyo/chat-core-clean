@@ -10,8 +10,12 @@
     <dimen name="spacing_huge">32dp</dimen>
     <dimen name="spacing_extra_huge">64dp</dimen>
 
+    <dimen name="textsize_large">20sp</dimen>
     <dimen name="textsize_medium">16sp</dimen>
     <dimen name="textsize_small">12dp</dimen>
+
+    <dimen name="circle_size_medium">40dp</dimen>
+    <dimen name="circle_size_xsmall">10dp</dimen>
 
     <dimen name="chatrow_height">70dp</dimen>
 </resources>

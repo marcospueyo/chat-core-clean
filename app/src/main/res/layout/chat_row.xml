@@ -3,35 +3,84 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/chatrow_height"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/selectableItemBackground">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/label_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Nombre del grupo de chat"
-            android:textColor="@color/gray_dark"
-            android:textSize="@dimen/textsize_medium"
-            android:layout_marginStart="@dimen/spacing_large"/>
-
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
         <android.support.v4.widget.Space
-            android:layout_width="0dp"
-            android:layout_height="@dimen/spacing_large" />
-
-        <TextView
-            android:id="@+id/label_descr"
+            android:layout_width="@dimen/spacing_large"
+            android:layout_height="0dp" />
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Descripción del grupo de chat"
-            android:textColor="@color/black"
-            android:textSize="@dimen/textsize_small"
-            android:layout_marginStart="@dimen/spacing_large"/>
+            android:layout_height="wrap_content">
+            <com.mph.chatcontrol.chatlist.widget.CircularTextView
+                android:id="@+id/initial_view"
+                android:layout_width="@dimen/circle_size_medium"
+                android:layout_height="@dimen/circle_size_medium"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/textsize_large"
+                android:gravity="center"
+                android:padding="3dp"/>
+            <TextView
+                android:layout_width="@dimen/circle_size_xsmall"
+                android:layout_height="@dimen/circle_size_xsmall"
+                android:id="@+id/pending_messages"
+                android:textColor="#ffffff"
+                android:background="@drawable/rounded_corner_red"
+                android:visibility="gone"
+                android:textIsSelectable="false"
+                android:layout_alignEnd="@id/initial_view"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.v4.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/spacing_small" />
+            <TextView
+                android:id="@+id/label_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Nombre del grupo de chat"
+                android:textColor="@color/gray_dark"
+                android:textSize="@dimen/textsize_medium"
+                android:layout_marginStart="@dimen/spacing_large"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/spacing_large" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/label_descr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Descripción del grupo de chat"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/textsize_small"
+                    android:layout_marginStart="@dimen/spacing_large"/>
+                <TextView
+                    android:id="@+id/label_lastmsg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="- Último mensaje..."
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/textsize_small"
+                    android:layout_marginStart="@dimen/spacing_large"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

@@ -1,6 +1,8 @@
 package com.mph.chatcontrol.chatlist.adapter;
 /* Created by macmini on 17/07/2017. */
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,9 +27,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 
     private final List<ChatViewModel> mChatList;
 
-    public ChatsAdapter(@NonNull ChatListPresenter presenter) {
+    private final TypedArray mColorPalette;
+
+
+    public ChatsAdapter(@NonNull ChatListPresenter presenter, Context context) {
         this.mPresenter = checkNotNull(presenter);
         mChatList = new ArrayList<>();
+        mColorPalette = context.getResources().obtainTypedArray(R.array.color_palette);
     }
 
     @Override
@@ -39,7 +45,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 
     @Override
     public void onBindViewHolder(ChatViewHolder holder, int position) {
-        holder.render(mChatList.get(position));
+        holder.render(mChatList.get(position),
+                mColorPalette.getColor(position % mColorPalette.length(), 0));
     }
 
     @Override

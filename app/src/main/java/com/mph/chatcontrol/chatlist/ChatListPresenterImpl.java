@@ -28,20 +28,26 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     @NonNull
     private ChatViewModelToChatMapper mMapper;
 
+    private final boolean mShouldShowActiveChats;
+
     public ChatListPresenterImpl(@NonNull ChatListView chatListView,
                                  @NonNull ChatViewModelToChatMapper mapper,
-                                 @NonNull FindChatsInteractor findChatsInteractor) {
+                                 @NonNull FindChatsInteractor findChatsInteractor,
+                                 boolean shouldShowActiveChats) {
         mChatListView = checkNotNull(chatListView);
         mFindChatsInteractor = checkNotNull(findChatsInteractor);
         mMapper = checkNotNull(mapper);
-
         mChatListView.setPresenter(this);
+        mShouldShowActiveChats = shouldShowActiveChats;
     }
 
     @Override
     public void start() {
         mChatListView.showProgress();
-        mFindChatsInteractor.findChats(this)    ;
+        if (mShouldShowActiveChats)
+            mFindChatsInteractor.findActiveChats(this);
+        else
+            mFindChatsInteractor.findArchivedChats(this);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
 import com.mph.chatcontrol.data.Chat;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class FindChatsInteractorImpl implements FindChatsInteractor {
@@ -16,7 +17,7 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
     //private final ChatsDataSource mChatsRepository;
 
     @Override
-    public void findChats(final OnFinishedListener listener) {
+    public void findActiveChats(final OnFinishedListener listener) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -26,15 +27,40 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
         }, 2000);
     }
 
+    @Override
+    public void findArchivedChats(final OnFinishedListener listener) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                listener.onFinished(createArchivedChatList());
+                //listener.onDataNotAvailable();
+            }
+        }, 2000);
+    }
+
     private List<Chat> createChatList() {
+        Date today = new Date();
         return Arrays.asList(
-                Chat.create("title 1", "descr 1"),
-                Chat.create("title 2", "descr 2"),
-                Chat.create("title 3", "descr 3"),
-                Chat.create("title 4", "descr 4"),
-                Chat.create("title 5", "descr 5"),
-                Chat.create("title 6", "descr 6"),
-                Chat.create("title 7", "descr 7"),
-                Chat.create("title 8", "descr 8"));
+                Chat.create("Nombre usuario 1", "Alojamiento 1", 0, today, today),
+                Chat.create("Nombre usuario 2", "Alojamiento 2", 1, today, today),
+                Chat.create("Nombre usuario 3", "Alojamiento 3", 0, today, today),
+                Chat.create("Nombre usuario 4", "Alojamiento 4", 1, today, today),
+                Chat.create("Nombre usuario 5", "Alojamiento 5", 0, today, today),
+                Chat.create("Nombre usuario 6", "Alojamiento 6", 1, today, today),
+                Chat.create("Nombre usuario 7", "Alojamiento 7", 0, today, today),
+                Chat.create("Nombre usuario 8", "Alojamiento 8", 1, today, today));
+    }
+
+    private List<Chat> createArchivedChatList() {
+        Date today = new Date();
+        return Arrays.asList(
+                Chat.create("Archivado 1", "Alojamiento 1", 0, today, today),
+                Chat.create("Archivado 2", "Alojamiento 2", 1, today, today),
+                Chat.create("Archivado 3", "Alojamiento 3", 0, today, today),
+                Chat.create("Archivado 4", "Alojamiento 4", 1, today, today),
+                Chat.create("Archivado 5", "Alojamiento 5", 0, today, today),
+                Chat.create("Archivado 6", "Alojamiento 6", 1, today, today),
+                Chat.create("Archivado 7", "Alojamiento 7", 0, today, today),
+                Chat.create("Archivado 8", "Alojamiento 8", 1, today, today));
     }
 }
