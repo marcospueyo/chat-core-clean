@@ -17,6 +17,7 @@ import com.mph.chatcontrol.chatlist.adapter.ChatsAdapter;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.contract.ChatListView;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
+import com.mph.chatcontrol.chatlist.widget.DividerItemDecoration;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class ChatlistFragment extends BaseFragment implements ChatListView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = super.inflate(inflater, R.layout.fragment_chatlist, container);
+        View view = super.init(inflater, R.layout.fragment_chatlist, container);
         initializeAdapter();
         initializeRecyclerView();
         return view;
@@ -95,6 +96,8 @@ public class ChatlistFragment extends BaseFragment implements ChatListView {
 
     private void initializeRecyclerView() {
         mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mListView.addItemDecoration(
+                new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST));
         mListView.setHasFixedSize(true);
         mListView.setAdapter(mAdapter);
     }

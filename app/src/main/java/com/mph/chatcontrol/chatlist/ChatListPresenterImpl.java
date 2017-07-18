@@ -41,7 +41,7 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     @Override
     public void start() {
         mChatListView.showProgress();
-        mFindChatsInteractor.findChats(this);
+        mFindChatsInteractor.findChats(this)    ;
     }
 
     @Override
