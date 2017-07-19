@@ -7,7 +7,11 @@ import com.mph.chatcontrol.data.Mapper;
 import com.mph.chatcontrol.utils.DateUtils;
 
 public class ChatViewModelToChatMapper extends Mapper<ChatViewModel, Chat> {
-    public final static String DATE_FORMAT = "dd/MM/yyyy";
+
+    public static final String CHECKOUT_DATE_FORMAT = "dd/MM/yyyy";
+
+    public static final String LAST_MSG_DATE_FORMAT = "EE";
+
     public ChatViewModelToChatMapper() {}
 
     @Override
@@ -22,7 +26,8 @@ public class ChatViewModelToChatMapper extends Mapper<ChatViewModel, Chat> {
         chatViewModel.setInitial(value.title().substring(0, 1));
         chatViewModel.setDescription(value.description());
         chatViewModel.setPendingCount(value.pendingCount());
-        chatViewModel.setCheckoutDate(DateUtils.dateToString(value.endDate(), DATE_FORMAT));
+        chatViewModel.setCheckoutDate(DateUtils.dateToString(value.endDate(), CHECKOUT_DATE_FORMAT));
+        chatViewModel.setLastMsgDate(DateUtils.dateToString(value.lastMsgDate(), LAST_MSG_DATE_FORMAT));
         return chatViewModel;
     }
 }

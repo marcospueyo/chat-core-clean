@@ -33,6 +33,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.initial_view) CircularTextView initialLabel;
     @BindView(R.id.label_lastmsg) TextView lastMsgLabel;
     @BindView(R.id.pending_messages) View pendingMessages;
+    @BindView(R.id.label_last_date) TextView lastDateLabel;
 
     public ChatViewHolder(@NonNull View itemView, @NonNull ChatListPresenter chatListPresenter) {
         super(itemView);
@@ -46,6 +47,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
         renderChatDescription(chat.getDescription());
         renderChatInitial(chat.getInitial(), color);
         renderPendingMessages(chat.getPendingCount());
+        renderLastMsgDate(chat.getLastMsgDate());
     }
 
     private void onItemClick(final ChatViewModel chatViewModel) {
@@ -82,5 +84,9 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
 
     private void renderHighlighting(boolean isHighlighted, TextView textView) {
         textView.setTypeface(null, isHighlighted ? BOLD : NORMAL);
+    }
+
+    private void renderLastMsgDate(String lastMsgDate) {
+        lastDateLabel.setText(lastMsgDate);
     }
 }

@@ -41,26 +41,26 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
     private List<Chat> createChatList() {
         Date today = new Date();
         return Arrays.asList(
-                Chat.create("Nombre usuario 1", "Alojamiento 1", 0, today, today),
-                Chat.create("Nombre usuario 2", "Alojamiento 2", 1, today, today),
-                Chat.create("Nombre usuario 3", "Alojamiento 3", 0, today, today),
-                Chat.create("Nombre usuario 4", "Alojamiento 4", 1, today, today),
-                Chat.create("Nombre usuario 5", "Alojamiento 5", 0, today, today),
-                Chat.create("Nombre usuario 6", "Alojamiento 6", 1, today, today),
-                Chat.create("Nombre usuario 7", "Alojamiento 7", 0, today, today),
-                Chat.create("Nombre usuario 8", "Alojamiento 8", 1, today, today));
+                Chat.create("Nombre usuario 1", "Alojamiento 1", 0, today, today, today),
+                Chat.create("Nombre usuario 2", "Alojamiento 2", 1, today, today, today),
+                Chat.create("Nombre usuario 3", "Alojamiento 3", 0, today, today, today),
+                Chat.create("Nombre usuario 4", "Alojamiento 4", 1, today, today, today),
+                Chat.create("Nombre usuario 5", "Alojamiento 5", 0, today, today, today),
+                Chat.create("Nombre usuario 6", "Alojamiento 6", 1, today, today, today),
+                Chat.create("Nombre usuario 7", "Alojamiento 7", 0, today, today, today),
+                Chat.create("Nombre usuario 8", "Alojamiento 8", 1, today, today, today));
     }
 
     private List<Chat> createArchivedChatList() {
         Date today = new Date();
         return Arrays.asList(
-                Chat.create("Archivado 1", "Alojamiento 1", 0, today, today),
-                Chat.create("Archivado 2", "Alojamiento 2", 1, today, today),
-                Chat.create("Archivado 3", "Alojamiento 3", 0, today, today),
-                Chat.create("Archivado 4", "Alojamiento 4", 1, today, today),
-                Chat.create("Archivado 5", "Alojamiento 5", 0, today, today),
-                Chat.create("Archivado 6", "Alojamiento 6", 1, today, today),
-                Chat.create("Archivado 7", "Alojamiento 7", 0, today, today),
-                Chat.create("Archivado 8", "Alojamiento 8", 1, today, today));
+                Chat.create("Archivado 1", "Alojamiento 1", 0, today, today, today),
+                Chat.create("Archivado 2", "Alojamiento 2", 1, today, today, today),
+                Chat.create("Archivado 3", "Alojamiento 3", 0, today, today, today),
+                Chat.create("Archivado 4", "Alojamiento 4", 1, today, today, today),
+                Chat.create("Archivado 5", "Alojamiento 5", 0, today, today, today),
+                Chat.create("Archivado 6", "Alojamiento 6", 1, today, today, today),
+                Chat.create("Archivado 7", "Alojamiento 7", 0, today, today, today),
+                Chat.create("Archivado 8", "Alojamiento 8", 1, today, today, today));
     }
 }

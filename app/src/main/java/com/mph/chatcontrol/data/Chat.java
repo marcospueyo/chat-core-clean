@@ -9,17 +9,19 @@ import java.util.UUID;
 @AutoValue
 public abstract class Chat {
     public static Chat create(String title, String description, String id, Integer pendingCount,
-                              Date startDate, Date endDate) {
-        return new AutoValue_Chat(title, description, id, pendingCount, startDate, endDate);
+                              Date startDate, Date endDate, Date lastMsgDate) {
+        return new AutoValue_Chat(title, description, id, pendingCount, startDate, endDate,
+                lastMsgDate);
     }
     public static Chat create(String title, String description) {
-        return new AutoValue_Chat(title, description, UUID.randomUUID().toString(), 0, null, null);
+        return new AutoValue_Chat(title, description, UUID.randomUUID().toString(), 0, null, null,
+                null);
     }
 
     public static Chat create(String title, String description, Integer pendingCount,
-                              Date startDate, Date endDate) {
+                              Date startDate, Date endDate, Date lastMsgDate) {
         return new AutoValue_Chat(title, description, UUID.randomUUID().toString(), pendingCount,
-                startDate, endDate);
+                startDate, endDate, lastMsgDate);
     }
 
     public abstract String title();
@@ -28,4 +30,5 @@ public abstract class Chat {
     public abstract Integer pendingCount();
     public abstract Date startDate();
     public abstract Date endDate();
+    public abstract Date lastMsgDate();
 }

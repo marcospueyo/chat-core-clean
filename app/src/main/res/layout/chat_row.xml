@@ -42,17 +42,36 @@
             <android.support.v4.widget.Space
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_small" />
-            <TextView
-                android:id="@+id/label_title"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Nombre del grupo de chat"
-                android:textColor="@color/gray_dark"
-                android:textSize="@dimen/textsize_medium"
-                android:layout_marginStart="@dimen/spacing_large"/>
-
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/label_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Nombre del grupo de chat"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/textsize_medium"
+                    android:layout_marginStart="@dimen/spacing_large"/>
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/label_last_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="FECHA"
+                    android:textColor="@color/gray_dark"
+                    android:textSize="@dimen/textsize_medium"/>
+                <android.support.v4.widget.Space
+                    android:layout_width="@dimen/spacing_large"
+                    android:layout_height="0dp" />
+            </LinearLayout>
             <android.support.v4.widget.Space
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_large" />

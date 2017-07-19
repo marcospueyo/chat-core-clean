@@ -8,6 +8,7 @@ public class ChatViewModel {
     private String initial;
     private int pendingCount;
     private String checkoutDate;
+    private String lastMsgDate;
 
     public ChatViewModel() {
     }
@@ -50,5 +51,13 @@ public class ChatViewModel {
 
     public void setCheckoutDate(String checkoutDate) {
         this.checkoutDate = checkoutDate;
+    }
+
+    public String getLastMsgDate() {
+        return lastMsgDate;
+    }
+
+    public void setLastMsgDate(String lastMsgDate) {
+        this.lastMsgDate = lastMsgDate;
     }
 }
