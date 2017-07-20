@@ -17,7 +17,7 @@ public abstract class BaseViewHolderImpl extends RecyclerView.ViewHolder impleme
 
     @NonNull protected final Context mContext;
 
-    @NonNull BaseListPresenter mPresenter;
+    @NonNull protected BaseListPresenter mPresenter;
 
     public BaseViewHolderImpl(@NonNull Context context, @NonNull View itemView,
                               @NonNull BaseListPresenter baseListPresenter) {

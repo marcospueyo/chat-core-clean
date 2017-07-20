@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.mph.chatcontrol.base.BaseListFragment;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
+import com.mph.chatcontrol.guestlist.adapter.GuestsAdapter;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.contract.GuestListView;
 import com.mph.chatcontrol.guestlist.viewmodel.GuestViewModel;
@@ -34,20 +35,15 @@ public class GuestListFragment extends BaseListFragment implements GuestListView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         initializeAdapter();
-        initializeRecyclerView();
         return view;
     }
 
     @Override
     public void setItems(List<GuestViewModel> guests) {
-
+        mAdapter.updateItemList(guests);
     }
 
     private void initializeAdapter() {
-
-    }
-
-    private void initializeRecyclerView() {
-
+        super.setAdapter(new GuestsAdapter((GuestListPresenter) mPresenter, mContext));
     }
 }

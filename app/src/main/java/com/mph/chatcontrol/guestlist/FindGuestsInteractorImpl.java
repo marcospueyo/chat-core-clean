@@ -6,6 +6,7 @@ import com.mph.chatcontrol.data.Guest;
 import com.mph.chatcontrol.guestlist.contract.FindGuestsInteractor;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /* Created by macmini on 19/07/2017. */
@@ -24,9 +25,10 @@ public class FindGuestsInteractorImpl implements FindGuestsInteractor {
     }
 
     private List<Guest> createGuestList() {
+        Date today = new Date();
         return Arrays.asList(
-                Guest.create("Nombre usuario 0", "email0", "000000000"),
-                Guest.create("Nombre usuario 1", "email1", "111111111")
+                Guest.create("Nombre usuario 0", "email0", "000000000", today, today),
+                Guest.create("Nombre usuario 1", "email1", "111111111", today, today)
         );
     }
 }

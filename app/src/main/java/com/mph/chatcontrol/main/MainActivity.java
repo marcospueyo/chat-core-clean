@@ -13,9 +13,13 @@ import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.ChatListPresenterImpl;
 import com.mph.chatcontrol.chatlist.ChatlistFragment;
 import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
-import com.mph.chatcontrol.chatlist.TestBFragment;
 import com.mph.chatcontrol.chatlist.TestCFragment;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.guestlist.FindGuestsInteractorImpl;
+import com.mph.chatcontrol.guestlist.GuestListFragment;
+import com.mph.chatcontrol.guestlist.GuestListPresenterImpl;
+import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
+import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
 import com.mph.chatcontrol.utils.CCUtils;
 
 import butterknife.BindView;
@@ -33,10 +37,11 @@ public class MainActivity extends AppCompatActivity implements
     // https://stackoverflow.com/questions/9294603/get-currently-displayed-fragment
     private ChatlistFragment activeChatListFragment, fragmentD;
     private ChatlistFragment archivedChatListFragment;
+    private GuestListFragment mGuestListFragment;
 
     private ChatListPresenter mActiveChatListPresenter;
     private ChatListPresenter mArchivedChatListPresenter;
-    private TestCFragment fragmentC;
+    private GuestListPresenter mGuestListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +110,14 @@ public class MainActivity extends AppCompatActivity implements
     public void showArchivedChatView() {
         Log.d(TAG, "showArchivedChatView: ");
         if (archivedChatListFragment == null) {
-            archivedChatListFragment = new ChatlistFragment();
+            archivedChatListFragment = ChatlistFragment.newInstance();
         }
         mArchivedChatListPresenter = new ChatListPresenterImpl(
                 archivedChatListFragment,
                 new ChatViewModelToChatMapper(),
                 new FindChatsInteractorImpl(),
                 false /* should NOT load active chats */);
+
         CCUtils.addFragmentToActivity(getFragmentManager(), archivedChatListFragment,
                 mFrameLayout.getId());
     }
@@ -119,10 +125,15 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void showGuestlistView() {
         Log.d(TAG, "showGuestlistView: ");
-        if (fragmentC == null) {
-            fragmentC = new TestCFragment();
-        }
-        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentC, mFrameLayout.getId());
+        if (mGuestListFragment == null)
+            mGuestListFragment = GuestListFragment.newInstance();
+
+        mGuestListPresenter = new GuestListPresenterImpl(
+                mGuestListFragment,
+                new GuestViewModelToGuestMapper(),
+                new FindGuestsInteractorImpl());
+
+        CCUtils.addFragmentToActivity(getFragmentManager(), mGuestListFragment, mFrameLayout.getId());
     }
 
     @Override

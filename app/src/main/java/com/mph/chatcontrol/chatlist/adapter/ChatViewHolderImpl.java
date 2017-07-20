@@ -42,7 +42,7 @@ public class ChatViewHolderImpl extends BaseViewHolderImpl {
         ButterKnife.bind(this, itemView);
     }
 
-    public void render(BaseViewModel entity, int color) {
+    public void render(final BaseViewModel entity, int color) {
         ChatViewModel chat = (ChatViewModel) entity;
         super.render(chat);
         renderChatTitle(chat.title());

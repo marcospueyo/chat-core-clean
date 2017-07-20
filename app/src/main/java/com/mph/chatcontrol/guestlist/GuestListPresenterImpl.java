@@ -31,9 +31,10 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     public GuestListPresenterImpl(@NonNull GuestListView guestListView,
                                   @NonNull GuestViewModelToGuestMapper mapper,
                                   @NonNull FindGuestsInteractor findGuestsInteractor) {
-        mGuestListView = checkNotNull(guestListView);
         mMapper = checkNotNull(mapper);
         mFindGuestsInteractor = checkNotNull(findGuestsInteractor);
+        mGuestListView = checkNotNull(guestListView);
+        mGuestListView.setPresenter(this);
     }
 
     @Override
@@ -45,6 +46,16 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     @Override
     public void onItemClicked(BaseViewModel item) {
         Log.d(TAG, "onItemClicked: " + item.toString());
+    }
+
+    @Override
+    public void onCallClicked(GuestViewModel guest) {
+        Log.d(TAG, "onCallClicked: " + guest.toString());
+    }
+
+    @Override
+    public void onChatClicked(GuestViewModel guest) {
+        Log.d(TAG, "onChatClicked: " + guest.toString());
     }
 
     @Override
