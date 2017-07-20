@@ -1,4 +1,4 @@
-package com.mph.chatcontrol.chatlist.widget;
+package com.mph.chatcontrol.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

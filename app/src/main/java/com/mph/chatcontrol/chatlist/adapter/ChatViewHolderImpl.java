@@ -10,7 +10,7 @@ import com.mph.chatcontrol.base.BaseViewModel;
 import com.mph.chatcontrol.base.adapter.BaseViewHolderImpl;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
-import com.mph.chatcontrol.chatlist.widget.CircularTextView;
+import com.mph.chatcontrol.widget.CircularTextView;
 import com.mph.chatcontrol.utils.CCUtils;
 
 import butterknife.BindView;

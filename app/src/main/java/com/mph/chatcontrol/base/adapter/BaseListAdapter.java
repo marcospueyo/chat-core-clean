@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 
 import com.mph.chatcontrol.base.BaseViewModel;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
-import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;

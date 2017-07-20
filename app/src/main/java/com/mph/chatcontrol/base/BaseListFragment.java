@@ -9,16 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.base.adapter.BaseListAdapter;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.base.presenter.BaseListView;
-import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
-import com.mph.chatcontrol.chatlist.widget.DividerItemDecoration;
-
-import java.util.List;
+import com.mph.chatcontrol.widget.DividerItemDecoration;
 
 import butterknife.BindView;
 
@@ -37,7 +33,7 @@ public abstract class BaseListFragment extends BaseFragment implements BaseListV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = super.init(inflater, R.layout.fragment_chatlist, container);
+        View view = super.init(inflater, R.layout.fragment_list, container);
         initializeRecyclerView();
         return view;
     }
