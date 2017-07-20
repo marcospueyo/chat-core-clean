@@ -3,7 +3,7 @@ package com.mph.chatcontrol.main;
 
 import android.os.Handler;
 
-import com.mph.chatcontrol.main.utils.MenuOptions;
+import com.mph.chatcontrol.utils.MenuOptions;
 
 public class MainInteractorImpl implements MainInteractor {
     @Override

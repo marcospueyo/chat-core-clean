@@ -1,4 +1,4 @@
-package com.mph.chatcontrol.main.utils;
+package com.mph.chatcontrol.utils;
 /* Created by Marcos on 13/07/2017.*/
 
 import android.support.annotation.Nullable;

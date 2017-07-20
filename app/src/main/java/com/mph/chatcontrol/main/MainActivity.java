@@ -106,9 +106,6 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "showArchivedChatView: ");
         if (archivedChatListFragment == null) {
             archivedChatListFragment = new ChatlistFragment();
-            Bundle bundle = new Bundle();
-            bundle.putBoolean(ChatlistFragment.SHOULD_LOAD_ACTIVE_CHATS, false);
-            archivedChatListFragment.setArguments(bundle);
         }
         mArchivedChatListPresenter = new ChatListPresenterImpl(
                 archivedChatListFragment,

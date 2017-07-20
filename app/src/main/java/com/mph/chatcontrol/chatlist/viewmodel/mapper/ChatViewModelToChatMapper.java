@@ -12,8 +12,6 @@ public class ChatViewModelToChatMapper extends Mapper<ChatViewModel, Chat> {
 
     public static final String LAST_MSG_DATE_FORMAT = "EE";
 
-    public ChatViewModelToChatMapper() {}
-
     @Override
     public Chat map(ChatViewModel value) {
         throw new UnsupportedOperationException();
@@ -21,13 +19,17 @@ public class ChatViewModelToChatMapper extends Mapper<ChatViewModel, Chat> {
 
     @Override
     public ChatViewModel reverseMap(Chat value) {
-        ChatViewModel chatViewModel = new ChatViewModel();
-        chatViewModel.setTitle(value.title());
-        chatViewModel.setInitial(value.title().substring(0, 1));
-        chatViewModel.setDescription(value.description());
-        chatViewModel.setPendingCount(value.pendingCount());
-        chatViewModel.setCheckoutDate(DateUtils.dateToString(value.endDate(), CHECKOUT_DATE_FORMAT));
-        chatViewModel.setLastMsgDate(DateUtils.dateToString(value.lastMsgDate(), LAST_MSG_DATE_FORMAT));
+        ChatViewModel chatViewModel = ChatViewModel.builder()
+                .setId(value.id())
+                .setTitle(value.title())
+                .setInitial(value.title().substring(0, 1))
+                .setDescription(value.description())
+                .setPendingCount(value.pendingCount())
+                .setCheckoutDate(DateUtils.dateToString(value.endDate(), CHECKOUT_DATE_FORMAT))
+                .setLastMsgDate(DateUtils.dateToString(value.lastMsgDate(), LAST_MSG_DATE_FORMAT))
+                .setLastActivity(value.lastMsg())
+                .setActive(value.isActive())
+                .build();
         return chatViewModel;
     }
 }

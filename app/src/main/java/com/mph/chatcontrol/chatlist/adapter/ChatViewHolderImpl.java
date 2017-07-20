@@ -1,16 +1,17 @@
 package com.mph.chatcontrol.chatlist.adapter;
 
-import android.content.res.TypedArray;
-import android.graphics.Color;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.base.BaseViewModel;
+import com.mph.chatcontrol.base.adapter.BaseViewHolderImpl;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.widget.CircularTextView;
+import com.mph.chatcontrol.utils.CCUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,10 +25,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /* Created by macmini on 17/07/2017. */
 
-public class ChatViewHolder extends RecyclerView.ViewHolder {
-    private static final String TAG = ChatViewHolder.class.getSimpleName();
+public class ChatViewHolderImpl extends BaseViewHolderImpl {
 
-    private final ChatListPresenter mPresenter;
+    private static final String TAG = ChatViewHolderImpl.class.getSimpleName();
+
     @BindView(R.id.label_title) TextView titleLabel;
     @BindView(R.id.label_descr) TextView descrLabel;
     @BindView(R.id.initial_view) CircularTextView initialLabel;
@@ -35,28 +36,21 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.pending_messages) View pendingMessages;
     @BindView(R.id.label_last_date) TextView lastDateLabel;
 
-    public ChatViewHolder(@NonNull View itemView, @NonNull ChatListPresenter chatListPresenter) {
-        super(itemView);
-        mPresenter = checkNotNull(chatListPresenter);
+    public ChatViewHolderImpl(@NonNull Context context, @NonNull View itemView,
+                              @NonNull ChatListPresenter chatListPresenter) {
+        super(context, itemView, chatListPresenter);
         ButterKnife.bind(this, itemView);
     }
 
-    public void render(ChatViewModel chat, int color) {
-        onItemClick(chat);
-        renderChatTitle(chat.getTitle());
-        renderChatDescription(chat.getDescription());
-        renderChatInitial(chat.getInitial(), color);
-        renderPendingMessages(chat.getPendingCount());
-        renderLastMsgDate(chat.getLastMsgDate());
-    }
-
-    private void onItemClick(final ChatViewModel chatViewModel) {
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.onItemClicked(chatViewModel);
-            }
-        });
+    public void render(BaseViewModel entity, int color) {
+        ChatViewModel chat = (ChatViewModel) entity;
+        super.render(chat);
+        renderChatTitle(chat.title());
+        renderChatDescription(chat.description());
+        renderChatInitial(chat.initial(), color);
+        renderPendingMessages(chat.pendingCount());
+        renderLastActivity(chat);
+        renderLastMsgDate(chat.lastMsgDate());
     }
 
     private void renderChatTitle(String title) {
@@ -88,5 +82,10 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
 
     private void renderLastMsgDate(String lastMsgDate) {
         lastDateLabel.setText(lastMsgDate);
+    }
+
+    private void renderLastActivity(final ChatViewModel chat) {
+        lastMsgLabel.setText(chat.active()
+                ? chat.lastActivity() : CCUtils.getFormattedCheckout(mContext, chat.checkoutDate()));
     }
 }

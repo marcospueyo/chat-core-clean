@@ -4,6 +4,7 @@ package com.mph.chatcontrol.chatlist;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.mph.chatcontrol.base.BaseViewModel;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.contract.ChatListView;
 import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
@@ -51,14 +52,14 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     }
 
     @Override
-    public void onItemClicked(ChatViewModel chat) {
-        Log.d(TAG, "onItemClicked: " + chat.getTitle());
+    public void onItemClicked(BaseViewModel chat) {
+        Log.d(TAG, "onItemClicked: " + chat.toString());
     }
 
     @Override
     public void onFinished(List<Chat> chats) {
         List<ChatViewModel> chatViewModels = mMapper.reverseMap(chats);
-        mChatListView.setChats(chatViewModels);
+        mChatListView.setItems(chatViewModels);
         mChatListView.hideProgress();
     }
 
