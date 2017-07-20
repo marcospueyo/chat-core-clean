@@ -50,6 +50,7 @@ public abstract class BaseListAdapter<VH extends BaseViewHolderImpl> extends Rec
     }
 
     public void updateItemList(List<BaseViewModel> collection) {
+        mItemList.clear();
         mItemList.addAll(collection);
         notifyDataSetChanged();
     }

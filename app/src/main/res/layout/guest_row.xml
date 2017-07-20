@@ -22,7 +22,7 @@
             android:gravity="center"
             android:padding="3dp"/>
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_weight="1">
@@ -71,21 +71,27 @@
         </LinearLayout>
         <ImageButton
             android:id="@+id/ib_call"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
             android:scaleType="fitCenter"
             android:layout_gravity="center_vertical"
-            android:src="@android:drawable/ic_delete"
+            android:src="@drawable/ic_phone"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:visibility="visible"/>
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/spacing_medium"
+            android:layout_height="0dp" />
         <ImageButton
             android:id="@+id/ib_chat"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
             android:scaleType="fitCenter"
             android:layout_gravity="center_vertical"
-            android:src="@android:drawable/ic_delete"
+            android:src="@drawable/ic_bubble"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:visibility="visible"/>
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/spacing_large"
+            android:layout_height="0dp" />
     </LinearLayout>
 </FrameLayout>

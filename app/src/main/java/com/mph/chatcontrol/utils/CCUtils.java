@@ -6,8 +6,14 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
+import com.mph.chatcontrol.Manifest;
 import com.mph.chatcontrol.R;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,5 +33,20 @@ public class CCUtils {
 
     public static String getFormattedCheckout(final Context context, String date) {
         return context.getString(R.string.checkout) + " " + date;
+    }
+
+    public static void makeCall(final Activity activity, String phoneNumber) {
+        int checkPermission = ContextCompat.checkSelfPermission(activity, "android.permission.CALL_PHONE");
+        if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    new String[]{"android.permission.CALL_PHONE"},
+                    /*REQUEST_CALL_PHONE)*/ 0);
+        }
+        else {
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + phoneNumber));
+            activity.startActivity(intent);
+        }
     }
 }

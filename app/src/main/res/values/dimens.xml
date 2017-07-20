@@ -19,4 +19,6 @@
     <dimen name="circle_size_xsmall">10dp</dimen>
 
     <dimen name="chatrow_height">70dp</dimen>
+
+    <dimen name="button_size">25dp</dimen>
 </resources>

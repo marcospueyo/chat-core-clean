@@ -12,6 +12,7 @@ import com.mph.chatcontrol.guestlist.adapter.GuestsAdapter;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.contract.GuestListView;
 import com.mph.chatcontrol.guestlist.viewmodel.GuestViewModel;
+import com.mph.chatcontrol.utils.CCUtils;
 
 import java.util.List;
 
@@ -41,6 +42,11 @@ public class GuestListFragment extends BaseListFragment implements GuestListView
     @Override
     public void setItems(List<GuestViewModel> guests) {
         mAdapter.updateItemList(guests);
+    }
+
+    @Override
+    public void callGuest(GuestViewModel guest) {
+        CCUtils.makeCall(getActivity(), guest.phone());
     }
 
     private void initializeAdapter() {

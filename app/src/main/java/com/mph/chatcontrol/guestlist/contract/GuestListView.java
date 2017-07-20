@@ -9,4 +9,6 @@ import java.util.List;
 public interface GuestListView extends BaseListView {
 
     void setItems(List<GuestViewModel> guests);
+
+    void callGuest(GuestViewModel guest);
 }

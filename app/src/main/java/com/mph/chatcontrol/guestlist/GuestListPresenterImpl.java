@@ -51,6 +51,7 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     @Override
     public void onCallClicked(GuestViewModel guest) {
         Log.d(TAG, "onCallClicked: " + guest.toString());
+        mGuestListView.callGuest(guest);
     }
 
     @Override
