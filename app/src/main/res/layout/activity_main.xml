@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_nav_view" />
+    <include layout="@layout/main_actionbar" />
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
         android:layout_marginBottom="0dp"
         android:layout_marginEnd="1dp"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@color/blue"
+        app:itemBackground="@color/brand_color"
         app:itemIconTint="@drawable/nav_item_color_state"
         app:itemTextColor="@drawable/nav_item_color_state"
         app:menu="@menu/bottom_navigation_main"

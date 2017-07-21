@@ -2,8 +2,10 @@ package com.mph.chatcontrol.main;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @BindView(R.id.bottom_nav_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.content_frame) FrameLayout mFrameLayout;
+    private Toolbar mToolbar;
     private MainPresenter mPresenter;
 
     // TODO: 17/07/2017 Add fragments with tags using fragment manager. Check whether they exist
@@ -48,10 +51,44 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setupToolbar();
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
         mPresenter = new MainPresenterImpl(this);
     }
+
+    private void setupToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayShowHomeEnabled(false);
+        ab.setDisplayHomeAsUpEnabled(false);
+        ab.setDisplayShowCustomEnabled(true);
+        ab.setDisplayShowTitleEnabled(false);
+        setupToolbarButtons();
+    }
+
+    private void setupToolbarButtons() {
+    /*    final ImageButton profileButton = (ImageButton) toolbar.findViewById(R.id.ico_perfil);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getBaseContext(), EditProfileActivity.class);
+                startActivity(i);
+            }
+        });
+
+        final ImageButton alertButton = (ImageButton) toolbar.findViewById(R.id.ico_alerts);
+        alertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getBaseContext(), AlertsActivity.class);
+                startActivity(i);
+            }
+        });
+        */
+    }
+
 
     @Override
     protected void onStart() {

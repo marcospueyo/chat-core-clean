@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="blue_dark">#303F9F</color>
-    <color name="accentColor">#8ebf34</color>
+    <color name="accentColor">#1e88e5</color>
+    <color name="brand_color">#8ebf34</color>
 
     <color name="gray_dark">@android:color/darker_gray</color>
     <color name="black">@android:color/black</color>
@@ -17,6 +18,8 @@
     <color name="teal">#00897b</color>
     <color name="purple_deep">#5e35b1</color>
     <color name="indigo">#3949ab</color>
+
+    <color name="white">#f7f7f3</color>
 
     <string-array name="color_palette">
         <item>@color/red</item>

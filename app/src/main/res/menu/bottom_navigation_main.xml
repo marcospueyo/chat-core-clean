@@ -4,25 +4,25 @@
     <item
         android:id="@+id/action_active"
         android:enabled="true"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@drawable/ic_bubble"
         android:title="@string/active_chats"
         app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/action_archived"
         android:enabled="true"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@drawable/ic_bubble_empty"
         android:title="@string/archived_chats"
         app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/action_guests"
         android:enabled="true"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@drawable/ic_guests"
         android:title="@string/guests"
         app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/action_config"
         android:enabled="true"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@drawable/ic_config"
         android:title="@string/config"
         app:showAsAction="ifRoom|withText" />
 </menu>
