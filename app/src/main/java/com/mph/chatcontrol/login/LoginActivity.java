@@ -1,5 +1,6 @@
 package com.mph.chatcontrol.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
     @BindView(R.id.pbLogin) ProgressBar progressBar;
 
     private LoginPresenter mPresenter;
+
+    public static Intent newInstance(Context context) {
+        return new Intent(context, LoginActivity.class);
+    }
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +63,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
     }
 
     @Override public void navigateToHome() {
-        // TODO: 13/07/2017 Create static method to get the MainActivity intent already instantiated
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(MainActivity.newInstance(this));
         finish();
     }
 }

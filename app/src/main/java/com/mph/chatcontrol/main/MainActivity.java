@@ -1,5 +1,8 @@
 package com.mph.chatcontrol.main;
 
+import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
@@ -8,21 +11,36 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.ChatListPresenterImpl;
 import com.mph.chatcontrol.chatlist.ChatlistFragment;
 import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
-import com.mph.chatcontrol.chatlist.TestCFragment;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.events.LogoutEvent;
+import com.mph.chatcontrol.events.OpenChatEvent;
 import com.mph.chatcontrol.guestlist.FindGuestsInteractorImpl;
 import com.mph.chatcontrol.guestlist.GuestListFragment;
 import com.mph.chatcontrol.guestlist.GuestListPresenterImpl;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
+import com.mph.chatcontrol.login.LoginActivity;
+import com.mph.chatcontrol.room.RoomActivity;
+import com.mph.chatcontrol.settings.GetNotificationPreferenceInteractorImpl;
+import com.mph.chatcontrol.settings.LogoutInteractorImpl;
+import com.mph.chatcontrol.settings.SetNotificationPreferenceInteractorImpl;
+import com.mph.chatcontrol.settings.SettingsFragment;
+import com.mph.chatcontrol.settings.SettingsPresenterImpl;
+import com.mph.chatcontrol.settings.contract.SettingsPresenter;
 import com.mph.chatcontrol.utils.CCUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,18 +52,25 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.bottom_nav_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.content_frame) FrameLayout mFrameLayout;
     private Toolbar mToolbar;
+    private ImageButton ibRefresh;
+    private ImageButton ibSearch;
     private MainPresenter mPresenter;
 
     // TODO: 17/07/2017 Add fragments with tags using fragment manager. Check whether they exist
     // https://stackoverflow.com/questions/9294603/get-currently-displayed-fragment
-    private ChatlistFragment activeChatListFragment, fragmentD;
+    private ChatlistFragment activeChatListFragment;
     private ChatlistFragment archivedChatListFragment;
     private GuestListFragment mGuestListFragment;
+    private SettingsFragment mSettingsFragment;
 
     private ChatListPresenter mActiveChatListPresenter;
     private ChatListPresenter mArchivedChatListPresenter;
     private GuestListPresenter mGuestListPresenter;
+    private SettingsPresenter mSettingsPresenter;
 
+    public static Intent newInstance(Context context) {
+        return new Intent(context, MainActivity.class);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,24 +94,22 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setupToolbarButtons() {
-    /*    final ImageButton profileButton = (ImageButton) toolbar.findViewById(R.id.ico_perfil);
-        profileButton.setOnClickListener(new View.OnClickListener() {
+        ibRefresh = (ImageButton) mToolbar.findViewById(R.id.ib_refresh);
+        ibSearch = (ImageButton) mToolbar.findViewById(R.id.ib_search);
+
+        ibRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getBaseContext(), EditProfileActivity.class);
-                startActivity(i);
+                Log.d(TAG, "onClick: refresh");
             }
         });
 
-        final ImageButton alertButton = (ImageButton) toolbar.findViewById(R.id.ico_alerts);
-        alertButton.setOnClickListener(new View.OnClickListener() {
+        ibSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getBaseContext(), AlertsActivity.class);
-                startActivity(i);
+                Log.d(TAG, "onClick: search");
             }
         });
-        */
     }
 
 
@@ -94,6 +117,13 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         mPresenter.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -139,13 +169,12 @@ public class MainActivity extends AppCompatActivity implements
                 new ChatViewModelToChatMapper(),
                 new FindChatsInteractorImpl(),
                 true /* should load active chats */);
-        CCUtils.addFragmentToActivity(getFragmentManager(), activeChatListFragment,
-                mFrameLayout.getId());
+
+        showFragment(activeChatListFragment);
     }
 
     @Override
     public void showArchivedChatView() {
-        Log.d(TAG, "showArchivedChatView: ");
         if (archivedChatListFragment == null) {
             archivedChatListFragment = ChatlistFragment.newInstance();
         }
@@ -155,13 +184,11 @@ public class MainActivity extends AppCompatActivity implements
                 new FindChatsInteractorImpl(),
                 false /* should NOT load active chats */);
 
-        CCUtils.addFragmentToActivity(getFragmentManager(), archivedChatListFragment,
-                mFrameLayout.getId());
+        showFragment(archivedChatListFragment);
     }
 
     @Override
     public void showGuestlistView() {
-        Log.d(TAG, "showGuestlistView: ");
         if (mGuestListFragment == null)
             mGuestListFragment = GuestListFragment.newInstance();
 
@@ -170,20 +197,49 @@ public class MainActivity extends AppCompatActivity implements
                 new GuestViewModelToGuestMapper(),
                 new FindGuestsInteractorImpl());
 
-        CCUtils.addFragmentToActivity(getFragmentManager(), mGuestListFragment, mFrameLayout.getId());
+        showFragment(mGuestListFragment);
     }
 
     @Override
     public void showConfigView() {
-        Log.d(TAG, "showConfigView: ");
-        /*if (fragmentD == null) {
-            fragmentD = new ChatlistFragment();
-        }
-        CCUtils.addFragmentToActivity(getFragmentManager(), fragmentD, mFrameLayout.getId());*/
+        if (mSettingsFragment == null)
+            mSettingsFragment = SettingsFragment.newInstance();
+
+        mSettingsPresenter = new SettingsPresenterImpl(
+                mSettingsFragment,
+                new LogoutInteractorImpl(),
+                new SetNotificationPreferenceInteractorImpl(),
+                new GetNotificationPreferenceInteractorImpl());
+        showFragment(mSettingsFragment);
+    }
+
+    private void showFragment(Fragment fragment) {
+        CCUtils.addFragmentToActivity(getFragmentManager(), fragment, mFrameLayout.getId());
     }
 
     @Override
     public void showMenuError() {
 
+    }
+
+    @Override
+    public void navigateToLogin() {
+        startActivity(LoginActivity.newInstance(getApplicationContext()));
+        finish();
+    }
+
+    @Override
+    public void showRoom(String roomID) {
+        startActivity(RoomActivity.getIntent(getApplicationContext(), roomID));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutEvent(LogoutEvent event) {
+        mPresenter.onLogout();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onOpenChatEvent(OpenChatEvent event) {
+        mPresenter.onOpenChat(event.chatID());
     }
 }

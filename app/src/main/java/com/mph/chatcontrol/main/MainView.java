@@ -7,4 +7,6 @@ public interface MainView {
     void showArchivedChatView();
     void showGuestlistView();
     void showConfigView();
+    void navigateToLogin();
+    void showRoom(String roomID);
 }

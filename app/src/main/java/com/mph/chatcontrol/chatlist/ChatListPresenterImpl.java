@@ -54,6 +54,7 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     @Override
     public void onItemClicked(BaseViewModel chat) {
         Log.d(TAG, "onItemClicked: " + chat.toString());
+        mChatListView.openChat((ChatViewModel) chat);
     }
 
     @Override

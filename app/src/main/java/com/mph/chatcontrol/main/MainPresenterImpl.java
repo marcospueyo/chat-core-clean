@@ -45,4 +45,16 @@ public class MainPresenterImpl implements MainPresenter {
     @Override public void onDestroy() {
         mainView = null;
     }
+
+    @Override
+    public void onLogout() {
+        if (mainView != null)
+            mainView.navigateToLogin();
+    }
+
+    @Override
+    public void onOpenChat(String chatID) {
+        if (mainView != null)
+            mainView.showRoom(chatID);
+    }
 }

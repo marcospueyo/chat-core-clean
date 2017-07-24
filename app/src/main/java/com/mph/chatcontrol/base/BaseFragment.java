@@ -14,11 +14,13 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment {
 
     protected Context mContext;
+    protected View mView;
 
     public View init(LayoutInflater inflater, int layoutRes, ViewGroup container) {
         View view = inflater.inflate(layoutRes, container, false);
         ButterKnife.bind(this, view);
         mContext = container.getContext();
+        mView = view;
         return view;
     }
 }

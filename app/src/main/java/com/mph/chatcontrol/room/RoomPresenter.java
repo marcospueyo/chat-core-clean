@@ -1,0 +1,14 @@
+package com.mph.chatcontrol.room;
+
+import com.mph.chatcontrol.base.presenter.BaseListPresenter;
+
+/* Created by macmini on 24/07/2017. */
+
+public interface RoomPresenter extends BaseListPresenter {
+
+    void onMessageSendClick(String message);
+
+    void bindView();
+
+    void unbindView();
+}

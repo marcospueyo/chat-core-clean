@@ -14,6 +14,10 @@ import com.mph.chatcontrol.chatlist.adapter.ChatsAdapter;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.contract.ChatListView;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
+import com.mph.chatcontrol.events.OpenChatEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 public class ChatlistFragment extends BaseListFragment implements ChatListView {
@@ -45,6 +49,11 @@ public class ChatlistFragment extends BaseListFragment implements ChatListView {
     @Override
     public void setItems(List<ChatViewModel> chats) {
         mAdapter.updateItemList(chats);
+    }
+
+    @Override
+    public void openChat(ChatViewModel chat) {
+        EventBus.getDefault().post(OpenChatEvent.create(chat.id()));
     }
 
     private void initializeAdapter() {
