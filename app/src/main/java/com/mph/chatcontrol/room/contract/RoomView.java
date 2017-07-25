@@ -3,7 +3,7 @@ package com.mph.chatcontrol.room.contract;
 
 import com.mph.chatcontrol.base.presenter.BaseListView;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
-import com.mph.chatcontrol.room.MessageViewModel;
+import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
 
 import java.util.List;
 

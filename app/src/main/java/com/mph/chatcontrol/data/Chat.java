@@ -20,7 +20,8 @@ public abstract class Chat {
     }
 
     public static Chat create(String title, String description, Integer pendingCount,
-                              Date startDate, Date endDate, Date lastMsgDate, String lastMsg, boolean isActive) {
+                              Date startDate, Date endDate, Date lastMsgDate, String lastMsg,
+                              boolean isActive) {
         return new AutoValue_Chat(title, description, UUID.randomUUID().toString(), pendingCount,
                 startDate, endDate, lastMsgDate, lastMsg, isActive);
     }

@@ -7,18 +7,25 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.guestlist.adapter.GuestsAdapter;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
+import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
+import com.mph.chatcontrol.widget.DividerItemDecoration;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /* Created by macmini on 24/07/2017. */
@@ -29,9 +36,11 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     private static final String TAG = RoomActivity.class.getSimpleName();
 
-    private Toolbar mToolbar;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.listview) RecyclerView mListView;
 
     private RoomPresenter mPresenter;
+    private GuestsAdapter mAdapter;
 
     public static Intent getIntent(Context context, String roomID) {
         Intent intent = new Intent(context, RoomActivity.class);
@@ -49,6 +58,8 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         setContentView(R.layout.activity_room);
         ButterKnife.bind(this);
         setupToolbar();
+        initializeRecyclerView();
+        initializeAdapter();
 
         mPresenter = new RoomPresenterImpl(
                 this,
@@ -60,7 +71,6 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
 
     private void setupToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayShowHomeEnabled(false);
@@ -73,6 +83,11 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
                 onBackPressed();
             }
         });
+    }
+
+    private void setToolbarTitle(String title) {
+        TextView tvTitle = (TextView) mToolbar.findViewById(R.id.tv_title);
+        tvTitle.setText(title);
     }
 
     @Override
@@ -94,7 +109,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @Override
     public void setRoom(ChatViewModel room) {
-
+        setToolbarTitle(getFormattedRoomTitle(room));
     }
 
     @Override
@@ -136,5 +151,20 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     @Override
     public void handleMessageSendError() {
 
+    }
+
+    private void initializeRecyclerView() {
+        mListView.setLayoutManager(new LinearLayoutManager(this));
+        mListView.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        mListView.setHasFixedSize(true);
+    }
+
+    private void initializeAdapter() {
+
+    }
+
+    private static String getFormattedRoomTitle(ChatViewModel chat) {
+        return chat.description() + " | " + chat.title();
     }
 }

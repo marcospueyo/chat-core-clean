@@ -8,7 +8,7 @@ import com.mph.chatcontrol.utils.DateUtils;
 
 public class GuestViewModelToGuestMapper extends Mapper<GuestViewModel, Guest> {
 
-    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    private static final String DATE_FORMAT = "dd/MM/yyyy";
 
     @Override
     public Guest map(GuestViewModel value) {
@@ -17,7 +17,8 @@ public class GuestViewModelToGuestMapper extends Mapper<GuestViewModel, Guest> {
 
     @Override
     public GuestViewModel reverseMap(Guest value) {
-        GuestViewModel guestViewModel = GuestViewModel.builder()
+        GuestViewModel guestViewModel;
+        guestViewModel = GuestViewModel.builder()
                 .setId(value.id())
                 .setName(value.name())
                 .setInitial(value.name().substring(0, 1))
