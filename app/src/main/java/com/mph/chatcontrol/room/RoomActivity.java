@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mph.chatcontrol.R;
@@ -21,6 +22,7 @@ import com.mph.chatcontrol.guestlist.adapter.GuestsAdapter;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
 import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
+import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 import com.mph.chatcontrol.widget.DividerItemDecoration;
 
 import java.util.List;
@@ -38,6 +40,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.listview) RecyclerView mListView;
+    @BindView(R.id.progressbar) ProgressBar mProgressBar;
 
     private RoomPresenter mPresenter;
     private GuestsAdapter mAdapter;
@@ -65,7 +68,9 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
                 this,
                 getRoomID(),
                 new ChatViewModelToChatMapper(),
-                new GetRoomInteractorImpl());
+                new MessageViewModelToMessageMapper(),
+                new GetRoomInteractorImpl(),
+                new GetMessagesInteractorImpl());
     }
 
 
@@ -119,12 +124,12 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @Override
     public void showProgress() {
-
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
