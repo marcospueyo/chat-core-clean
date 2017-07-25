@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mph.chatcontrol.room.RoomActivity">
+    tools:context="com.mph.chatcontrol.room.RoomActivity"
+    android:id="@+id/room_content_view">
 
     <include
         layout="@layout/room_actionbar"

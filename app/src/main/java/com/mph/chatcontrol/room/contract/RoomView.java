@@ -1,8 +1,9 @@
-package com.mph.chatcontrol.room;
+package com.mph.chatcontrol.room.contract;
 /* Created by macmini on 24/07/2017. */
 
 import com.mph.chatcontrol.base.presenter.BaseListView;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
+import com.mph.chatcontrol.room.MessageViewModel;
 
 import java.util.List;
 

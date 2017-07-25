@@ -28,4 +28,6 @@
 
     <string name="preference_change_success">Se han modificado sus preferencias con éxito</string>
     <string name="preference_change_error">No se ha podido modificar sus preferencias</string>
+
+    <string name="room_load_error">No ha sido posible cargar el chat</string>
 </resources>

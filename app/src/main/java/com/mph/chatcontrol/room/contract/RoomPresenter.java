@@ -1,4 +1,4 @@
-package com.mph.chatcontrol.room;
+package com.mph.chatcontrol.room.contract;
 
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 

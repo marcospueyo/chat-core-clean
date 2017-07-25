@@ -4,15 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
+import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.room.contract.RoomPresenter;
+import com.mph.chatcontrol.room.contract.RoomView;
 
 import java.util.List;
 
@@ -47,8 +50,14 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         ButterKnife.bind(this);
         setupToolbar();
 
-        mPresenter = new RoomPresenterImpl(this, getRoomID());
+        mPresenter = new RoomPresenterImpl(
+                this,
+                getRoomID(),
+                new ChatViewModelToChatMapper(),
+                new GetRoomInteractorImpl());
     }
+
+
 
     private void setupToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -110,7 +119,8 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @Override
     public void showLoadError() {
-
+        Snackbar.make(findViewById(android.R.id.content), getString(R.string.room_load_error),
+                Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
