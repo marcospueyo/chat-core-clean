@@ -4,9 +4,9 @@ import android.os.Handler;
 
 import com.mph.chatcontrol.data.Message;
 import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
-import com.mph.chatcontrol.room.contract.GetRoomInteractor;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /* Created by macmini on 25/07/2017. */
@@ -24,6 +24,9 @@ public class GetMessagesInteractorImpl implements GetMessagesInteractor {
     }
 
     private List<Message> getMessageList(String roomID) {
-        return new ArrayList<>();
+        Date today = new Date();
+        return Arrays.asList(
+                Message.create("test text 0", today, false),
+                Message.create("test text 1", today, false));
     }
 }

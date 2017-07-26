@@ -69,15 +69,13 @@ public class ChatViewHolderImpl extends BaseViewHolderImpl {
     }
 
     private void renderPendingMessages(int pendingCount) {
-        pendingMessages.setVisibility(pendingCount > 0 ? VISIBLE : GONE);
-        boolean isHighlighted = pendingCount > 0;
-        renderHighlighting(isHighlighted, titleLabel);
-        renderHighlighting(isHighlighted, descrLabel);
-        renderHighlighting(isHighlighted, lastMsgLabel);
-    }
+        boolean isMessagePending = pendingCount > 0;
+        pendingMessages.setVisibility(isMessagePending ? VISIBLE : GONE);
 
-    private void renderHighlighting(boolean isHighlighted, TextView textView) {
-        textView.setTypeface(null, isHighlighted ? BOLD : NORMAL);
+        // TODO: 26/07/2017 Do Java8 magic here
+        CCUtils.renderHighlighting(isMessagePending, titleLabel);
+        CCUtils.renderHighlighting(isMessagePending, descrLabel);
+        CCUtils.renderHighlighting(isMessagePending, lastMsgLabel);
     }
 
     private void renderLastMsgDate(String lastMsgDate) {

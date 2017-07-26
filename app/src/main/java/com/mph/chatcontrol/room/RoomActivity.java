@@ -15,10 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.base.adapter.BaseListAdapter;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
-import com.mph.chatcontrol.guestlist.adapter.GuestsAdapter;
+import com.mph.chatcontrol.room.adapter.MessagesAdapter;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
 import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
@@ -43,7 +44,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     @BindView(R.id.progressbar) ProgressBar mProgressBar;
 
     private RoomPresenter mPresenter;
-    private GuestsAdapter mAdapter;
+    private BaseListAdapter mAdapter;
 
     public static Intent getIntent(Context context, String roomID) {
         Intent intent = new Intent(context, RoomActivity.class);
@@ -119,7 +120,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @Override
     public void setMessages(List<MessageViewModel> messages) {
-
+        mAdapter.updateItemList(messages);
     }
 
     @Override
@@ -166,7 +167,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     }
 
     private void initializeAdapter() {
-
+        mAdapter = new MessagesAdapter(this, mPresenter);
     }
 
     private static String getFormattedRoomTitle(ChatViewModel chat) {

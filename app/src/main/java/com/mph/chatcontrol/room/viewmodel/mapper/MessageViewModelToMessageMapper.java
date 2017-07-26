@@ -23,6 +23,8 @@ public class MessageViewModelToMessageMapper extends Mapper<MessageViewModel, Me
                 .setId(value.id())
                 .setText(value.text())
                 .setTimestamp(DateUtils.dateToString(value.date(), DATE_FORMAT))
+                .setIsOwnMessage(value.isOwnMessage())
+                .setSenderName("nombre de usuario")
                 .build();
         return messageViewModel;
     }

@@ -12,10 +12,13 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.TextView;
 
 import com.mph.chatcontrol.Manifest;
 import com.mph.chatcontrol.R;
 
+import static android.graphics.Typeface.BOLD;
+import static android.graphics.Typeface.NORMAL;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
@@ -33,6 +36,12 @@ public class CCUtils {
 
     public static String getFormattedCheckout(final Context context, String date) {
         return context.getString(R.string.checkout) + " " + date;
+    }
+
+
+    // TODO: 26/07/2017 Extend TextView with this method
+    public static void renderHighlighting(boolean isHighlighted, TextView textView) {
+        textView.setTypeface(null, isHighlighted ? BOLD : NORMAL);
     }
 
     public static void makeCall(final Activity activity, String phoneNumber) {
