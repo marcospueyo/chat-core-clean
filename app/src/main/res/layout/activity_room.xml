@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/room_content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mph.chatcontrol.room.RoomActivity"
-    android:id="@+id/room_content_view">
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="25dp">
 
     <include
+        android:id="@+id/actionbar"
         layout="@layout/room_actionbar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/actionbar"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/listview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
+        android:layout_marginTop="60dp"
         android:backgroundTint="@color/blue"
+        android:overScrollMode="ifContentScrolls"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_edit_area"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/actionbar"
-        tools:layout_constraintLeft_creator="1" />
+        app:layout_constraintTop_toBottomOf="@+id/actionbar" />
 
     <ProgressBar
         android:id="@+id/progressbar"
@@ -45,5 +49,53 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/actionbar" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_edit_area"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/brand_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/listview">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            app:backgroundTint="@color/brand_color_brighter"
+            app:fabSize="mini"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_send" />
+    </android.support.constraint.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="64dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/chat_edittext_border"
+        android:ems="10"
+        android:hint="@string/write_mesage_hint"
+        android:inputType="textMultiLine"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:paddingStart="@dimen/spacing_medium"
+        android:textColorLink="@color/brand_color"
+        android:textCursorDrawable="@null"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_edit_area"
+        app:layout_constraintLeft_toLeftOf="@+id/cl_edit_area"
+        app:layout_constraintRight_toRightOf="@+id/cl_edit_area"
+        app:layout_constraintTop_toTopOf="@+id/cl_edit_area"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>

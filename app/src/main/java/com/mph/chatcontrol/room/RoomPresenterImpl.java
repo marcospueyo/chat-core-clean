@@ -85,8 +85,8 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onMessagesLoaded(List<Message> messages) {
-        mRoomView.setMessages(mMessageMapper.reverseMap(messages));
         mRoomView.hideProgress();
+        mRoomView.setMessages(mMessageMapper.reverseMap(messages));
     }
 
     @Override

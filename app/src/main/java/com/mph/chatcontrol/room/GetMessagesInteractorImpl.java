@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.mph.chatcontrol.data.Message;
 import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -25,8 +26,10 @@ public class GetMessagesInteractorImpl implements GetMessagesInteractor {
 
     private List<Message> getMessageList(String roomID) {
         Date today = new Date();
-        return Arrays.asList(
-                Message.create("test text 0", today, false),
-                Message.create("test text 1", today, false));
+        List<Message> messages = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            messages.add(Message.create("test text " + i, today, i % 2 == 0));
+        }
+        return messages;
     }
 }

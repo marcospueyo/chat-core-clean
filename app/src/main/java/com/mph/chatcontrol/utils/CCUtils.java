@@ -9,9 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.mph.chatcontrol.Manifest;
@@ -36,6 +39,35 @@ public class CCUtils {
 
     public static String getFormattedCheckout(final Context context, String date) {
         return context.getString(R.string.checkout) + " " + date;
+    }
+
+    public static boolean isAPI_L_OrAbove() {
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    public static RecyclerView.AdapterDataObserver getScrolldownObserver(
+            final RecyclerView.Adapter adapter,
+            final LinearLayoutManager layoutManager,
+            final RecyclerView recyclerView) {
+        return new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int messageCount = adapter.getItemCount();
+                int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
+
+                if (lastVisiblePosition == -1  || (positionStart >= (messageCount - 1)
+                        && lastVisiblePosition == (positionStart -1))) {
+                    recyclerView.smoothScrollToPosition(positionStart );
+                }
+            }
+
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                recyclerView.smoothScrollToPosition(adapter.getItemCount());
+            }
+        };
     }
 
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/white" />
+    <stroke
+        android:width="1dip"
+        android:color="@color/brand_color" />
+    <corners
+        android:bottomLeftRadius="@dimen/edittext_write_msg_radius"
+        android:bottomRightRadius="@dimen/edittext_write_msg_radius"
+        android:topLeftRadius="@dimen/edittext_write_msg_radius"
+        android:topRightRadius="@dimen/edittext_write_msg_radius">
+
+    </corners>
+</shape>

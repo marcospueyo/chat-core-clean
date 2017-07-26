@@ -4,6 +4,11 @@
     <color name="accentColor">#1e88e5</color>
     <color name="brand_color">#8ebf34</color>
 
+    <!-- BRAND PANTONE -->
+    <color name="brand_color_brighter">#beff45</color>
+    <color name="brand_color_pale">#d9ff92</color>
+    <color name="brand_color_dark">#6c7f49</color>
+
     <color name="gray_dark">@android:color/darker_gray</color>
     <color name="black">@android:color/black</color>
 

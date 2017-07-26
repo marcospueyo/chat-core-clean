@@ -5,9 +5,13 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.utils.CCUtils;
 
 /* Created by macmini on 18/07/2017. */
 
@@ -22,9 +26,23 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mOrientation;
 
+    public DividerItemDecoration(Context context, int orientation, int color) {
+        init(context, orientation, color);
+    }
+
     public DividerItemDecoration(Context context, int orientation) {
+        init(context, orientation, null);
+    }
+
+    private void init(Context context, int orientation, Integer color) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
+
+        if (color != null && CCUtils.isAPI_L_OrAbove()) {
+            assert mDivider != null;
+            mDivider.setTint(color);
+        }
+
         a.recycle();
         setOrientation(orientation);
     }

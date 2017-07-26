@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +26,7 @@ import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
 import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
 import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
+import com.mph.chatcontrol.utils.CCUtils;
 import com.mph.chatcontrol.widget.DividerItemDecoration;
 
 import java.util.List;
@@ -37,11 +40,13 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     public static final String ROOM_ID_KEY = "room_id_key";
 
+    @SuppressWarnings("unused")
     private static final String TAG = RoomActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.listview) RecyclerView mListView;
     @BindView(R.id.progressbar) ProgressBar mProgressBar;
+    @BindView(R.id.floatingActionButton) FloatingActionButton mSendButton;
 
     private RoomPresenter mPresenter;
     private BaseListAdapter mAdapter;
@@ -62,9 +67,12 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         setContentView(R.layout.activity_room);
         ButterKnife.bind(this);
         setupToolbar();
-        initializeRecyclerView();
-        initializeAdapter();
+        initializePresenter();
+        initializeListView();
+        onSendListener();
+    }
 
+    private void initializePresenter() {
         mPresenter = new RoomPresenterImpl(
                 this,
                 getRoomID(),
@@ -74,11 +82,10 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
                 new GetMessagesInteractorImpl());
     }
 
-
-
     private void setupToolbar() {
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
+        assert ab != null;
         ab.setDisplayShowHomeEnabled(false);
         ab.setDisplayHomeAsUpEnabled(false);
         ab.setDisplayShowCustomEnabled(true);
@@ -146,28 +153,52 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @Override
     public void setChatEnabled(boolean enabled) {
-
     }
 
     @Override
     public void handleMessageSendSuccess() {
-
     }
 
     @Override
     public void handleMessageSendError() {
-
+// TODO: 26/07/2017 Show snackbar
     }
 
-    private void initializeRecyclerView() {
-        mListView.setLayoutManager(new LinearLayoutManager(this));
+    private void initializeListView() {
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        initializeRecyclerView(layoutManager);
+        initializeAdapter(layoutManager);
+    }
+
+    private void initializeRecyclerView(LinearLayoutManager layoutManager) {
+        layoutManager.setStackFromEnd(true);
+        mListView.setLayoutManager(layoutManager);
         mListView.addItemDecoration(
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST,
+                        ContextCompat.getColor(this, R.color.brand_color)));
         mListView.setHasFixedSize(true);
     }
 
-    private void initializeAdapter() {
+    private void initializeAdapter(LinearLayoutManager layoutManager) {
         mAdapter = new MessagesAdapter(this, mPresenter);
+        mAdapter.registerAdapterDataObserver(
+                CCUtils.getScrolldownObserver(mAdapter, layoutManager, mListView));
+        mListView.setAdapter(mAdapter);
+    }
+
+    private void onSendListener() {
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPendingMsg();
+                //mPresenter.onMessageSendClick("dkfjkdf");
+            }
+        });
+    }
+
+    private void showPendingMsg() {
+        Snackbar.make(findViewById(android.R.id.content), "Pendiente",
+                Snackbar.LENGTH_SHORT).show();
     }
 
     private static String getFormattedRoomTitle(ChatViewModel chat) {
