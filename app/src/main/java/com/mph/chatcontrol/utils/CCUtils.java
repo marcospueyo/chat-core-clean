@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.mph.chatcontrol.Manifest;
@@ -58,7 +59,7 @@ public class CCUtils {
 
                 if (lastVisiblePosition == -1  || (positionStart >= (messageCount - 1)
                         && lastVisiblePosition == (positionStart -1))) {
-                    recyclerView.smoothScrollToPosition(positionStart );
+                    recyclerView.smoothScrollToPosition(positionStart);
                 }
             }
 
@@ -66,6 +67,19 @@ public class CCUtils {
             public void onChanged() {
                 super.onChanged();
                 recyclerView.smoothScrollToPosition(adapter.getItemCount());
+            }
+        };
+    }
+
+    public static View.OnLayoutChangeListener getScrolldownLayoutObserver(
+            final RecyclerView.Adapter adapter,
+            final RecyclerView recyclerView) {
+        return new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft,
+                                       int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom)
+                    recyclerView.smoothScrollToPosition(adapter.getItemCount());
             }
         };
     }

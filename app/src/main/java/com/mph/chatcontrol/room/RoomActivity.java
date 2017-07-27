@@ -192,6 +192,9 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         mAdapter = new MessagesAdapter(this, mPresenter);
         mAdapter.registerAdapterDataObserver(
                 CCUtils.getScrolldownObserver(mAdapter, layoutManager, mListView));
+
+        mListView.addOnLayoutChangeListener(
+                CCUtils.getScrolldownLayoutObserver(mAdapter, mListView));
         mListView.setAdapter(mAdapter);
     }
 
