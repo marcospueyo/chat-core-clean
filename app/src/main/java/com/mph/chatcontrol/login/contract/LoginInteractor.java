@@ -1,4 +1,4 @@
-package com.mph.chatcontrol.login;
+package com.mph.chatcontrol.login.contract;
 /* Created by Marcos on 13/07/2017.*/
 
 public interface LoginInteractor {
@@ -12,5 +12,7 @@ public interface LoginInteractor {
     }
 
     void login(String email, String password, OnLoginFinishedListener listener);
+
+    boolean isLogged();
 
 }

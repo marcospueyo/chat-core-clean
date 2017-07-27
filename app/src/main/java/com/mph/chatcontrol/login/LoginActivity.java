@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.mph.chatcontrol.login.contract.LoginPresenter;
+import com.mph.chatcontrol.login.contract.LoginView;
 import com.mph.chatcontrol.main.MainActivity;
 import com.mph.chatcontrol.R;
 
@@ -35,7 +37,16 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
         ButterKnife.bind(this);
         btnLogin.setOnClickListener(this);
 
-        mPresenter = new LoginPresenterImpl(this);
+        mPresenter = new LoginPresenterImpl(
+                this,
+                new LoginInteractorImpl(new SharedPreferencesRepositoryImpl(
+                        getPreferences(MODE_PRIVATE))));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.start();
     }
 
     @Override protected void onDestroy() {

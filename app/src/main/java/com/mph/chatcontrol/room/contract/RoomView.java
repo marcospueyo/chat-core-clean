@@ -15,7 +15,9 @@ public interface RoomView extends BaseListView {
 
     void addMessage(MessageViewModel message);
 
-    void setChatEnabled(boolean enabled);
+    void enableChat();
+
+    void disableChat();
 
     void handleMessageSendSuccess();
 

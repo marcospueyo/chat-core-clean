@@ -2,6 +2,7 @@ package com.mph.chatcontrol.room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -53,6 +54,8 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     @BindView(R.id.floatingActionButton) FloatingActionButton mSendButton;
 
     @BindView(R.id.etMessage) MPHEditText mMessageInput;
+
+    @BindView(R.id.cl_edit_area) View mInputArea;
 
     private RoomPresenter mPresenter;
     private BaseListAdapter mAdapter;
@@ -159,7 +162,26 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     }
 
     @Override
-    public void setChatEnabled(boolean enabled) {
+    public void enableChat() {
+        setInputAreaEnableState(true);
+    }
+
+    @Override
+    public void disableChat() {
+        setInputAreaEnableState(false);
+    }
+
+    private void setInputAreaEnableState(boolean enabled) {
+        int color = ContextCompat.getColor(this, enabled
+                ? R.color.brand_color_brighter : R.color.gray_dark);
+        int backgroundColor = ContextCompat.getColor(this, enabled
+                ? R.color.brand_color : R.color.gray_dark);
+
+        mSendButton.setBackgroundTintList(ColorStateList.valueOf(color));
+        mInputArea.setBackgroundColor(backgroundColor);
+        mMessageInput.setEnabled(enabled);
+        mMessageInput.setHint(getString(enabled
+                ? R.string.write_message_hint : R.string.write_message_disabled_hint));
     }
 
     @Override
@@ -209,11 +231,6 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     private void clearViewAfterSentMessage() {
         mMessageInput.setText("");
-    }
-
-    private void showPendingMsg() {
-        Snackbar.make(findViewById(android.R.id.content), "Pendiente",
-                Snackbar.LENGTH_SHORT).show();
     }
 
     private static String getFormattedRoomTitle(ChatViewModel chat) {

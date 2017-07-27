@@ -11,12 +11,12 @@ public class GetRoomInteractorImpl implements GetRoomInteractor {
 
     @Override
     public void execute(String roomID, OnFinishedListener listener) {
-        listener.onRoomLoaded(getChat());
+        listener.onRoomLoaded(getChat(roomID));
     }
 
-    private Chat getChat() {
+    private Chat getChat(String roomID) {
         Date today = new Date();
         return Chat.create("Nombre usuario 1", "Alojamiento 1", 0, today, today, today,
-                "Lorem ipsum...", true);
+                "Lorem ipsum...", roomID.hashCode() % 2 == 0);
     }
 }
