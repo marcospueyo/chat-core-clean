@@ -6,7 +6,6 @@ import com.mph.chatcontrol.data.Message;
 import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 

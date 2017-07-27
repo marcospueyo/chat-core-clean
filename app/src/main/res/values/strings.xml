@@ -30,6 +30,7 @@
     <string name="preference_change_error">No se ha podido modificar sus preferencias</string>
 
     <string name="room_load_error">No ha sido posible cargar el chat</string>
+    <string name="message_send_error">No se ha podido enviar el mensaje</string>
 
     <string name="username_placeholder">Nombre de usuario</string>
     <string name="timestamp_placeholder">DD/MM/AAAA HH:mm</string>

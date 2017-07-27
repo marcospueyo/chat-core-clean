@@ -2,6 +2,7 @@ package com.mph.chatcontrol.room;
 /* Created by macmini on 24/07/2017. */
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.mph.chatcontrol.base.BaseViewModel;
@@ -12,6 +13,7 @@ import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
 import com.mph.chatcontrol.room.contract.GetRoomInteractor;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
+import com.mph.chatcontrol.room.contract.SendMessageInteractor;
 import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFinishedListener,
-        GetMessagesInteractor.OnFinishedListener {
+        GetMessagesInteractor.OnFinishedListener, SendMessageInteractor.OnFinishedListener {
 
     private static final String TAG = RoomPresenterImpl.class.getSimpleName();
 
@@ -31,17 +33,20 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @NonNull private final GetRoomInteractor mGetRoomInteractor;
     @NonNull private final GetMessagesInteractor mGetMessagesInteractor;
+    @NonNull private final SendMessageInteractor mSendMessageInteractor;
 
     public RoomPresenterImpl(@NonNull RoomView roomView, @NonNull String roomID,
                              @NonNull ChatViewModelToChatMapper chatMapper,
                              @NonNull MessageViewModelToMessageMapper messageMapper,
                              @NonNull GetRoomInteractor getRoomInteractor,
-                             @NonNull GetMessagesInteractor getMessagesInteractor) {
+                             @NonNull GetMessagesInteractor getMessagesInteractor,
+                             @NonNull SendMessageInteractor sendMessageInteractor) {
         mRoomID = checkNotNull(roomID);
         mChatMapper = checkNotNull(chatMapper);
         mMessageMapper = checkNotNull(messageMapper);
         mGetRoomInteractor = checkNotNull(getRoomInteractor);
         mGetMessagesInteractor = checkNotNull(getMessagesInteractor);
+        mSendMessageInteractor = checkNotNull(sendMessageInteractor);
         mRoomView = checkNotNull(roomView);
         mRoomView.setPresenter(this);
     }
@@ -60,7 +65,9 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onMessageSendClick(String message) {
-        Log.d(TAG, "onMessageSendClick: " + message);
+        if (!TextUtils.isEmpty(message)) {
+            mSendMessageInteractor.execute(mRoomID, message, this);
+        }
     }
 
     @Override
@@ -92,5 +99,16 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     @Override
     public void onMessagesLoadError() {
         mRoomView.showLoadError();
+    }
+
+    @Override
+    public void onMessageSent(Message message) {
+        mRoomView.handleMessageSendSuccess();
+        mRoomView.addMessage(mMessageMapper.reverseMap(message));
+    }
+
+    @Override
+    public void onMessageSendError() {
+        mRoomView.handleMessageSendError();
     }
 }

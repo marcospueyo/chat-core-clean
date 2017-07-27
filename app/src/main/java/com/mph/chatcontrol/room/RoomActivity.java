@@ -28,6 +28,7 @@ import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
 import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 import com.mph.chatcontrol.utils.CCUtils;
 import com.mph.chatcontrol.widget.DividerItemDecoration;
+import com.mph.chatcontrol.widget.MPHEditText;
 
 import java.util.List;
 
@@ -44,9 +45,14 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     private static final String TAG = RoomActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+
     @BindView(R.id.listview) RecyclerView mListView;
+
     @BindView(R.id.progressbar) ProgressBar mProgressBar;
+
     @BindView(R.id.floatingActionButton) FloatingActionButton mSendButton;
+
+    @BindView(R.id.etMessage) MPHEditText mMessageInput;
 
     private RoomPresenter mPresenter;
     private BaseListAdapter mAdapter;
@@ -79,7 +85,8 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
                 new ChatViewModelToChatMapper(),
                 new MessageViewModelToMessageMapper(),
                 new GetRoomInteractorImpl(),
-                new GetMessagesInteractorImpl());
+                new GetMessagesInteractorImpl(),
+                new SendMessageInteractorImpl());
     }
 
     private void setupToolbar() {
@@ -142,7 +149,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @Override
     public void addMessage(MessageViewModel message) {
-
+        mAdapter.addItem(message);
     }
 
     @Override
@@ -157,11 +164,13 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @Override
     public void handleMessageSendSuccess() {
+        clearViewAfterSentMessage();
     }
 
     @Override
     public void handleMessageSendError() {
-// TODO: 26/07/2017 Show snackbar
+        Snackbar.make(findViewById(android.R.id.content), getString(R.string.message_send_error),
+                Snackbar.LENGTH_SHORT).show();
     }
 
     private void initializeListView() {
@@ -190,10 +199,13 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPendingMsg();
-                //mPresenter.onMessageSendClick("dkfjkdf");
+                mPresenter.onMessageSendClick(mMessageInput.getTrimmedText());
             }
         });
+    }
+
+    private void clearViewAfterSentMessage() {
+        mMessageInput.setText("");
     }
 
     private void showPendingMsg() {

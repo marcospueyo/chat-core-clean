@@ -54,4 +54,9 @@ public abstract class BaseListAdapter<VH extends BaseViewHolderImpl> extends Rec
         mItemList.addAll(collection);
         notifyDataSetChanged();
     }
+
+    public void addItem(BaseViewModel item) {
+        mItemList.add(item);
+        notifyItemInserted(mItemList.size() - 1);
+    }
 }
