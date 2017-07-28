@@ -8,7 +8,7 @@ import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 
 public class SharedPreferencesRepositoryImpl implements SharedPreferencesRepository {
 
-    public static final String IS_LOGGED_IN = "is_logged_in";
+    private static final String IS_LOGGED_IN = "is_logged_in";
 
     private SharedPreferences mSharedPreferences;
 
