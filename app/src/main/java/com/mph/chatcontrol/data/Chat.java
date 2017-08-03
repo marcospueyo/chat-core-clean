@@ -6,33 +6,29 @@ import com.google.auto.value.AutoValue;
 import java.util.Date;
 import java.util.UUID;
 
+import io.requery.Entity;
+import io.requery.Generated;
+import io.requery.Key;
+
+@Entity
 @AutoValue
 public abstract class Chat {
     public static Chat create(String title, String description, String id, Integer pendingCount,
                               Date startDate, Date endDate, Date lastMsgDate, String lastMsg,
-                              boolean isActive) {
+                              Boolean active) {
         return new AutoValue_Chat(title, description, id, pendingCount, startDate, endDate,
-                lastMsgDate, lastMsg, isActive);
-    }
-    public static Chat create(String title, String description) {
-        return new AutoValue_Chat(title, description, UUID.randomUUID().toString(), 0, null, null,
-                null, null, true);
+                lastMsgDate, lastMsg, active);
     }
 
-    public static Chat create(String title, String description, Integer pendingCount,
-                              Date startDate, Date endDate, Date lastMsgDate, String lastMsg,
-                              boolean isActive) {
-        return new AutoValue_Chat(title, description, UUID.randomUUID().toString(), pendingCount,
-                startDate, endDate, lastMsgDate, lastMsg, isActive);
-    }
+    @Key @Generated
+    public abstract String id();
 
     public abstract String title();
     public abstract String description();
-    public abstract String id();
     public abstract Integer pendingCount();
     public abstract Date startDate();
     public abstract Date endDate();
     public abstract Date lastMsgDate();
     public abstract String lastMsg();
-    public abstract boolean isActive();
+    public abstract Boolean active();
 }

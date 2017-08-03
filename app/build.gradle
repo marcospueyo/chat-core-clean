@@ -139,6 +139,11 @@ dependencies {
     provided "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
 
+    //requery
+    compile "io.requery:requery:$rootProject.requeryVersion"
+    compile "io.requery:requery-android:$rootProject.requeryVersion"
+    annotationProcessor "io.requery:requery-processor:$rootProject.requeryVersion"
+
     //dagger
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"

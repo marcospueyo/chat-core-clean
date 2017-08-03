@@ -28,7 +28,7 @@ public class ChatViewModelToChatMapper extends Mapper<ChatViewModel, Chat> {
                 .setCheckoutDate(DateUtils.dateToString(value.endDate(), CHECKOUT_DATE_FORMAT))
                 .setLastMsgDate(DateUtils.dateToString(value.lastMsgDate(), LAST_MSG_DATE_FORMAT))
                 .setLastActivity(value.lastMsg())
-                .setActive(value.isActive())
+                .setActive(value.active())
                 .build();
         return chatViewModel;
     }

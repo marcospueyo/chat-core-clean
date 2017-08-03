@@ -82,7 +82,7 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onRoomLoaded(Chat chat) {
-        if (!chat.isActive())
+        if (!chat.active())
             mRoomView.disableChat();
 
         mRoomView.setRoom(mChatMapper.reverseMap(chat));
