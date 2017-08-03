@@ -9,5 +9,10 @@ import java.util.List;
 public interface ChatsRepository {
 
     List<Chat> findActiveChats();
+
     List<Chat> findArchivedChats();
+
+    Chat getChat(String id);
+
+    void updateChat(Chat chat);
 }

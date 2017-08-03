@@ -17,11 +17,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.base.adapter.BaseListAdapter;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.data.ChatsRepository;
+import com.mph.chatcontrol.data.ChatsRepositoryImpl;
+import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
 import com.mph.chatcontrol.room.adapter.MessagesAdapter;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
@@ -82,14 +86,19 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     }
 
     private void initializePresenter() {
+        ChatsRepository chatsRepository =
+                new ChatsRepositoryImpl(
+                        new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                        (((ChatcontrolApplication) getApplication()).getData()));
         mPresenter = new RoomPresenterImpl(
                 this,
                 getRoomID(),
                 new ChatViewModelToChatMapper(),
                 new MessageViewModelToMessageMapper(),
-                new GetRoomInteractorImpl(),
+                new GetRoomInteractorImpl(chatsRepository),
                 new GetMessagesInteractorImpl(),
-                new SendMessageInteractorImpl());
+                new SendMessageInteractorImpl(),
+                new UpdateSeenStatusInteractorImpl(chatsRepository));
     }
 
     private void setupToolbar() {

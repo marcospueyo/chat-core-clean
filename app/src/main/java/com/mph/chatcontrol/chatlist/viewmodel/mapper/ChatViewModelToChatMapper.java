@@ -20,15 +20,15 @@ public class ChatViewModelToChatMapper extends Mapper<ChatViewModel, Chat> {
     @Override
     public ChatViewModel reverseMap(Chat value) {
         ChatViewModel chatViewModel = ChatViewModel.builder()
-                .setId(value.id())
-                .setTitle(value.title())
-                .setInitial(value.title().substring(0, 1))
-                .setDescription(value.description())
-                .setPendingCount(value.pendingCount())
-                .setCheckoutDate(DateUtils.dateToString(value.endDate(), CHECKOUT_DATE_FORMAT))
-                .setLastMsgDate(DateUtils.dateToString(value.lastMsgDate(), LAST_MSG_DATE_FORMAT))
-                .setLastActivity(value.lastMsg())
-                .setActive(value.active())
+                .setId(value.getId())
+                .setTitle(value.getTitle())
+                .setInitial(value.getTitle().substring(0, 1))
+                .setDescription(value.getDescription())
+                .setPendingCount(value.getPendingCount())
+                .setCheckoutDate(DateUtils.dateToString(value.getEndDate(), CHECKOUT_DATE_FORMAT))
+                .setLastMsgDate(DateUtils.dateToString(value.getLastMsgDate(), LAST_MSG_DATE_FORMAT))
+                .setLastActivity(value.getLastMsg())
+                .setActive(value.isActive())
                 .build();
         return chatViewModel;
     }

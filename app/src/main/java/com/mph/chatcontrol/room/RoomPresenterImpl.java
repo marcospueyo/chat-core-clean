@@ -14,6 +14,7 @@ import com.mph.chatcontrol.room.contract.GetRoomInteractor;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
 import com.mph.chatcontrol.room.contract.SendMessageInteractor;
+import com.mph.chatcontrol.room.contract.UpdateSeenStatusInteractor;
 import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 
 import java.util.List;
@@ -21,7 +22,8 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFinishedListener,
-        GetMessagesInteractor.OnFinishedListener, SendMessageInteractor.OnFinishedListener {
+        GetMessagesInteractor.OnFinishedListener, SendMessageInteractor.OnFinishedListener,
+        UpdateSeenStatusInteractor.OnFinishedListener {
 
     private static final String TAG = RoomPresenterImpl.class.getSimpleName();
 
@@ -34,19 +36,22 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     @NonNull private final GetRoomInteractor mGetRoomInteractor;
     @NonNull private final GetMessagesInteractor mGetMessagesInteractor;
     @NonNull private final SendMessageInteractor mSendMessageInteractor;
+    @NonNull private final UpdateSeenStatusInteractor mUpdateSeenStatusInteractor;
 
     public RoomPresenterImpl(@NonNull RoomView roomView, @NonNull String roomID,
                              @NonNull ChatViewModelToChatMapper chatMapper,
                              @NonNull MessageViewModelToMessageMapper messageMapper,
                              @NonNull GetRoomInteractor getRoomInteractor,
                              @NonNull GetMessagesInteractor getMessagesInteractor,
-                             @NonNull SendMessageInteractor sendMessageInteractor) {
+                             @NonNull SendMessageInteractor sendMessageInteractor,
+                             @NonNull UpdateSeenStatusInteractor updateSeenStatusInteractor) {
         mRoomID = checkNotNull(roomID);
         mChatMapper = checkNotNull(chatMapper);
         mMessageMapper = checkNotNull(messageMapper);
         mGetRoomInteractor = checkNotNull(getRoomInteractor);
         mGetMessagesInteractor = checkNotNull(getMessagesInteractor);
         mSendMessageInteractor = checkNotNull(sendMessageInteractor);
+        mUpdateSeenStatusInteractor = checkNotNull(updateSeenStatusInteractor);
         mRoomView = checkNotNull(roomView);
         mRoomView.setPresenter(this);
     }
@@ -82,10 +87,15 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onRoomLoaded(Chat chat) {
-        if (!chat.active())
+        if (!chat.isActive())
             mRoomView.disableChat();
 
         mRoomView.setRoom(mChatMapper.reverseMap(chat));
+        setRoomSeen(chat);
+    }
+
+    private void setRoomSeen(final Chat chat) {
+        mUpdateSeenStatusInteractor.execute(chat.getId(), true, this);
     }
 
     @Override
@@ -113,5 +123,15 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     @Override
     public void onMessageSendError() {
         mRoomView.handleMessageSendError();
+    }
+
+    @Override
+    public void onSeenStatusUpdated() {
+
+    }
+
+    @Override
+    public void onSeenStatusUpdateError() {
+
     }
 }
