@@ -27,7 +27,7 @@ android {
         applicationId "com.mph.chatcontrol"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
+        versionCode 10
         versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -47,13 +47,13 @@ android {
 
     buildTypes {
         debug {
-            minifyEnabled true
+            minifyEnabled false
             useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             useProguard false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -138,6 +138,11 @@ dependencies {
     //autovalue
     provided "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
+
+    //requery
+    compile "io.requery:requery:$rootProject.requeryVersion"
+    compile "io.requery:requery-android:$rootProject.requeryVersion"
+    annotationProcessor "io.requery:requery-processor:$rootProject.requeryVersion"
 
     //dagger
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"

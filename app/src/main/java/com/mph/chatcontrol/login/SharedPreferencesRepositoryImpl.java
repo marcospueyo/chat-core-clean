@@ -10,6 +10,8 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
 
     private static final String IS_LOGGED_IN = "is_logged_in";
 
+    private static final String IS_FIRST_LAUNCH = "is_first_launch";
+
     private SharedPreferences mSharedPreferences;
 
     public SharedPreferencesRepositoryImpl(SharedPreferences sharedPreferences) {
@@ -24,5 +26,15 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     @Override
     public void setLoggedIn() {
         mSharedPreferences.edit().putBoolean(IS_LOGGED_IN, true).apply();
+    }
+
+    @Override
+    public boolean isFirstLaunch() {
+        return mSharedPreferences.getBoolean(IS_FIRST_LAUNCH, false);
+    }
+
+    @Override
+    public void setFirstLaunchFinished() {
+        mSharedPreferences.edit().putBoolean(IS_FIRST_LAUNCH, true).apply();
     }
 }

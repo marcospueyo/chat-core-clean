@@ -15,12 +15,16 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
+import com.mph.chatcontrol.BuildConfig;
+import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.ChatListPresenterImpl;
 import com.mph.chatcontrol.chatlist.ChatlistFragment;
 import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.data.ChatsRepositoryImpl;
+import com.mph.chatcontrol.data.Models;
 import com.mph.chatcontrol.events.LogoutEvent;
 import com.mph.chatcontrol.events.OpenChatEvent;
 import com.mph.chatcontrol.guestlist.FindGuestsInteractorImpl;
@@ -29,6 +33,7 @@ import com.mph.chatcontrol.guestlist.GuestListPresenterImpl;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
 import com.mph.chatcontrol.login.LoginActivity;
+import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
 import com.mph.chatcontrol.room.RoomActivity;
 import com.mph.chatcontrol.settings.GetNotificationPreferenceInteractorImpl;
 import com.mph.chatcontrol.settings.LogoutInteractorImpl;
@@ -44,6 +49,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.requery.android.sqlite.DatabaseSource;
+import io.requery.sql.EntityDataStore;
 
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener, MainView {
@@ -167,7 +174,10 @@ public class MainActivity extends AppCompatActivity implements
         mActiveChatListPresenter = new ChatListPresenterImpl(
                 activeChatListFragment,
                 new ChatViewModelToChatMapper(),
-                new FindChatsInteractorImpl(),
+                new FindChatsInteractorImpl(
+                        new ChatsRepositoryImpl(
+                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                                getDataStore())),
                 true /* should load active chats */);
 
         showFragment(activeChatListFragment);
@@ -181,7 +191,10 @@ public class MainActivity extends AppCompatActivity implements
         mArchivedChatListPresenter = new ChatListPresenterImpl(
                 archivedChatListFragment,
                 new ChatViewModelToChatMapper(),
-                new FindChatsInteractorImpl(),
+                new FindChatsInteractorImpl(
+                        new ChatsRepositoryImpl(
+                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                                getDataStore())),
                 false /* should NOT load active chats */);
 
         showFragment(archivedChatListFragment);
@@ -241,5 +254,9 @@ public class MainActivity extends AppCompatActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOpenChatEvent(OpenChatEvent event) {
         mPresenter.onOpenChat(event.chatID());
+    }
+
+    private EntityDataStore getDataStore() {
+        return ((ChatcontrolApplication) getApplication()).getData();
     }
 }

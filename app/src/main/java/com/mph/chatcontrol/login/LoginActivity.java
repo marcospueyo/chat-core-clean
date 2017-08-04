@@ -31,7 +31,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
         return new Intent(context, LoginActivity.class);
     }
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
@@ -49,27 +50,33 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
         mPresenter.start();
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         mPresenter.onDestroy();
         super.onDestroy();
     }
-    @Override public void onClick(View view) {
+    @Override
+    public void onClick(View view) {
         mPresenter.validateCredentials(etEmail.getText().toString(), etPassword.getText().toString());
     }
 
-    @Override public void showProgress() {
+    @Override
+    public void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    @Override public void hideProgress() {
+    @Override
+    public void hideProgress() {
         progressBar.setVisibility(View.GONE);
     }
 
-    @Override public void setEmailError() {
+    @Override
+    public void setEmailError() {
         etEmail.setError(getString(R.string.email_error));
     }
 
-    @Override public void setPasswordError() {
+    @Override
+    public void setPasswordError() {
         etPassword.setError(getString(R.string.password_error));
     }
 

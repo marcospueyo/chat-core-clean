@@ -8,4 +8,6 @@ public interface SharedPreferencesRepository {
     }
     boolean isLoggedIn();
     void setLoggedIn();
+    boolean isFirstLaunch();
+    void setFirstLaunchFinished();
 }

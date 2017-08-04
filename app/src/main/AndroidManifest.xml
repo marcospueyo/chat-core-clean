@@ -3,22 +3,26 @@
     package="com.mph.chatcontrol">
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <application
+        android:name=".ChatcontrolApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.MainActivity">
-
-        </activity>
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".splash.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".main.MainActivity">
+        </activity>
+        <activity
+            android:name=".login.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".room.RoomActivity"
