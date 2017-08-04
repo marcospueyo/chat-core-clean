@@ -25,6 +25,8 @@ import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.ChatsRepository;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
+import com.mph.chatcontrol.data.MessagesRepository;
+import com.mph.chatcontrol.data.MessagesRepositoryImpl;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
 import com.mph.chatcontrol.room.adapter.MessagesAdapter;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
@@ -90,14 +92,20 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
                 new ChatsRepositoryImpl(
                         new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
                         (((ChatcontrolApplication) getApplication()).getData()));
+
+        MessagesRepository messagesRepository =
+                new MessagesRepositoryImpl(
+                        new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                        (((ChatcontrolApplication) getApplication()).getData()));
+
         mPresenter = new RoomPresenterImpl(
                 this,
                 getRoomID(),
                 new ChatViewModelToChatMapper(),
                 new MessageViewModelToMessageMapper(),
                 new GetRoomInteractorImpl(chatsRepository),
-                new GetMessagesInteractorImpl(),
-                new SendMessageInteractorImpl(),
+                new GetMessagesInteractorImpl(messagesRepository),
+                new SendMessageInteractorImpl(messagesRepository),
                 new UpdateSeenStatusInteractorImpl(chatsRepository));
     }
 

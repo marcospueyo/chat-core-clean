@@ -20,9 +20,9 @@ public class MessageViewModelToMessageMapper extends Mapper<MessageViewModel, Me
     public MessageViewModel reverseMap(Message value) {
         MessageViewModel messageViewModel;
         messageViewModel = MessageViewModel.builder()
-                .setId(value.id())
-                .setText(value.text())
-                .setTimestamp(DateUtils.dateToString(value.date(), DATE_FORMAT))
+                .setId(value.getId())
+                .setText(value.getText())
+                .setTimestamp(DateUtils.dateToString(value.getDate(), DATE_FORMAT))
                 .setIsOwnMessage(value.isOwnMessage())
                 .setSenderName("nombre de usuario")
                 .build();
