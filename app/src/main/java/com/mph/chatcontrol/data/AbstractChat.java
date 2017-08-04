@@ -13,6 +13,8 @@ public abstract class AbstractChat {
     @Key
     String id;
 
+    String guestName;
+
     String title;
     String description;
     Integer pendingCount;

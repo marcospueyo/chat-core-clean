@@ -83,6 +83,7 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         for (int i = 0; i < 10; i++) {
             Chat chat = new Chat();
             chat.setId(UUID.randomUUID().toString());
+            chat.setGuestName(names[i]);
             chat.setTitle(names[i]);
             chat.setDescription("Alojamiento " + i);
             chat.setPendingCount(i % 2);
@@ -107,6 +108,7 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         for (int i = 0; i < 10; i++) {
             Chat chat = new Chat();
             chat.setId(UUID.randomUUID().toString());
+            chat.setGuestName(names[i]);
             chat.setTitle(names[i]);
             chat.setDescription("Alojamiento " + i);
             chat.setPendingCount(i % 2);

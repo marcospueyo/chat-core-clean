@@ -17,4 +17,5 @@ public abstract class AbstractMessage {
     boolean ownMessage;
 
     String roomId;
+    String senderName;
 }

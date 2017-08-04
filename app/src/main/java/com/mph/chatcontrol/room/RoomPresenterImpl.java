@@ -15,6 +15,7 @@ import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
 import com.mph.chatcontrol.room.contract.SendMessageInteractor;
 import com.mph.chatcontrol.room.contract.UpdateSeenStatusInteractor;
+import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
 import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @NonNull private final RoomView mRoomView;
     @NonNull private String mRoomID;
+    private Chat mRoom;
 
     @NonNull private final ChatViewModelToChatMapper mChatMapper;
     @NonNull private final MessageViewModelToMessageMapper mMessageMapper;
@@ -60,7 +62,6 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     public void start() {
         mRoomView.showProgress();
         mGetRoomInteractor.execute(mRoomID, this);
-        mGetMessagesInteractor.execute(mRoomID, this);
     }
 
     @Override
@@ -92,6 +93,9 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
         mRoomView.setRoom(mChatMapper.reverseMap(chat));
         setRoomSeen(chat);
+
+        mRoom = chat;
+        mGetMessagesInteractor.execute(mRoom, this);
     }
 
     private void setRoomSeen(final Chat chat) {

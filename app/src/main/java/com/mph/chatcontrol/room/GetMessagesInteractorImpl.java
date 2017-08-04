@@ -3,6 +3,7 @@ package com.mph.chatcontrol.room;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
+import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.Message;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
@@ -25,6 +26,15 @@ public class GetMessagesInteractorImpl implements GetMessagesInteractor {
     @Override
     public void execute(final String roomID, final OnFinishedListener listener) {
         List<Message> messages = messagesRepository.getRoomMessages(roomID);
+        if (messages == null)
+            listener.onMessagesLoadError();
+        else
+            listener.onMessagesLoaded(messages);
+    }
+
+    @Override
+    public void execute(Chat room, OnFinishedListener listener) {
+        List<Message> messages = messagesRepository.getRoomMessages(room);
         if (messages == null)
             listener.onMessagesLoadError();
         else

@@ -3,6 +3,7 @@ package com.mph.chatcontrol.room;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
+import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.Message;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.room.contract.SendMessageInteractor;
@@ -33,5 +34,10 @@ public class SendMessageInteractorImpl implements SendMessageInteractor {
                     listener.onMessageSent(insertedMessage);
             }
         }, 500);
+    }
+
+    @Override
+    public void execute(Chat chat, String text, OnFinishedListener listener) {
+        execute(chat.getId(), text, listener);
     }
 }

@@ -24,7 +24,7 @@ public class MessageViewModelToMessageMapper extends Mapper<MessageViewModel, Me
                 .setText(value.getText())
                 .setTimestamp(DateUtils.dateToString(value.getDate(), DATE_FORMAT))
                 .setIsOwnMessage(value.isOwnMessage())
-                .setSenderName("nombre de usuario")
+                .setSenderName(value.getSenderName())
                 .build();
         return messageViewModel;
     }

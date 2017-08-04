@@ -138,7 +138,7 @@ dependencies {
     //autovalue
     provided "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$rootProject.autovalueVersion"
-
+    
     //requery
     compile "io.requery:requery:$rootProject.requeryVersion"
     compile "io.requery:requery-android:$rootProject.requeryVersion"

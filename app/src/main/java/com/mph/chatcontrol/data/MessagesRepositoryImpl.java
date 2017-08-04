@@ -31,18 +31,23 @@ public class MessagesRepositoryImpl implements MessagesRepository {
 
     @Override
     public List<Message> getRoomMessages(String roomID) {
-        insertMockData(roomID);
         return dataStore.select(Message.class).where(Message.ROOM_ID.eq(roomID)).get().toList();
     }
 
-    private void insertMockData(String roomID) {
-        int count = dataStore.count(Message.class).where(Message.ROOM_ID.eq(roomID)).get().value();
-        if (count == 0)
-            persistMockEntities(roomID);
+    @Override
+    public List<Message> getRoomMessages(Chat room) {
+        insertMockData(room);
+        return getRoomMessages(room.getId());
     }
 
-    private void persistMockEntities(String roomID) {
-        dataStore.insert(getMessageList(roomID));
+    private void insertMockData(Chat room) {
+        int count = dataStore.count(Message.class).where(Message.ROOM_ID.eq(room.getId())).get().value();
+        if (count == 0)
+            persistMockEntities(room);
+    }
+
+    private void persistMockEntities(Chat room) {
+        dataStore.insert(getMockMessageList(room));
     }
 
     @Override
@@ -55,6 +60,7 @@ public class MessagesRepositoryImpl implements MessagesRepository {
         return dataStore.insert(createMessage(roomID, text));
     }
 
+    // TODO: 04/08/2017 Should have own user 'senderName' field info
     private Message createMessage(String roomID, String text) {
         Message message = new Message();
         message.setId(UUID.randomUUID().toString());
@@ -62,12 +68,12 @@ public class MessagesRepositoryImpl implements MessagesRepository {
         message.setDate(new Date());
         message.setOwnMessage(true);
         message.setRoomId(roomID);
-
+        message.setSenderName("Usuario");
         return message;
     }
 
 
-    private List<Message> getMessageList(String roomID) {
+    private List<Message> getMockMessageList(Chat room) {
         List<Message> messages = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             Message message = new Message();
@@ -75,7 +81,8 @@ public class MessagesRepositoryImpl implements MessagesRepository {
             message.setText("test text " + i);
             message.setDate(new Date());
             message.setOwnMessage(false);
-            message.setRoomId(roomID);
+            message.setRoomId(room.getId());
+            message.setSenderName(room.getGuestName());
             messages.add(message);
         }
         return messages;

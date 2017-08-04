@@ -7,6 +7,8 @@ public interface MessagesRepository {
 
     List<Message> getRoomMessages(String roomID);
 
+    List<Message> getRoomMessages(Chat room);
+
     Message getMessage(String messageID);
 
     Message insertOwnMessage(String roomID, String text);
