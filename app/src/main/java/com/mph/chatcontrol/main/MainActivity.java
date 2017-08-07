@@ -24,6 +24,7 @@ import com.mph.chatcontrol.chatlist.ChatlistFragment;
 import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
+import com.mph.chatcontrol.data.GuestRepositoryImpl;
 import com.mph.chatcontrol.data.Models;
 import com.mph.chatcontrol.events.LogoutEvent;
 import com.mph.chatcontrol.events.OpenChatEvent;
@@ -34,6 +35,7 @@ import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
+import com.mph.chatcontrol.room.GetRoomInteractorImpl;
 import com.mph.chatcontrol.room.RoomActivity;
 import com.mph.chatcontrol.settings.GetNotificationPreferenceInteractorImpl;
 import com.mph.chatcontrol.settings.LogoutInteractorImpl;
@@ -208,7 +210,20 @@ public class MainActivity extends AppCompatActivity implements
         mGuestListPresenter = new GuestListPresenterImpl(
                 mGuestListFragment,
                 new GuestViewModelToGuestMapper(),
-                new FindGuestsInteractorImpl());
+                new ChatViewModelToChatMapper(),
+                new FindGuestsInteractorImpl(
+                        new GuestRepositoryImpl(
+                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                                getDataStore()
+                        )
+                ),
+                new GetRoomInteractorImpl(
+                        new ChatsRepositoryImpl(
+                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                                getDataStore()
+                        )
+                )
+        );
 
         showFragment(mGuestListFragment);
     }

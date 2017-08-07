@@ -24,7 +24,7 @@ public abstract class BaseListFragment extends BaseFragment implements BaseListV
 
     @BindView(R.id.rv_elements) protected RecyclerView mListView;
     @BindView(R.id.ll_progress) View mProgressView;
-    @BindView(R.id.ll_content) View mContentView;
+    @BindView(R.id.ll_content) protected View mContentView;
 
     protected BaseListPresenter mPresenter;
     protected BaseListAdapter mAdapter;

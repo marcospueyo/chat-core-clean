@@ -4,12 +4,15 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mph.chatcontrol.base.BaseViewModel;
+import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.Guest;
 import com.mph.chatcontrol.guestlist.contract.FindGuestsInteractor;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.contract.GuestListView;
 import com.mph.chatcontrol.guestlist.viewmodel.GuestViewModel;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
+import com.mph.chatcontrol.room.contract.GetRoomInteractor;
 
 import java.util.List;
 
@@ -18,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /* Created by macmini on 20/07/2017. */
 
 public class GuestListPresenterImpl implements GuestListPresenter,
-        FindGuestsInteractor.OnFinishedListener {
+        FindGuestsInteractor.OnFinishedListener, GetRoomInteractor.OnFinishedListener {
 
     private static final String TAG = GuestListPresenterImpl.class.getSimpleName();
 
@@ -26,13 +29,21 @@ public class GuestListPresenterImpl implements GuestListPresenter,
 
     @NonNull private final FindGuestsInteractor mFindGuestsInteractor;
 
-    @NonNull private GuestViewModelToGuestMapper mMapper;
+    @NonNull private final GetRoomInteractor mGetRoomInteractor;
+
+    @NonNull private GuestViewModelToGuestMapper mGuestMapper;
+
+    @NonNull private ChatViewModelToChatMapper mChatMapper;
 
     public GuestListPresenterImpl(@NonNull GuestListView guestListView,
-                                  @NonNull GuestViewModelToGuestMapper mapper,
-                                  @NonNull FindGuestsInteractor findGuestsInteractor) {
-        mMapper = checkNotNull(mapper);
+                                  @NonNull GuestViewModelToGuestMapper guestMapper,
+                                  @NonNull ChatViewModelToChatMapper chatMapper,
+                                  @NonNull FindGuestsInteractor findGuestsInteractor,
+                                  @NonNull GetRoomInteractor getRoomInteractor) {
+        mGuestMapper = checkNotNull(guestMapper);
+        mChatMapper = chatMapper;
         mFindGuestsInteractor = checkNotNull(findGuestsInteractor);
+        mGetRoomInteractor = checkNotNull(getRoomInteractor);
         mGuestListView = checkNotNull(guestListView);
         mGuestListView.setPresenter(this);
     }
@@ -57,11 +68,12 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     @Override
     public void onChatClicked(GuestViewModel guest) {
         Log.d(TAG, "onChatClicked: " + guest.toString());
+        mGetRoomInteractor.execute(guest.relatedRoomId(), this);
     }
 
     @Override
     public void onFinished(List<Guest> guests) {
-        List<GuestViewModel> guestViewModels = mMapper.reverseMap(guests);
+        List<GuestViewModel> guestViewModels = mGuestMapper.reverseMap(guests);
         mGuestListView.setItems(guestViewModels);
         mGuestListView.hideProgress();
     }
@@ -70,5 +82,15 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     public void onDataNotAvailable() {
         mGuestListView.hideProgress();
         mGuestListView.showLoadError();
+    }
+
+    @Override
+    public void onRoomLoaded(Chat chat) {
+        mGuestListView.openChat(mChatMapper.reverseMap(chat));
+    }
+
+    @Override
+    public void onRoomLoadError() {
+        mGuestListView.showRoomLoadError();
     }
 }

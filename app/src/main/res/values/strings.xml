@@ -38,4 +38,6 @@
 
     <string name="write_message_hint">Escriba un mensaje</string>
     <string name="write_message_disabled_hint">La sala está inactiva</string>
+
+    <string name="guestlist_room_load_error">No se ha podido cargar la sala asociada</string>
 </resources>

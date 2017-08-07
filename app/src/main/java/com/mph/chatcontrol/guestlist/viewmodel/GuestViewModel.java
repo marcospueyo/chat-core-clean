@@ -15,9 +15,10 @@ public abstract class GuestViewModel extends BaseViewModel {
     public abstract String email();
     public abstract String startDate();
     public abstract String endDate();
+    public abstract String relatedRoomId();
 
     public static GuestViewModel create(String id, String name, String initial, String phone,
-                                        String email, String startDate, String endDate) {
+                                        String email, String startDate, String endDate, String relatedRoomId) {
         return builder()
                 .setId(id)
                 .setName(name)
@@ -26,6 +27,7 @@ public abstract class GuestViewModel extends BaseViewModel {
                 .setEmail(email)
                 .setStartDate(startDate)
                 .setEndDate(endDate)
+                .setRelatedRoomId(relatedRoomId)
                 .build();
     }
 
@@ -42,6 +44,7 @@ public abstract class GuestViewModel extends BaseViewModel {
         public abstract Builder setEmail(String value);
         public abstract Builder setStartDate(String value);
         public abstract Builder setEndDate(String value);
+        public abstract Builder setRelatedRoomId(String value);
 
         public abstract GuestViewModel build();
     }

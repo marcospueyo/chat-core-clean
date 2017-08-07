@@ -82,7 +82,7 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         List<Chat> chats = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Chat chat = new Chat();
-            chat.setId(UUID.randomUUID().toString());
+            chat.setId(/*UUID.randomUUID().toString()*/ names[i]);
             chat.setGuestName(names[i]);
             chat.setTitle(names[i]);
             chat.setDescription("Alojamiento " + i);

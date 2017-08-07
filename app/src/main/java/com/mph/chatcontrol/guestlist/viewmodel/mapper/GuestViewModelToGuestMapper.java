@@ -19,13 +19,14 @@ public class GuestViewModelToGuestMapper extends Mapper<GuestViewModel, Guest> {
     public GuestViewModel reverseMap(Guest value) {
         GuestViewModel guestViewModel;
         guestViewModel = GuestViewModel.builder()
-                .setId(value.id())
-                .setName(value.name())
-                .setInitial(value.name().substring(0, 1))
-                .setPhone(value.phone())
-                .setEmail(value.email())
-                .setStartDate(DateUtils.dateToString(value.startDate(), DATE_FORMAT))
-                .setEndDate(DateUtils.dateToString(value.endDate(), DATE_FORMAT))
+                .setId(value.getId())
+                .setName(value.getName())
+                .setInitial(value.getName().substring(0, 1))
+                .setPhone(value.getPhone())
+                .setEmail(value.getEmail())
+                .setStartDate(DateUtils.dateToString(value.getStartDate(), DATE_FORMAT))
+                .setEndDate(DateUtils.dateToString(value.getEndDate(), DATE_FORMAT))
+                .setRelatedRoomId(value.getRelatedRoomID())
                 .build();
         return guestViewModel;
     }
