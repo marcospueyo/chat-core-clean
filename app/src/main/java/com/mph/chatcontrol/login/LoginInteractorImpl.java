@@ -1,9 +1,7 @@
 package com.mph.chatcontrol.login;
 /* Created by Marcos on 13/07/2017.*/
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.mph.chatcontrol.login.contract.FirebaseLoginRepository;
 import com.mph.chatcontrol.login.contract.LoginInteractor;
@@ -31,27 +29,6 @@ public class LoginInteractorImpl implements LoginInteractor,
                       final OnLoginFinishedListener listener) {
         mListener = listener;
         mFirebaseLoginRepository.login(email, password, this);
-        /*
-        new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
-                boolean error = false;
-                if (TextUtils.isEmpty(email)) {
-                    listener.onEmailError();
-                    error = true;
-                    return;
-                }
-                if (TextUtils.isEmpty(password)){
-                    listener.onPasswordError();
-                    error = true;
-                    return;
-                }
-                if (!error){
-                    mSharedPreferencesRepository.setLoggedIn();
-                    listener.onSuccess();
-                }
-            }
-        }, 2000);
-        */
     }
 
     @Override

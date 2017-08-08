@@ -35,7 +35,7 @@
 
     <string name="username_placeholder">Nombre de usuario</string>
     <string name="timestamp_placeholder">DD/MM/AAAA HH:mm</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sit amet ultrices ipsum. Praesent lorem augue, dapibus vel justo eu, feugiat pellentesque tellus. In rutrum quam enim, non accumsan est laoreet eget. Sed consectetur finibus nibh, id bibendum nisi semper vel. Nam et turpis porta, viverra felis sit amet, mattis metus. Pellentesque tempus lobortis nisi, a sagittis justo rhoncus at. Proin placerat ultricies finibus. Suspendisse maximus diam risus, eu placerat justo semper et.</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sit amet ultrices ipsum. Praesent lorem augue, dapibus vel justo eu, feugiat pellentesque tellus. In rutrum quam enim, non accumsan est laoreet eget. Sed consectetur finibus nibh, id bibendum nisi semper vel. Nam et turpis porta</string>
 
     <string name="write_message_hint">Escriba un mensaje</string>
     <string name="write_message_disabled_hint">La sala está inactiva</string>

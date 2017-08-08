@@ -27,7 +27,7 @@
 
     <EditText
         android:id="@+id/etEmail"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="34dp"
         android:ems="10"
@@ -39,11 +39,14 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintHorizontal_bias="0.503"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp" />
 
     <EditText
         android:id="@+id/etPassword"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
@@ -54,7 +57,9 @@
         app:layout_constraintTop_toBottomOf="@+id/etEmail"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintHorizontal_bias="0.506"
+        android:layout_marginLeft="0dp" />
 
     <Button
         android:id="@+id/btnLogin"
