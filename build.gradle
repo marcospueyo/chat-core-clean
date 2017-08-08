@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 
@@ -26,9 +27,9 @@ ext {
     // App dependencies
     supportLibraryVersion = '25.3.1'
     contraintLayoutVersion = '1.0.2'
-    firebaseLibraryVersion = '11.0.2'
+    firebaseLibraryVersion = '11.0.4'
     firebaseUILibraryVersion = '2.0.1'
-    playServicesLibraryVersion = '11.0.2'
+    playServicesLibraryVersion = '11.0.4'
     guavaVersion = '22.0-android'
     glideVersion = '3.8.0'
     glideTransVersion = '2.0.1'

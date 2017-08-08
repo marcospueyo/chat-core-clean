@@ -2,6 +2,7 @@ package com.mph.chatcontrol.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mph.chatcontrol.login.contract.LoginPresenter;
 import com.mph.chatcontrol.login.contract.LoginView;
 import com.mph.chatcontrol.main.MainActivity;
@@ -25,6 +27,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
     @BindView(R.id.btnLogin) Button btnLogin;
     @BindView(R.id.pbLogin) ProgressBar progressBar;
 
+    @BindView(R.id.cl_login) View mView;
+
     private LoginPresenter mPresenter;
 
     public static Intent newInstance(Context context) {
@@ -40,8 +44,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
 
         mPresenter = new LoginPresenterImpl(
                 this,
-                new LoginInteractorImpl(new SharedPreferencesRepositoryImpl(
-                        getPreferences(MODE_PRIVATE))));
+                new LoginInteractorImpl(
+                        new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                        new FirebaseLoginRepositoryImpl(FirebaseAuth.getInstance())));
     }
 
     @Override
@@ -78,6 +83,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
     @Override
     public void setPasswordError() {
         etPassword.setError(getString(R.string.password_error));
+    }
+
+    @Override
+    public void showLoginError() {
+        Snackbar.make(mView, getString(R.string.login_error), Snackbar.LENGTH_LONG).show();
     }
 
     @Override public void navigateToHome() {

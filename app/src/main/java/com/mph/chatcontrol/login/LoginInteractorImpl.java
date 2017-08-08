@@ -5,23 +5,33 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.mph.chatcontrol.login.contract.FirebaseLoginRepository;
 import com.mph.chatcontrol.login.contract.LoginInteractor;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class LoginInteractorImpl implements LoginInteractor {
+public class LoginInteractorImpl implements LoginInteractor,
+        FirebaseLoginRepository.OnFinishedListener {
 
     @NonNull private final SharedPreferencesRepository mSharedPreferencesRepository;
 
-    public LoginInteractorImpl(@NonNull SharedPreferencesRepository sharedPreferencesRepository) {
+    @NonNull private final FirebaseLoginRepository mFirebaseLoginRepository;
+
+    private OnLoginFinishedListener mListener;
+
+    public LoginInteractorImpl(@NonNull SharedPreferencesRepository sharedPreferencesRepository,
+                               @NonNull FirebaseLoginRepository firebaseLoginRepository) {
         mSharedPreferencesRepository = checkNotNull(sharedPreferencesRepository);
+        mFirebaseLoginRepository = checkNotNull(firebaseLoginRepository);
     }
 
     @Override
     public void login(final String email, final String password,
                       final OnLoginFinishedListener listener) {
-        // Mock login. I'm creating a handler to delay the answer a couple of seconds
+        mListener = listener;
+        mFirebaseLoginRepository.login(email, password, this);
+        /*
         new Handler().postDelayed(new Runnable() {
             @Override public void run() {
                 boolean error = false;
@@ -41,10 +51,24 @@ public class LoginInteractorImpl implements LoginInteractor {
                 }
             }
         }, 2000);
+        */
     }
 
     @Override
     public boolean isLogged() {
         return mSharedPreferencesRepository.isLoggedIn();
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        mSharedPreferencesRepository.setLoggedIn();
+        if (mListener != null)
+            mListener.onSuccess();
+    }
+
+    @Override
+    public void onLoginError() {
+        if (mListener != null)
+            mListener.onError();
     }
 }

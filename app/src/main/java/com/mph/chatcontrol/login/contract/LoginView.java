@@ -8,6 +8,8 @@ public interface LoginView {
 
     void setEmailError();
 
+    void showLoginError();
+
     void setPasswordError();
 
     void navigateToHome();

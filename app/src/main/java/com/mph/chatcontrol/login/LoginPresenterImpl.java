@@ -2,6 +2,7 @@ package com.mph.chatcontrol.login;
 /* Created by Marcos on 13/07/2017.*/
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.mph.chatcontrol.login.contract.LoginInteractor;
 import com.mph.chatcontrol.login.contract.LoginPresenter;
@@ -25,9 +26,14 @@ public class LoginPresenterImpl implements LoginPresenter, LoginInteractor.OnLog
     }
 
     @Override public void validateCredentials(String email, String password) {
-        if (loginView != null) {
+        if (loginView != null)
             loginView.showProgress();
-        }
+
+        if (TextUtils.isEmpty(email))
+            onEmailError();
+
+        if (TextUtils.isEmpty(password))
+            onPasswordError();
 
         loginInteractor.login(email, password, this);
     }
@@ -49,6 +55,14 @@ public class LoginPresenterImpl implements LoginPresenter, LoginInteractor.OnLog
     public void onPasswordError() {
         if (loginView != null) {
             loginView.setPasswordError();
+            loginView.hideProgress();
+        }
+    }
+
+    @Override
+    public void onError() {
+        if (loginView != null) {
+            loginView.showLoginError();
             loginView.hideProgress();
         }
     }

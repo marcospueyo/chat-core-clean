@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "561343980440",
+    "firebase_url": "https://triptips-50da0.firebaseio.com",
+    "project_id": "triptips-50da0",
+    "storage_bucket": "triptips-50da0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561343980440:android:4d6959a471b95921",
+        "android_client_info": {
+          "package_name": "com.netfactorial.triptips"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561343980440-eqqeveeo7vqs6172pml1eeta9pllp34f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB57HOoR7ajQzrpn81QPyypSRtXZMXEx_E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561343980440:android:0a63b0fb2f64adb1",
+        "android_client_info": {
+          "package_name": "com.mph.chatcontrol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561343980440-eqqeveeo7vqs6172pml1eeta9pllp34f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB57HOoR7ajQzrpn81QPyypSRtXZMXEx_E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
