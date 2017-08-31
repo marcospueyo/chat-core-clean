@@ -1,26 +1,29 @@
 package com.mph.chatcontrol.network;
 /* Created by macmini on 31/08/2017. */
 
-import com.google.gson.annotations.SerializedName;
+import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.PropertyName;
 import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.utils.DateUtils;
 
+
+@IgnoreExtraProperties
 public class RestRoom {
 
-    @SerializedName("id")
-    private String id;
+    @PropertyName("id")
+    public String id;
 
-    @SerializedName("guest_name")
-    private String guestName;
+    @PropertyName("guest_name")
+    public String guestName;
 
-    @SerializedName("date_start")
-    private String startDate;
+    @PropertyName("date_start")
+    public String startDate;
 
-    @SerializedName("date_end")
-    private String endDate;
+    @PropertyName("date_end")
+    public String endDate;
 
-    @SerializedName("date_last_msg")
-    private String lastMsgDate;
+    @PropertyName("date_last_msg")
+    public String lastMsgDate;
 
     public RestRoom(Chat chat) {
         id = chat.getId();
