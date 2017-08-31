@@ -1,6 +1,11 @@
 package com.mph.chatcontrol.data;
 
+import android.support.annotation.NonNull;
+
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
+import com.mph.chatcontrol.network.RestRoom;
+import com.mph.chatcontrol.network.RestRoomToChatMapper;
+import com.mph.chatcontrol.network.RoomService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,9 +19,7 @@ import io.requery.sql.EntityDataStore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Created by Marcos on 02/08/2017.
- */
+/* Created by Marcos on 02/08/2017. */
 
 public class ChatsRepositoryImpl implements ChatsRepository {
 
@@ -24,11 +27,17 @@ public class ChatsRepositoryImpl implements ChatsRepository {
 
     @Nonnull private SharedPreferencesRepository sharedPreferencesRepository;
     @Nonnull private EntityDataStore<Persistable> dataStore;
+    @NonNull private final RoomService service;
+    @NonNull private final RestRoomToChatMapper mapper;
 
     public ChatsRepositoryImpl(@Nonnull SharedPreferencesRepository sharedPreferencesRepository,
-                               @Nonnull EntityDataStore<Persistable> dataStore) {
+                               @Nonnull EntityDataStore<Persistable> dataStore,
+                               @NonNull RoomService service,
+                               @NonNull RestRoomToChatMapper mapper) {
         this.sharedPreferencesRepository = checkNotNull(sharedPreferencesRepository);
         this.dataStore = checkNotNull(dataStore);
+        this.service = checkNotNull(service);
+        this.mapper = checkNotNull(mapper);
         insertMockData();
     }
 
@@ -39,23 +48,55 @@ public class ChatsRepositoryImpl implements ChatsRepository {
     }
 
     @Override
-    public List<Chat> findActiveChats() {
-        return getActiveChats();
+    public void findActiveChats(final GetChatsCallback callback) {
+        fetchChats(callback, true /* active */);
     }
 
     @Override
-    public List<Chat> findArchivedChats() {
-        return getArchivedChats();
+    public void findArchivedChats(GetChatsCallback callback) {
+        fetchChats(callback, false /* active */);
+    }
+
+    private void fetchChats(final GetChatsCallback callback, final boolean active) {
+        int count = dataStore.count(Chat.class).get().value();
+        if (count != 0) {
+            List<Chat> chats = dataStore.select(Chat.class).where(Chat.ACTIVE.eq(active)).get()
+                    .toList();
+            callback.onChatsLoaded(chats);
+        }
+        else {
+            service.getRooms(new RoomService.GetRoomsCallback() {
+                @Override
+                public void onRoomsLoaded(List<RestRoom> rooms) {
+                    deleteEntities();
+                    persistEntities(mapper.map(rooms));
+                    callback.onChatsLoaded(getLocalChats(active));
+                }
+
+                @Override
+                public void onDataNotAvailable() {
+                    callback.onChatsNotAvailable();
+                }
+            });
+        }
     }
 
     @Override
-    public Chat getChat(String id) {
+    public void getChat(String id, GetSingleChatCallback callback) {
+        callback.onSingleChatLoaded(getLocalChat(id));
+    }
+
+    private Chat getLocalChat(String id) {
         return dataStore.select(Chat.class).where(Chat.ID.eq(id)).get().firstOrNull();
     }
 
     @Override
     public void updateChat(Chat chat) {
         dataStore.update(chat);
+    }
+
+    private List<Chat> getLocalChats(boolean active) {
+        return active ? getActiveChats() : getArchivedChats();
     }
 
     private List<Chat> getActiveChats() {
@@ -69,6 +110,14 @@ public class ChatsRepositoryImpl implements ChatsRepository {
     private void persistMockEntities() {
         dataStore.insert(mockActiveChatList());
         dataStore.insert(mockArchivedChatList());
+    }
+
+    private void persistEntities(List<Chat> entities) {
+        dataStore.insert(entities);
+    }
+
+    private void deleteEntities() {
+        dataStore.delete(Chat.class).get().value();
     }
 
     private List<Chat> mockActiveChatList() {

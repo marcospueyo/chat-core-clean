@@ -15,7 +15,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
-import com.mph.chatcontrol.BuildConfig;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
@@ -25,7 +26,6 @@ import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
 import com.mph.chatcontrol.data.GuestRepositoryImpl;
-import com.mph.chatcontrol.data.Models;
 import com.mph.chatcontrol.events.LogoutEvent;
 import com.mph.chatcontrol.events.OpenChatEvent;
 import com.mph.chatcontrol.guestlist.FindGuestsInteractorImpl;
@@ -35,6 +35,8 @@ import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
+import com.mph.chatcontrol.network.RestRoomToChatMapper;
+import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
 import com.mph.chatcontrol.room.GetRoomInteractorImpl;
 import com.mph.chatcontrol.room.RoomActivity;
 import com.mph.chatcontrol.settings.GetNotificationPreferenceInteractorImpl;
@@ -51,7 +53,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.requery.android.sqlite.DatabaseSource;
+import io.requery.Persistable;
 import io.requery.sql.EntityDataStore;
 
 public class MainActivity extends AppCompatActivity implements
@@ -179,7 +181,9 @@ public class MainActivity extends AppCompatActivity implements
                 new FindChatsInteractorImpl(
                         new ChatsRepositoryImpl(
                                 new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore())),
+                                getDataStore(),
+                                new RoomFirebaseServiceImpl(getChatDatabaseReference()),
+                                new RestRoomToChatMapper())),
                 true /* should load active chats */);
 
         showFragment(activeChatListFragment);
@@ -196,7 +200,9 @@ public class MainActivity extends AppCompatActivity implements
                 new FindChatsInteractorImpl(
                         new ChatsRepositoryImpl(
                                 new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore())),
+                                getDataStore(),
+                                new RoomFirebaseServiceImpl(getChatDatabaseReference()),
+                                new RestRoomToChatMapper())),
                 false /* should NOT load active chats */);
 
         showFragment(archivedChatListFragment);
@@ -220,7 +226,9 @@ public class MainActivity extends AppCompatActivity implements
                 new GetRoomInteractorImpl(
                         new ChatsRepositoryImpl(
                                 new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore()
+                                getDataStore(),
+                                new RoomFirebaseServiceImpl(getChatDatabaseReference()),
+                                new RestRoomToChatMapper()
                         )
                 )
         );
@@ -271,7 +279,11 @@ public class MainActivity extends AppCompatActivity implements
         mPresenter.onOpenChat(event.chatID());
     }
 
-    private EntityDataStore getDataStore() {
+    private EntityDataStore<Persistable> getDataStore() {
         return ((ChatcontrolApplication) getApplication()).getData();
+    }
+
+    private DatabaseReference getChatDatabaseReference() {
+        return ((ChatcontrolApplication) getApplication()).getChatDatabaseReference();
     }
 }

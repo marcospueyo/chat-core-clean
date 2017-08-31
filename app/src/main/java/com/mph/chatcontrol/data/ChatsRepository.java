@@ -7,12 +7,23 @@ import java.util.List;
  */
 
 public interface ChatsRepository {
+    interface GetChatsCallback {
+        void onChatsLoaded(List<Chat> chats);
 
-    List<Chat> findActiveChats();
+        void onChatsNotAvailable();
+    }
 
-    List<Chat> findArchivedChats();
+    interface GetSingleChatCallback {
+        void onSingleChatLoaded(Chat chat);
 
-    Chat getChat(String id);
+        void onChatNotAvailable();
+    }
+
+    void findActiveChats(GetChatsCallback callback);
+
+    void findArchivedChats(GetChatsCallback callback);
+
+    void getChat(String id, GetSingleChatCallback callback);
 
     void updateChat(Chat chat);
 }

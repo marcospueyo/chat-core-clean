@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
 import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.base.adapter.BaseListAdapter;
@@ -28,6 +29,8 @@ import com.mph.chatcontrol.data.ChatsRepositoryImpl;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.data.MessagesRepositoryImpl;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
+import com.mph.chatcontrol.network.RestRoomToChatMapper;
+import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
 import com.mph.chatcontrol.room.adapter.MessagesAdapter;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
@@ -87,11 +90,18 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         onSendListener();
     }
 
+    private DatabaseReference getDatabaseReference() {
+        return ((ChatcontrolApplication) getApplication()).getChatDatabaseReference();
+    }
+
     private void initializePresenter() {
         ChatsRepository chatsRepository =
                 new ChatsRepositoryImpl(
                         new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                        (((ChatcontrolApplication) getApplication()).getData()));
+                        ((ChatcontrolApplication) getApplication()).getData(),
+                        new RoomFirebaseServiceImpl(getDatabaseReference()),
+                        new RestRoomToChatMapper()
+                );
 
         MessagesRepository messagesRepository =
                 new MessagesRepositoryImpl(

@@ -3,6 +3,8 @@ package com.mph.chatcontrol;
 import android.app.Application;
 
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mph.chatcontrol.data.Models;
 
 import io.requery.Persistable;
@@ -38,5 +40,9 @@ public class ChatcontrolApplication extends Application {
             dataStore = new EntityDataStore<>(configuration);
         }
         return dataStore;
+    }
+
+    public DatabaseReference getChatDatabaseReference() {
+        return FirebaseDatabase.getInstance().getReference();
     }
 }

@@ -23,11 +23,17 @@ public class GetRoomInteractorImpl implements GetRoomInteractor {
     }
 
     @Override
-    public void execute(String roomID, OnFinishedListener listener) {
-        Chat chat = mChatsRepository.getChat(roomID);
-        if (chat == null)
-            listener.onRoomLoadError();
-        else
-            listener.onRoomLoaded(chat);
+    public void execute(String roomID, final OnFinishedListener listener) {
+        mChatsRepository.getChat(roomID, new ChatsRepository.GetSingleChatCallback() {
+            @Override
+            public void onSingleChatLoaded(Chat chat) {
+                listener.onRoomLoaded(chat);
+            }
+
+            @Override
+            public void onChatNotAvailable() {
+                listener.onRoomLoadError();
+            }
+        });
     }
 }

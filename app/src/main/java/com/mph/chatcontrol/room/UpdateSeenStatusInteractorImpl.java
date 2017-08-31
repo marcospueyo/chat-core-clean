@@ -20,14 +20,23 @@ public class UpdateSeenStatusInteractorImpl implements UpdateSeenStatusInteracto
     }
 
     @Override
-    public void execute(String roomID, boolean seen, OnFinishedListener listener) {
-        Chat chat = mChatsRepository.getChat(roomID);
-        if (chat == null)
-            listener.onSeenStatusUpdateError();
-        else {
-            chat.setPendingCount(seen ? 0 : 1);
-            mChatsRepository.updateChat(chat);
-            listener.onSeenStatusUpdated();
-        }
+    public void execute(String roomID, final boolean seen, final OnFinishedListener listener) {
+        mChatsRepository.getChat(roomID, new ChatsRepository.GetSingleChatCallback() {
+            @Override
+            public void onSingleChatLoaded(Chat chat) {
+                if (chat == null)
+                    listener.onSeenStatusUpdateError();
+                else {
+                    chat.setPendingCount(seen ? 0 : 1);
+                    mChatsRepository.updateChat(chat);
+                    listener.onSeenStatusUpdated();
+                }
+            }
+
+            @Override
+            public void onChatNotAvailable() {
+                listener.onSeenStatusUpdateError();
+            }
+        });
     }
 }
