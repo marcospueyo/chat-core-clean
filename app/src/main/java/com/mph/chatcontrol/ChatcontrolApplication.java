@@ -31,7 +31,7 @@ public class ChatcontrolApplication extends Application {
     public EntityDataStore<Persistable> getData() {
         if (dataStore == null) {
             // override onUpgrade to handle migrating to a new version
-            DatabaseSource source = new DatabaseSource(this, Models.DEFAULT, 6);
+            DatabaseSource source = new DatabaseSource(this, Models.DEFAULT, 7);
             if (BuildConfig.DEBUG) {
                 // use this in development mode to drop and recreate the tables on every upgrade
                 source.setTableCreationMode(TableCreationMode.DROP_CREATE);
@@ -43,6 +43,6 @@ public class ChatcontrolApplication extends Application {
     }
 
     public DatabaseReference getChatDatabaseReference() {
-        return FirebaseDatabase.getInstance().getReference();
+        return FirebaseDatabase.getInstance().getReference().child("rooms");
     }
 }

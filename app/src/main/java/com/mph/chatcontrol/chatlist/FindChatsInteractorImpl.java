@@ -1,13 +1,13 @@
 package com.mph.chatcontrol.chatlist;
 /* Created by macmini on 17/07/2017. */
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
 import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.ChatsRepository;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,8 +21,8 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
     }
 
     @Override
-    public void findActiveChats(final OnFinishedListener listener) {
-        mChatsRepository.findActiveChats(new ChatsRepository.GetChatsCallback() {
+    public void findActiveChats(Date inputDate, final OnFinishedListener listener) {
+        mChatsRepository.findActiveChats(inputDate, new ChatsRepository.GetChatsCallback() {
             @Override
             public void onChatsLoaded(List<Chat> chats) {
                 listener.onFinished(chats);
@@ -36,8 +36,8 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
     }
 
     @Override
-    public void findArchivedChats(final OnFinishedListener listener) {
-        mChatsRepository.findArchivedChats(new ChatsRepository.GetChatsCallback() {
+    public void findArchivedChats(Date inputDate, final OnFinishedListener listener) {
+        mChatsRepository.findArchivedChats(inputDate, new ChatsRepository.GetChatsCallback() {
             @Override
             public void onChatsLoaded(List<Chat> chats) {
                 listener.onFinished(chats);

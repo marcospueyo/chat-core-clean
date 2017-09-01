@@ -38,39 +38,37 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         this.dataStore = checkNotNull(dataStore);
         this.service = checkNotNull(service);
         this.mapper = checkNotNull(mapper);
-        insertMockData();
+        //insertMockData();
     }
 
-    private void insertMockData() {
-        int count = dataStore.count(Chat.class).get().value();
-        if (count == 0)
-            persistMockEntities();
+//    private void insertMockData() {
+//        int count = dataStore.count(Chat.class).get().value();
+//        if (count == 0)
+//            persistMockEntities();
+//    }
+
+    @Override
+    public void findActiveChats(Date inputDate, final GetChatsCallback callback) {
+        fetchChats(callback, true /* active */, inputDate);
     }
 
     @Override
-    public void findActiveChats(final GetChatsCallback callback) {
-        fetchChats(callback, true /* active */);
+    public void findArchivedChats(Date inputDate, GetChatsCallback callback) {
+        fetchChats(callback, false /* active */, inputDate);
     }
 
-    @Override
-    public void findArchivedChats(GetChatsCallback callback) {
-        fetchChats(callback, false /* active */);
-    }
-
-    private void fetchChats(final GetChatsCallback callback, final boolean active) {
+    private void fetchChats(final GetChatsCallback callback, final boolean active,
+                            final Date inputDate) {
         int count = dataStore.count(Chat.class).get().value();
-        if (count != 0) {
-            List<Chat> chats = dataStore.select(Chat.class).where(Chat.ACTIVE.eq(active)).get()
-                    .toList();
-            callback.onChatsLoaded(chats);
-        }
+        if (/*count != 0*/ false)
+            callback.onChatsLoaded(getLocalChats(active, inputDate));
         else {
             service.getRooms(new RoomService.GetRoomsCallback() {
                 @Override
                 public void onRoomsLoaded(List<RestRoom> rooms) {
                     deleteEntities();
                     persistEntities(mapper.map(rooms));
-                    callback.onChatsLoaded(getLocalChats(active));
+                    callback.onChatsLoaded(getLocalChats(active, inputDate));
                 }
 
                 @Override
@@ -95,22 +93,27 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         dataStore.update(chat);
     }
 
-    private List<Chat> getLocalChats(boolean active) {
-        return active ? getActiveChats() : getArchivedChats();
+    private List<Chat> getLocalChats(boolean active, Date inputDate) {
+        return active ? getActiveChats(inputDate) : getArchivedChats(inputDate);
     }
 
-    private List<Chat> getActiveChats() {
-        return dataStore.select(Chat.class).where(Chat.ACTIVE.eq(true)).get().toList();
+    private List<Chat> getActiveChats(Date inputDate) {
+        return dataStore
+                .select(Chat.class)
+                .where(Chat.START_DATE.lessThanOrEqual(inputDate))
+                .and(Chat.END_DATE.greaterThanOrEqual(inputDate))
+                .get()
+                .toList();
     }
 
-    private List<Chat> getArchivedChats() {
+    private List<Chat> getArchivedChats(Date inputDate) {
         return dataStore.select(Chat.class).where(Chat.ACTIVE.eq(false)).get().toList();
     }
 
-    private void persistMockEntities() {
-        dataStore.insert(mockActiveChatList());
-        dataStore.insert(mockArchivedChatList());
-    }
+//    private void persistMockEntities() {
+//        dataStore.insert(mockActiveChatList());
+//        dataStore.insert(mockArchivedChatList());
+//    }
 
     private void persistEntities(List<Chat> entities) {
         dataStore.insert(entities);
@@ -120,6 +123,7 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         dataStore.delete(Chat.class).get().value();
     }
 
+    /*
     private List<Chat> mockActiveChatList() {
         String[] names = new String[] {
                 "Alice", "Bob", "Carol", "Chloe", "Dan", "Emily", "Emma", "Eric", "Eva",
@@ -131,7 +135,7 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         List<Chat> chats = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Chat chat = new Chat();
-            chat.setId(/*UUID.randomUUID().toString()*/ names[i]);
+            chat.setId(names[i]);
             chat.setGuestName(names[i]);
             chat.setTitle(names[i]);
             chat.setDescription("Alojamiento " + i);
@@ -146,7 +150,9 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         }
         return chats;
     }
+    */
 
+    /*
     private List<Chat> mockArchivedChatList() {
         String[] names = new String[] {
                 "Kevin", "Laura", "Leon", "Lilly", "Mary", "Maria",
@@ -171,4 +177,5 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         }
         return chats;
     }
+    */
 }

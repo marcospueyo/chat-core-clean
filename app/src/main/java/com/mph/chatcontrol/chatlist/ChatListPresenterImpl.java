@@ -12,6 +12,7 @@ import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.Chat;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,10 +46,11 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     @Override
     public void start() {
         mChatListView.showProgress();
+        Date currentDate = new Date();
         if (mShouldShowActiveChats)
-            mFindChatsInteractor.findActiveChats(this);
+            mFindChatsInteractor.findActiveChats(currentDate, this);
         else
-            mFindChatsInteractor.findArchivedChats(this);
+            mFindChatsInteractor.findArchivedChats(currentDate, this);
     }
 
     @Override
@@ -59,9 +61,19 @@ public class ChatListPresenterImpl implements ChatListPresenter,
 
     @Override
     public void onFinished(List<Chat> chats) {
+        processChats(chats, mShouldShowActiveChats);
         List<ChatViewModel> chatViewModels = mMapper.reverseMap(chats);
         mChatListView.setItems(chatViewModels);
         mChatListView.hideProgress();
+    }
+
+    private void processChats(List<Chat> chats, boolean active) {
+        Date currentDate = new Date();
+        for (Chat chat : chats) {
+            chat.setPendingCount(0);
+            chat.setActive(chat.getStartDate().before(currentDate)
+                    && chat.getEndDate().after(currentDate));
+        }
     }
 
     @Override

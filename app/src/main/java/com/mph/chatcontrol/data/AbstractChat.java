@@ -12,16 +12,12 @@ public abstract class AbstractChat {
 
     @Key
     String id;
-
     String guestName;
-
-    String title;
-    String description;
+    String propertyName;
     Integer pendingCount;
     Date startDate;
     Date endDate;
     Date lastMsgDate;
     String lastMsg;
     Boolean active;
-
 }

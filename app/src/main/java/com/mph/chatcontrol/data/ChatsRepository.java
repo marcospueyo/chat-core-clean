@@ -1,5 +1,6 @@
 package com.mph.chatcontrol.data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,9 +20,9 @@ public interface ChatsRepository {
         void onChatNotAvailable();
     }
 
-    void findActiveChats(GetChatsCallback callback);
+    void findActiveChats(Date inputDate, GetChatsCallback callback);
 
-    void findArchivedChats(GetChatsCallback callback);
+    void findArchivedChats(Date inputDate, GetChatsCallback callback);
 
     void getChat(String id, GetSingleChatCallback callback);
 
