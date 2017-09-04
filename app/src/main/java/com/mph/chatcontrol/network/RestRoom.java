@@ -34,6 +34,9 @@ public class RestRoom {
     @PropertyName("last_msg_str")
     public String lastMsgStr;
 
+    @PropertyName("guest_id")
+    public String guestID;
+
     public RestRoom() {
     }
 
@@ -105,6 +108,14 @@ public class RestRoom {
         this.propertyName = propertyName;
     }
 
+    public String getGuestID() {
+        return guestID;
+    }
+
+    public void setGuestID(String guestID) {
+        this.guestID = guestID;
+    }
+
     public void setLastMsgStr(String lastMsgStr) {
         this.lastMsgStr = lastMsgStr;
     }
@@ -118,6 +129,7 @@ public class RestRoom {
         chat.setLastMsgDate(DateUtils.stringToDateISO8601(getLastMsgDate()));
         chat.setPropertyName(getPropertyName());
         chat.setLastMsg(getLastMsgStr());
+        chat.setGuestID(getGuestID());
         return chat;
     }
 }

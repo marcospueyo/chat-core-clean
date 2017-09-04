@@ -19,5 +19,5 @@ public abstract class AbstractChat {
     Date endDate;
     Date lastMsgDate;
     String lastMsg;
-    Boolean active;
+    String guestID;
 }

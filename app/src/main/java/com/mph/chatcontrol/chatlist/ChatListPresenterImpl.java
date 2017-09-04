@@ -61,18 +61,16 @@ public class ChatListPresenterImpl implements ChatListPresenter,
 
     @Override
     public void onFinished(List<Chat> chats) {
-        processChats(chats, mShouldShowActiveChats);
+        processChats(chats);
         List<ChatViewModel> chatViewModels = mMapper.reverseMap(chats);
         mChatListView.setItems(chatViewModels);
         mChatListView.hideProgress();
     }
 
-    private void processChats(List<Chat> chats, boolean active) {
-        Date currentDate = new Date();
+    // TODO: 04/09/2017 Must be removed
+    private void processChats(List<Chat> chats) {
         for (Chat chat : chats) {
             chat.setPendingCount(0);
-            chat.setActive(chat.getStartDate().before(currentDate)
-                    && chat.getEndDate().after(currentDate));
         }
     }
 

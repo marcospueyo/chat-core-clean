@@ -17,7 +17,9 @@ import com.mph.chatcontrol.room.contract.SendMessageInteractor;
 import com.mph.chatcontrol.room.contract.UpdateSeenStatusInteractor;
 import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
 import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
+import com.mph.chatcontrol.utils.RoomUtils;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -88,7 +90,7 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onRoomLoaded(Chat chat) {
-        if (!chat.isActive())
+        if (!RoomUtils.roomIsActive(chat, new Date()))
             mRoomView.disableChat();
 
         mRoomView.setRoom(mChatMapper.reverseMap(chat));

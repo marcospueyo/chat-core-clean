@@ -107,7 +107,11 @@ public class ChatsRepositoryImpl implements ChatsRepository {
     }
 
     private List<Chat> getArchivedChats(Date inputDate) {
-        return dataStore.select(Chat.class).where(Chat.ACTIVE.eq(false)).get().toList();
+        return dataStore
+                .select(Chat.class)
+                .where(Chat.END_DATE.lessThan(inputDate))
+                .get()
+                .toList();
     }
 
 //    private void persistMockEntities() {

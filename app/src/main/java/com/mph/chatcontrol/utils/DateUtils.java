@@ -252,4 +252,8 @@ public class DateUtils {
     public static Date stringToDateISO8601(String dateStr) {
         return stringToDate(dateStr, "yyyy-MM-dd'T'HH:mm:ssZ");
     }
+
+    public static boolean dateIsInsideInterval(Date input, Date start, Date end) {
+        return start.before(input) && end.after(input);
+    }
 }
