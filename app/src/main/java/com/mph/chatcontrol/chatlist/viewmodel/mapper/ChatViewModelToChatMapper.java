@@ -4,6 +4,7 @@ package com.mph.chatcontrol.chatlist.viewmodel.mapper;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.Mapper;
+import com.mph.chatcontrol.utils.CCUtils;
 import com.mph.chatcontrol.utils.DateUtils;
 import com.mph.chatcontrol.utils.RoomUtils;
 
@@ -29,12 +30,16 @@ public class ChatViewModelToChatMapper extends Mapper<ChatViewModel, Chat> {
                 .setDescription(value.getPropertyName())
                 .setPendingCount(value.getPendingCount())
                 .setCheckoutDate(DateUtils.dateToString(value.getEndDate(), CHECKOUT_DATE_FORMAT))
-                .setLastMsgDate(DateUtils.dateToString(value.getLastMsgDate(), LAST_MSG_DATE_FORMAT))
+                .setLastMsgDate(CCUtils.getFormattedLastActivity(value.getLastMsgDate()))
                 .setLastActivity(value.getLastMsg())
                 .setActive(chatIsActive(value))
                 .build();
         return chatViewModel;
     }
+
+
+
+
 
     private boolean chatIsActive(Chat chat) {
         return RoomUtils.roomIsActive(chat, new Date());

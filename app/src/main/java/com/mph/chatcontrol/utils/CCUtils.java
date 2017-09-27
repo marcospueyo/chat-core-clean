@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.mph.chatcontrol.Manifest;
 import com.mph.chatcontrol.R;
 
+import java.util.Date;
+
 import static android.graphics.Typeface.BOLD;
 import static android.graphics.Typeface.NORMAL;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,6 +42,17 @@ public class CCUtils {
 
     public static String getFormattedCheckout(final Context context, String date) {
         return context.getString(R.string.checkout) + " " + date;
+    }
+
+    public static String getFormattedLastActivity(Date date) {
+        String formattedDate;
+        if (DateUtils.isToday(date)) {
+            formattedDate = DateUtils.dateToString(date, DateUtils.SHORT_TIME_FORMAT);
+        }
+        else {
+            formattedDate = DateUtils.dateToString(date, DateUtils.DATE_FORMAT);
+        }
+        return formattedDate;
     }
 
     public static boolean isAPI_L_OrAbove() {

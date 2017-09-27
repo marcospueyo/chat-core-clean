@@ -29,7 +29,7 @@
         android:id="@+id/ll_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/balloon_incoming_new_blue_120"
+        android:background="@drawable/balloon_incoming_triptips"
         android:minWidth="163dp"
         android:orientation="vertical"
         android:gravity="right">

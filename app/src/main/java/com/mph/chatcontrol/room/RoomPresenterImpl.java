@@ -92,12 +92,17 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     public void onRoomLoaded(Chat chat) {
         if (!RoomUtils.roomIsActive(chat, new Date()))
             mRoomView.disableChat();
+        processRoom(chat);
 
         mRoomView.setRoom(mChatMapper.reverseMap(chat));
         setRoomSeen(chat);
 
         mRoom = chat;
         mGetMessagesInteractor.execute(mRoom, this);
+    }
+
+    private void processRoom(Chat chat) {
+        chat.setPendingCount(0);
     }
 
     private void setRoomSeen(final Chat chat) {

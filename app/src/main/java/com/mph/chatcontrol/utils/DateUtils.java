@@ -36,6 +36,9 @@ public class DateUtils {
     /** Format de hora ("HH:mm") */
     public final static String SHORT_TIME_FORMAT = "HH:mm";
 
+    /** Format de dia ("Fri") */
+    public static final String LAST_MSG_DATE_FORMAT = "EE";
+
 
     /**
      * Si el format del paràmetre no existeix, obté el format per defecte

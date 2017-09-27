@@ -54,6 +54,7 @@ public class MessageViewHolder extends BaseViewHolderImpl {
     private void setStyle(boolean isOwnMessage) {
         setStyleForContent(isOwnMessage);
         setStyleForSender(isOwnMessage);
+        setStyleForTimestamp(isOwnMessage);
     }
 
     private void setStyleForContent(boolean isOwnMessage) {
@@ -65,11 +66,11 @@ public class MessageViewHolder extends BaseViewHolderImpl {
 
         int color = ContextCompat.getColor(mContext,
                 isOwnMessage ? R.color.brand_color : R.color.gray_dark);
-        renderSenderColor(tvSender, color);
+        renderTextColor(tvSender, color);
 
         int bgResource = isOwnMessage
-                ? R.drawable.balloon_outgoing_new_grey_120
-                : R.drawable.balloon_incoming_new_blue_120;
+                ? R.drawable.balloon_outgoing_triptips
+                : R.drawable.balloon_incoming_triptips;
         renderSenderBackground(llMessage, bgResource);
 
         int gravity = isOwnMessage ? Gravity.END : Gravity.START;
@@ -81,6 +82,12 @@ public class MessageViewHolder extends BaseViewHolderImpl {
                 leftMargin, rightMargin);
     }
 
+    private void setStyleForTimestamp(boolean isOwnMessage) {
+        int color = ContextCompat.getColor(mContext,
+                isOwnMessage ? R.color.gray_dark : R.color.white);
+        renderTextColor(tvTimestamp, color);
+    }
+
     private void renderAlignment(TextView textView, boolean isOwnMessage) {
         textView.setTextAlignment(isOwnMessage
                 ? TEXT_ALIGNMENT_VIEW_END : TEXT_ALIGNMENT_VIEW_START);
@@ -90,7 +97,7 @@ public class MessageViewHolder extends BaseViewHolderImpl {
         tvMessage.setText(value);
     }
 
-    private void renderSenderColor(TextView textView, int color) {
+    private void renderTextColor(TextView textView, int color) {
         textView.setTextColor(color);
     }
 

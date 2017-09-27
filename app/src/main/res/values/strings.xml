@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chat-control</string>
+    <string name="app_name">TripTips chat</string>
 
     <!-- TABS -->
     <string name="active_chats">Activos</string>

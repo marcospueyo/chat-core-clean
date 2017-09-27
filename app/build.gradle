@@ -61,15 +61,20 @@ android {
         }
     }
 
+    flavorDimensions "environment"
+
     productFlavors {
         mock {
             applicationIdSuffix = ".mock"
+            dimension "environment"
         }
         dev {
             versionName "${versionNumber}-BETA"
+            dimension "environment"
         }
         prod {
             versionName "${versionNumber}.${versionBuild}-RELEASE"
+            dimension "environment"
         }
     }
 
