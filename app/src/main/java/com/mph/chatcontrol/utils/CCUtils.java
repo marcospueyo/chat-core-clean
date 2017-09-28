@@ -104,6 +104,7 @@ public class CCUtils {
     }
 
     public static void makeCall(final Activity activity, String phoneNumber) {
+        // TODO: 27/09/2017 Handle permission request response
         int checkPermission = ContextCompat.checkSelfPermission(activity, "android.permission.CALL_PHONE");
         if (checkPermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
