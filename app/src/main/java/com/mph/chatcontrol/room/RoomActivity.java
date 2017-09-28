@@ -231,9 +231,9 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     private void initializeRecyclerView(LinearLayoutManager layoutManager) {
         layoutManager.setStackFromEnd(true);
         mListView.setLayoutManager(layoutManager);
-        mListView.addItemDecoration(
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST,
-                        ContextCompat.getColor(this, R.color.brand_color)));
+//        mListView.addItemDecoration(
+//                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST,
+//                        ContextCompat.getColor(this, R.color.brand_color)));
         mListView.setHasFixedSize(true);
     }
 

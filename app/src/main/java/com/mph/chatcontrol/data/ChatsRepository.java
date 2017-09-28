@@ -22,7 +22,11 @@ public interface ChatsRepository {
 
     void findActiveChats(Date inputDate, GetChatsCallback callback);
 
+    void findActiveChatsSorted(Date inputDate, GetChatsCallback callback);
+
     void findArchivedChats(Date inputDate, GetChatsCallback callback);
+
+    void findArchivedChatsSorted(Date inputDate, GetChatsCallback callback);
 
     void getChat(String id, GetSingleChatCallback callback);
 

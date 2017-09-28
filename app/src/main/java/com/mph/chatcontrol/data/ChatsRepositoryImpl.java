@@ -15,6 +15,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import io.requery.Persistable;
+import io.requery.query.Condition;
 import io.requery.sql.EntityDataStore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -50,6 +51,16 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         int count = dataStore.count(Chat.class).get().value();
         if (count == 0)
             persistMockEntities();
+    }
+
+    @Override
+    public void findActiveChatsSorted(Date inputDate, GetChatsCallback callback) {
+
+    }
+
+    @Override
+    public void findArchivedChatsSorted(Date inputDate, GetChatsCallback callback) {
+
     }
 
     @Override
@@ -109,6 +120,7 @@ public class ChatsRepositoryImpl implements ChatsRepository {
                 .select(Chat.class)
                 .where(Chat.START_DATE.lessThanOrEqual(inputDate))
                 .and(Chat.END_DATE.greaterThanOrEqual(inputDate))
+                .orderBy(Chat.LAST_MSG_DATE.desc())
                 .get()
                 .toList();
     }
@@ -117,6 +129,7 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         return dataStore
                 .select(Chat.class)
                 .where(Chat.END_DATE.lessThan(inputDate))
+                .orderBy(Chat.LAST_MSG_DATE.desc())
                 .get()
                 .toList();
     }

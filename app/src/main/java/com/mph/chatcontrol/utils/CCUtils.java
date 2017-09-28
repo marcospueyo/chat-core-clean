@@ -45,14 +45,13 @@ public class CCUtils {
     }
 
     public static String getFormattedLastActivity(Date date) {
-        String formattedDate;
-        if (DateUtils.isToday(date)) {
-            formattedDate = DateUtils.dateToString(date, DateUtils.SHORT_TIME_FORMAT);
-        }
-        else {
-            formattedDate = DateUtils.dateToString(date, DateUtils.DATE_FORMAT);
-        }
-        return formattedDate;
+        return DateUtils.dateToString(date,
+                DateUtils.isToday(date) ? DateUtils.SHORT_TIME_FORMAT : DateUtils.DATE_FORMAT);
+    }
+
+    public static String getFormattedMessageDate(Date date) {
+        return DateUtils.dateToString(date,
+                DateUtils.isToday(date) ? DateUtils.SHORT_TIME_FORMAT : DateUtils.FULL_DATE_FORMAT);
     }
 
     public static boolean isAPI_L_OrAbove() {

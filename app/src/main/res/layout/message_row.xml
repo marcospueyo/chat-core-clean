@@ -63,16 +63,12 @@
             android:maxLines="1"
             android:text="@string/timestamp_placeholder"
             android:textAlignment="center"
-            android:textColor="@color/gray_dark"
+            android:textColor="@color/white"
             android:textSize="@dimen/textsize_small"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_gravity="end"/>
-
-        <android.support.v4.widget.Space
-            android:layout_width="0dp"
-            android:layout_height="@dimen/spacing_small" />
     </LinearLayout>
 </LinearLayout>
