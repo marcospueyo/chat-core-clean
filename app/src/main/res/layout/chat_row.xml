@@ -67,7 +67,7 @@
                     android:maxLines="1"
                     android:text="FECHA"
                     android:textColor="@color/gray_dark"
-                    android:textSize="@dimen/textsize_medium"/>
+                    android:textSize="@dimen/textsize_small"/>
                 <android.support.v4.widget.Space
                     android:layout_width="@dimen/spacing_large"
                     android:layout_height="0dp" />

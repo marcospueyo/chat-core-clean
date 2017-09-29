@@ -35,6 +35,8 @@ import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
+import com.mph.chatcontrol.network.GuestServiceImpl;
+import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
 import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
 import com.mph.chatcontrol.room.GetRoomInteractorImpl;
@@ -220,7 +222,9 @@ public class MainActivity extends AppCompatActivity implements
                 new FindGuestsInteractorImpl(
                         new GuestRepositoryImpl(
                                 new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore()
+                                getDataStore(),
+                                new GuestServiceImpl(getGuestDatabaseReference()),
+                                new RestGuestToGuestMapper()
                         )
                 ),
                 new GetRoomInteractorImpl(
@@ -285,5 +289,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private DatabaseReference getChatDatabaseReference() {
         return ((ChatcontrolApplication) getApplication()).getChatDatabaseReference();
+    }
+
+    private DatabaseReference getGuestDatabaseReference() {
+        return ((ChatcontrolApplication) getApplication()).getGuestDatabaseReference();
     }
 }

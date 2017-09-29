@@ -45,4 +45,8 @@ public class ChatcontrolApplication extends Application {
     public DatabaseReference getChatDatabaseReference() {
         return FirebaseDatabase.getInstance().getReference().child("rooms");
     }
+
+    public DatabaseReference getGuestDatabaseReference() {
+        return FirebaseDatabase.getInstance().getReference().child("users");
+    }
 }

@@ -11,7 +11,6 @@ public interface RoomService {
         void onDataNotAvailable();
     }
 
-
     void getRooms(GetRoomsCallback callback);
 
 }

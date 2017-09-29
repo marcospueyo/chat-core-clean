@@ -1,7 +1,11 @@
 package com.mph.chatcontrol.data;
 /* Created by macmini on 07/08/2017. */
 
+import com.mph.chatcontrol.base.UpdateOperationCallback;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
+import com.mph.chatcontrol.network.GuestService;
+import com.mph.chatcontrol.network.RestGuest;
+import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,12 +26,23 @@ public class GuestRepositoryImpl implements GuestRepository {
     @Nonnull
     private SharedPreferencesRepository sharedPreferencesRepository;
     @Nonnull private EntityDataStore<Persistable> dataStore;
+    @Nonnull private final GuestService service;
+    @Nonnull private final RestGuestToGuestMapper mapper;
+
+    private final boolean mockData = false;
+    private final boolean forceSync = true;
 
     public GuestRepositoryImpl(@Nonnull SharedPreferencesRepository sharedPreferencesRepository,
-                               @Nonnull EntityDataStore<Persistable> dataStore) {
+                               @Nonnull EntityDataStore<Persistable> dataStore,
+                               @Nonnull GuestService service,
+                               @Nonnull RestGuestToGuestMapper mapper) {
         this.sharedPreferencesRepository = checkNotNull(sharedPreferencesRepository);
         this.dataStore = checkNotNull(dataStore);
-        insertMockData();
+        this.service = checkNotNull(service);
+        this.mapper = checkNotNull(mapper);
+
+        if (mockData)
+            insertMockData();
     }
 
     private void insertMockData() {
@@ -41,18 +56,45 @@ public class GuestRepositoryImpl implements GuestRepository {
     }
 
     @Override
-    public List<Guest> getGuests() {
-        return dataStore.select(Guest.class).get().toList();
+    public void getGuests(final GuestGuestsCallback callback) {
+        // TODO: 27/09/2017 Define strategy
+        int count = dataStore.count(Chat.class).get().value();
+        if (forceSync || count == 0) {
+            service.getGuests(new GuestService.GetGuestsCallback() {
+                @Override
+                public void onGuestsLoaded(List<RestGuest> guests) {
+                    deleteEntities();
+                    persistEntities(mapper.map(guests));
+                    callback.onGuestsLoaded(getLocalGuests());
+                }
+
+                @Override
+                public void onDataNotAvailable() {
+                    callback.onGuestsNotAvailable();
+                }
+            });
+        }
+        else {
+            callback.onGuestsLoaded(getLocalGuests());
+        }
     }
 
     @Override
-    public Guest getGuest(String id) {
+    public void getGuest(String id, GetSingleGuestCallback callback) {
+        callback.onSingleGuestLoaded(getLocalGuest(id));
+    }
+
+    @Override
+    public void updateGuest(Guest guest, UpdateOperationCallback callback) {
+        dataStore.update(guest);
+    }
+
+    private Guest getLocalGuest(String id) {
         return dataStore.select(Guest.class).where(Guest.ID.eq(id)).get().firstOrNull();
     }
 
-    @Override
-    public void updateGuest(Guest guest) {
-        dataStore.update(guest);
+    private List<Guest> getLocalGuests() {
+        return dataStore.select(Guest.class).get().toList();
     }
 
     private List<Guest> createGuestList() {
@@ -77,5 +119,13 @@ public class GuestRepositoryImpl implements GuestRepository {
             guests.add(guest);
         }
         return guests;
+    }
+
+    private void persistEntities(List<Guest> entities) {
+        dataStore.insert(entities);
+    }
+
+    private void deleteEntities() {
+        dataStore.delete(Guest.class).get().value();
     }
 }
