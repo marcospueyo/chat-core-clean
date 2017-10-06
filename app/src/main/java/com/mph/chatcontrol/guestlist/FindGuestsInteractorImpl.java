@@ -25,6 +25,16 @@ public class FindGuestsInteractorImpl implements FindGuestsInteractor {
 
     @Override
     public void findGuests(final OnFinishedListener listener) {
-        listener.onFinished(mGuestRepository.getGuests());
+        mGuestRepository.getGuests(new GuestRepository.GuestGuestsCallback() {
+            @Override
+            public void onGuestsLoaded(List<Guest> guests) {
+                listener.onFinished(guests);
+            }
+
+            @Override
+            public void onGuestsNotAvailable() {
+                listener.onDataNotAvailable();
+            }
+        });
     }
 }

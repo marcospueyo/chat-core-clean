@@ -1,13 +1,28 @@
 package com.mph.chatcontrol.data;
 /* Created by macmini on 07/08/2017. */
 
+import com.mph.chatcontrol.base.UpdateOperationCallback;
+
 import java.util.List;
 
 public interface GuestRepository {
+    interface GuestGuestsCallback {
 
-    List<Guest> getGuests();
+        void onGuestsLoaded(List<Guest> guests);
 
-    Guest getGuest(String id);
+        void onGuestsNotAvailable();
+    }
 
-    void updateGuest(Guest guest);
+    interface GetSingleGuestCallback {
+
+        void onSingleGuestLoaded(Guest guest);
+
+        void onGuestNotAvailable();
+    }
+
+    void getGuests(GuestGuestsCallback callback);
+
+    void getGuest(String id, GetSingleGuestCallback callback);
+
+    void updateGuest(Guest guest, UpdateOperationCallback callback);
 }

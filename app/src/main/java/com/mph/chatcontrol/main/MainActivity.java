@@ -43,6 +43,8 @@ import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMappe
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
+import com.mph.chatcontrol.network.GuestServiceImpl;
+import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
 import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
 import com.mph.chatcontrol.network.RoomService;
@@ -235,7 +237,27 @@ public class MainActivity extends AppCompatActivity implements
         if (mGuestListFragment == null)
             mGuestListFragment = GuestListFragment.newInstance();
 
-        mGuestListPresenter = getGuestListPresenter();
+        mGuestListPresenter = new GuestListPresenterImpl(
+                mGuestListFragment,
+                new GuestViewModelToGuestMapper(),
+                new ChatViewModelToChatMapper(),
+                new FindGuestsInteractorImpl(
+                        new GuestRepositoryImpl(
+                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                                getDataStore(),
+                                new GuestServiceImpl(getGuestDatabaseReference()),
+                                new RestGuestToGuestMapper()
+                        )
+                ),
+                new GetRoomInteractorImpl(
+                        new ChatsRepositoryImpl(
+                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                                getDataStore(),
+                                new RoomFirebaseServiceImpl(getChatDatabaseReference()),
+                                new RestRoomToChatMapper()
+                        )
+                )
+        );
 
         showFragment(mGuestListFragment);
     }
@@ -443,7 +465,9 @@ public class MainActivity extends AppCompatActivity implements
         if (mGuestRepository == null) {
             mGuestRepository = new GuestRepositoryImpl(
                     getSharedPreferencesRepository(),
-                    getDataStore()
+                    getDataStore(),
+                    new GuestServiceImpl(getGuestDatabaseReference()),
+                    new RestGuestToGuestMapper()
             );
         }
         return mGuestRepository;
@@ -469,5 +493,9 @@ public class MainActivity extends AppCompatActivity implements
             mGetLastMessageInteractor = new GetLastMessageInteractorImpl(getMessagesRepository());
         }
         return mGetLastMessageInteractor;
+    }
+
+    private DatabaseReference getGuestDatabaseReference() {
+        return ((ChatcontrolApplication) getApplication()).getGuestDatabaseReference();
     }
 }
