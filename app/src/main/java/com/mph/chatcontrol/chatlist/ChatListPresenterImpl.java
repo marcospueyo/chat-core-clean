@@ -11,9 +11,12 @@ import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.Chat;
+import com.mph.chatcontrol.data.Message;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,6 +30,8 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     @NonNull
     private final FindChatsInteractor mFindChatsInteractor;
 
+    @Nonnull private final GetLastMessageInteractor mGetLastMessageInteractor;
+
     @NonNull
     private ChatViewModelToChatMapper mMapper;
 
@@ -35,9 +40,11 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     public ChatListPresenterImpl(@NonNull ChatListView chatListView,
                                  @NonNull ChatViewModelToChatMapper mapper,
                                  @NonNull FindChatsInteractor findChatsInteractor,
+                                 @Nonnull GetLastMessageInteractor getLastMessageInteractor,
                                  boolean shouldShowActiveChats) {
         mChatListView = checkNotNull(chatListView);
         mFindChatsInteractor = checkNotNull(findChatsInteractor);
+        mGetLastMessageInteractor = checkNotNull(getLastMessageInteractor);
         mMapper = checkNotNull(mapper);
         mChatListView.setPresenter(this);
         mShouldShowActiveChats = shouldShowActiveChats;
@@ -69,8 +76,20 @@ public class ChatListPresenterImpl implements ChatListPresenter,
 
     // TODO: 04/09/2017 Must be removed
     private void processChats(List<Chat> chats) {
-        for (Chat chat : chats) {
+        for (final Chat chat : chats) {
             chat.setPendingCount(0);
+            mGetLastMessageInteractor.execute(chat.getId(), new GetLastMessageInteractor.OnFinishedListener() {
+                @Override
+                public void onLastMessageFetched(Message message) {
+                    chat.setLastMsgDate(message == null ? null : message.getDate());
+                    chat.setLastMsg(message == null ? "" : message.getText());
+                }
+
+                @Override
+                public void onLastActivityLoadError() {
+
+                }
+            });
         }
     }
 

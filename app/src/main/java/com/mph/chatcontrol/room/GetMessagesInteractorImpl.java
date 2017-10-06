@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /* Created by macmini on 25/07/2017. */
 
 public class GetMessagesInteractorImpl implements GetMessagesInteractor {
@@ -20,7 +22,7 @@ public class GetMessagesInteractorImpl implements GetMessagesInteractor {
     @NonNull private final MessagesRepository messagesRepository;
 
     public GetMessagesInteractorImpl(@NonNull MessagesRepository messagesRepository) {
-        this.messagesRepository = messagesRepository;
+        this.messagesRepository = checkNotNull(messagesRepository);
     }
 
     @Override

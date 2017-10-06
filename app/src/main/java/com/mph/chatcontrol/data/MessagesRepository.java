@@ -12,4 +12,6 @@ public interface MessagesRepository {
     Message getMessage(String messageID);
 
     Message insertOwnMessage(String roomID, String text);
+
+    Message getLastMessage(String roomID);
 }

@@ -60,6 +60,18 @@ public class MessagesRepositoryImpl implements MessagesRepository {
         return dataStore.insert(createMessage(roomID, text));
     }
 
+    @Override
+    public Message getLastMessage(String roomID) {
+        List<Message> messages = dataStore
+                .select(Message.class)
+                .where(Message.ROOM_ID.eq(roomID))
+                .orderBy(Message.DATE.desc())
+                .get()
+                .toList();
+        return (messages.size() > 0) ? messages.get(0) : null;
+
+    }
+
     // TODO: 04/08/2017 Should have own user 'senderName' field info
     private Message createMessage(String roomID, String text) {
         Message message = new Message();
@@ -75,7 +87,7 @@ public class MessagesRepositoryImpl implements MessagesRepository {
 
     private List<Message> getMockMessageList(Chat room) {
         List<Message> messages = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             Message message = new Message();
             message.setId(UUID.randomUUID().toString());
             message.setText("test text " + i);

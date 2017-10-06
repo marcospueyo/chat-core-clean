@@ -30,11 +30,15 @@ public class ChatViewModelToChatMapper extends Mapper<ChatViewModel, Chat> {
                 .setDescription(value.getPropertyName())
                 .setPendingCount(value.getPendingCount())
                 .setCheckoutDate(DateUtils.dateToString(value.getEndDate(), CHECKOUT_DATE_FORMAT))
-                .setLastMsgDate(CCUtils.getFormattedLastActivity(value.getLastMsgDate()))
+                .setLastMsgDate(formatLastMsgDate(value.getLastMsgDate()))
                 .setLastActivity(value.getLastMsg())
                 .setActive(chatIsActive(value))
                 .build();
         return chatViewModel;
+    }
+
+    private String formatLastMsgDate(Date date) {
+        return date == null ? "" : CCUtils.getFormattedLastActivity(date);
     }
 
 

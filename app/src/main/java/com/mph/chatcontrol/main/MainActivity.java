@@ -16,34 +16,51 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.chatlist.GetLastMessageInteractor;
+import com.mph.chatcontrol.chatlist.GetLastMessageInteractorImpl;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.ChatListPresenterImpl;
 import com.mph.chatcontrol.chatlist.ChatlistFragment;
 import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
+import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.data.ChatsRepository;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
+import com.mph.chatcontrol.data.GuestRepository;
 import com.mph.chatcontrol.data.GuestRepositoryImpl;
+import com.mph.chatcontrol.data.MessagesRepository;
+import com.mph.chatcontrol.data.MessagesRepositoryImpl;
 import com.mph.chatcontrol.events.LogoutEvent;
 import com.mph.chatcontrol.events.OpenChatEvent;
 import com.mph.chatcontrol.guestlist.FindGuestsInteractorImpl;
 import com.mph.chatcontrol.guestlist.GuestListFragment;
 import com.mph.chatcontrol.guestlist.GuestListPresenterImpl;
+import com.mph.chatcontrol.guestlist.contract.FindGuestsInteractor;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
+import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
 import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
+import com.mph.chatcontrol.network.RoomService;
 import com.mph.chatcontrol.room.GetRoomInteractorImpl;
 import com.mph.chatcontrol.room.RoomActivity;
+import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
+import com.mph.chatcontrol.room.contract.GetRoomInteractor;
+import com.mph.chatcontrol.room.contract.SendMessageInteractor;
+import com.mph.chatcontrol.room.contract.UpdateSeenStatusInteractor;
+import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 import com.mph.chatcontrol.settings.GetNotificationPreferenceInteractorImpl;
 import com.mph.chatcontrol.settings.LogoutInteractorImpl;
 import com.mph.chatcontrol.settings.SetNotificationPreferenceInteractorImpl;
 import com.mph.chatcontrol.settings.SettingsFragment;
 import com.mph.chatcontrol.settings.SettingsPresenterImpl;
+import com.mph.chatcontrol.settings.contract.GetNotificationPreferenceInteractor;
+import com.mph.chatcontrol.settings.contract.LogoutInteractor;
+import com.mph.chatcontrol.settings.contract.SetNotificationPreferenceInteractor;
 import com.mph.chatcontrol.settings.contract.SettingsPresenter;
 import com.mph.chatcontrol.utils.CCUtils;
 
@@ -78,6 +95,29 @@ public class MainActivity extends AppCompatActivity implements
     private ChatListPresenter mArchivedChatListPresenter;
     private GuestListPresenter mGuestListPresenter;
     private SettingsPresenter mSettingsPresenter;
+
+    private ChatViewModelToChatMapper mChatViewModelToChatMapper;
+    private RestRoomToChatMapper mRestRoomToChatMapper;
+    private MessageViewModelToMessageMapper messageViewModelToMessageMapper;
+    private GuestViewModelToGuestMapper mGuestViewModelToGuestMapper;
+
+    private FindChatsInteractor mFindChatsInteractor;
+    private FindGuestsInteractor mFindGuestsInteractor;
+    private GetRoomInteractor mGetRoomInteractor;
+    private GetMessagesInteractor mGetMessagesInteractor;
+    private GetLastMessageInteractor mGetLastMessageInteractor;
+    private SendMessageInteractor mSendMessageInteractor;
+    private UpdateSeenStatusInteractor mUpdateSeenStatusInteractor;
+    private LogoutInteractor mLogoutInteractor;
+    private SetNotificationPreferenceInteractor mSetNotificationPreferenceInteractor;
+    private GetNotificationPreferenceInteractor mGetNotificationPreferenceInteractor;
+
+    private ChatsRepository mChatsRepository;
+    private GuestRepository mGuestRepository;
+    private MessagesRepository mMessagesRepository;
+    private SharedPreferencesRepository mSharedPreferencesRepository;
+
+    private RoomService mRoomService;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, MainActivity.class);
@@ -175,16 +215,7 @@ public class MainActivity extends AppCompatActivity implements
         if (activeChatListFragment == null) {
             activeChatListFragment = ChatlistFragment.newInstance();
         }
-        mActiveChatListPresenter = new ChatListPresenterImpl(
-                activeChatListFragment,
-                new ChatViewModelToChatMapper(),
-                new FindChatsInteractorImpl(
-                        new ChatsRepositoryImpl(
-                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore(),
-                                new RoomFirebaseServiceImpl(getChatDatabaseReference()),
-                                new RestRoomToChatMapper())),
-                true /* should load active chats */);
+        mActiveChatListPresenter = getActiveChatListPresenter();
 
         showFragment(activeChatListFragment);
     }
@@ -194,16 +225,7 @@ public class MainActivity extends AppCompatActivity implements
         if (archivedChatListFragment == null) {
             archivedChatListFragment = ChatlistFragment.newInstance();
         }
-        mArchivedChatListPresenter = new ChatListPresenterImpl(
-                archivedChatListFragment,
-                new ChatViewModelToChatMapper(),
-                new FindChatsInteractorImpl(
-                        new ChatsRepositoryImpl(
-                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore(),
-                                new RoomFirebaseServiceImpl(getChatDatabaseReference()),
-                                new RestRoomToChatMapper())),
-                false /* should NOT load active chats */);
+        mArchivedChatListPresenter = getArchivedChatListPresenter();
 
         showFragment(archivedChatListFragment);
     }
@@ -213,25 +235,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mGuestListFragment == null)
             mGuestListFragment = GuestListFragment.newInstance();
 
-        mGuestListPresenter = new GuestListPresenterImpl(
-                mGuestListFragment,
-                new GuestViewModelToGuestMapper(),
-                new ChatViewModelToChatMapper(),
-                new FindGuestsInteractorImpl(
-                        new GuestRepositoryImpl(
-                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore()
-                        )
-                ),
-                new GetRoomInteractorImpl(
-                        new ChatsRepositoryImpl(
-                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore(),
-                                new RoomFirebaseServiceImpl(getChatDatabaseReference()),
-                                new RestRoomToChatMapper()
-                        )
-                )
-        );
+        mGuestListPresenter = getGuestListPresenter();
 
         showFragment(mGuestListFragment);
     }
@@ -241,11 +245,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mSettingsFragment == null)
             mSettingsFragment = SettingsFragment.newInstance();
 
-        mSettingsPresenter = new SettingsPresenterImpl(
-                mSettingsFragment,
-                new LogoutInteractorImpl(),
-                new SetNotificationPreferenceInteractorImpl(),
-                new GetNotificationPreferenceInteractorImpl());
+        mSettingsPresenter = getSettingsPresenter();
         showFragment(mSettingsFragment);
     }
 
@@ -285,5 +285,189 @@ public class MainActivity extends AppCompatActivity implements
 
     private DatabaseReference getChatDatabaseReference() {
         return ((ChatcontrolApplication) getApplication()).getChatDatabaseReference();
+    }
+
+
+    public ChatListPresenter getActiveChatListPresenter() {
+        if (mActiveChatListPresenter == null) {
+            mActiveChatListPresenter = new ChatListPresenterImpl(
+                    activeChatListFragment,
+                    getChatViewModelToChatMapper(),
+                    getFindChatsInteractor(),
+                    getGetLastMessageInteractor(),
+                    true /* should load active chats */);
+        }
+        return mActiveChatListPresenter;
+    }
+
+    public ChatListPresenter getArchivedChatListPresenter() {
+        if (mArchivedChatListPresenter == null) {
+            mArchivedChatListPresenter = new ChatListPresenterImpl(
+                    archivedChatListFragment,
+                    getChatViewModelToChatMapper(),
+                    getFindChatsInteractor(),
+                    getGetLastMessageInteractor(),
+                    false /* should NOT load active chats */);
+        }
+        return mArchivedChatListPresenter;
+    }
+
+    public GuestListPresenter getGuestListPresenter() {
+        if (mGuestListPresenter == null) {
+            mGuestListPresenter = new GuestListPresenterImpl(
+                    mGuestListFragment,
+                    getGuestViewModelToGuestMapper(),
+                    getChatViewModelToChatMapper(),
+                    getFindGuestsInteractor(),
+                    getGetRoomInteractor()
+            );
+        }
+
+        return mGuestListPresenter;
+    }
+
+    public SettingsPresenter getSettingsPresenter() {
+        if (mSettingsPresenter == null) {
+            mSettingsPresenter = new SettingsPresenterImpl(
+                    mSettingsFragment,
+                    getLogoutInteractor(),
+                    getSetNotificationPreferenceInteractor(),
+                    getGetNotificationPreferenceInteractor());
+        }
+        return mSettingsPresenter;
+    }
+
+    public ChatViewModelToChatMapper getChatViewModelToChatMapper() {
+        if (mChatViewModelToChatMapper == null) {
+            mChatViewModelToChatMapper = new ChatViewModelToChatMapper();
+        }
+        return mChatViewModelToChatMapper;
+    }
+
+    public RestRoomToChatMapper getRestRoomToChatMapper() {
+        if (mRestRoomToChatMapper == null) {
+            mRestRoomToChatMapper = new RestRoomToChatMapper();
+        }
+        return mRestRoomToChatMapper;
+    }
+
+    public MessageViewModelToMessageMapper getMessageViewModelToMessageMapper() {
+        if (messageViewModelToMessageMapper == null) {
+            messageViewModelToMessageMapper = new MessageViewModelToMessageMapper();
+        }
+        return messageViewModelToMessageMapper;
+    }
+
+    public GuestViewModelToGuestMapper getGuestViewModelToGuestMapper() {
+        if (mGuestViewModelToGuestMapper == null) {
+            mGuestViewModelToGuestMapper = new GuestViewModelToGuestMapper();
+        }
+        return mGuestViewModelToGuestMapper;
+    }
+
+    public FindChatsInteractor getFindChatsInteractor() {
+        if (mFindChatsInteractor == null) {
+            mFindChatsInteractor = new FindChatsInteractorImpl(getChatsRepository());
+        }
+        return mFindChatsInteractor;
+    }
+
+    public FindGuestsInteractor getFindGuestsInteractor() {
+        if (mFindGuestsInteractor == null) {
+            mFindGuestsInteractor = new FindGuestsInteractorImpl(getGuestRepository());
+        }
+        return mFindGuestsInteractor;
+    }
+
+    public GetRoomInteractor getGetRoomInteractor() {
+        if (mGetRoomInteractor == null) {
+            mGetRoomInteractor = new GetRoomInteractorImpl(getChatsRepository());
+        }
+        return mGetRoomInteractor;
+    }
+
+    public GetMessagesInteractor getGetMessagesInteractor() {
+        return mGetMessagesInteractor;
+    }
+
+    public SendMessageInteractor getSendMessageInteractor() {
+        return mSendMessageInteractor;
+    }
+
+    public UpdateSeenStatusInteractor getUpdateSeenStatusInteractor() {
+        return mUpdateSeenStatusInteractor;
+    }
+
+    public MessagesRepository getMessagesRepository() {
+        if (mMessagesRepository == null) {
+            mMessagesRepository = new MessagesRepositoryImpl(
+                    getSharedPreferencesRepository(),
+                    getDataStore());
+        }
+        return mMessagesRepository;
+    }
+
+    public LogoutInteractor getLogoutInteractor() {
+        if (mLogoutInteractor == null) {
+            mLogoutInteractor = new LogoutInteractorImpl();
+        }
+        return mLogoutInteractor;
+    }
+
+    public SetNotificationPreferenceInteractor getSetNotificationPreferenceInteractor() {
+        if (mSetNotificationPreferenceInteractor == null) {
+            mSetNotificationPreferenceInteractor = new SetNotificationPreferenceInteractorImpl();
+        }
+        return mSetNotificationPreferenceInteractor;
+    }
+
+    public GetNotificationPreferenceInteractor getGetNotificationPreferenceInteractor() {
+        if (mGetNotificationPreferenceInteractor == null) {
+            mGetNotificationPreferenceInteractor = new GetNotificationPreferenceInteractorImpl();
+        }
+        return mGetNotificationPreferenceInteractor;
+    }
+
+    public ChatsRepository getChatsRepository() {
+        if (mChatsRepository == null) {
+            mChatsRepository = new ChatsRepositoryImpl(
+                    getSharedPreferencesRepository(),
+                    getDataStore(),
+                    getRoomService(),
+                    getRestRoomToChatMapper());
+        }
+        return mChatsRepository;
+    }
+
+    public GuestRepository getGuestRepository() {
+        if (mGuestRepository == null) {
+            mGuestRepository = new GuestRepositoryImpl(
+                    getSharedPreferencesRepository(),
+                    getDataStore()
+            );
+        }
+        return mGuestRepository;
+    }
+
+    public SharedPreferencesRepository getSharedPreferencesRepository() {
+        if (mSharedPreferencesRepository == null) {
+            mSharedPreferencesRepository =
+                    new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE));
+        }
+        return mSharedPreferencesRepository;
+    }
+
+    public RoomService getRoomService() {
+        if (mRoomService == null) {
+            mRoomService = new RoomFirebaseServiceImpl(getChatDatabaseReference());
+        }
+        return mRoomService;
+    }
+
+    public GetLastMessageInteractor getGetLastMessageInteractor() {
+        if (mGetLastMessageInteractor == null) {
+            mGetLastMessageInteractor = new GetLastMessageInteractorImpl(getMessagesRepository());
+        }
+        return mGetLastMessageInteractor;
     }
 }
