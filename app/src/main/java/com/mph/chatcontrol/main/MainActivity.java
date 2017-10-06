@@ -43,6 +43,7 @@ import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMappe
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
+import com.mph.chatcontrol.network.GuestService;
 import com.mph.chatcontrol.network.GuestServiceImpl;
 import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements
     private MessageViewModelToMessageMapper messageViewModelToMessageMapper;
     private GuestViewModelToGuestMapper mGuestViewModelToGuestMapper;
 
+
     private FindChatsInteractor mFindChatsInteractor;
     private FindGuestsInteractor mFindGuestsInteractor;
     private GetRoomInteractor mGetRoomInteractor;
@@ -120,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements
     private SharedPreferencesRepository mSharedPreferencesRepository;
 
     private RoomService mRoomService;
+
+    private RestGuestToGuestMapper mRestGuestToGuestMapper;
+    private GuestService mGuestService;
 
     public static Intent newInstance(Context context) {
         return new Intent(context, MainActivity.class);
@@ -466,8 +471,8 @@ public class MainActivity extends AppCompatActivity implements
             mGuestRepository = new GuestRepositoryImpl(
                     getSharedPreferencesRepository(),
                     getDataStore(),
-                    new GuestServiceImpl(getGuestDatabaseReference()),
-                    new RestGuestToGuestMapper()
+                    getGuestService(),
+                    getRestGuestToGuestMapper()
             );
         }
         return mGuestRepository;
@@ -497,5 +502,19 @@ public class MainActivity extends AppCompatActivity implements
 
     private DatabaseReference getGuestDatabaseReference() {
         return ((ChatcontrolApplication) getApplication()).getGuestDatabaseReference();
+    }
+
+    public RestGuestToGuestMapper getRestGuestToGuestMapper() {
+        if (mRestGuestToGuestMapper == null) {
+            mRestGuestToGuestMapper = new RestGuestToGuestMapper();
+        }
+        return mRestGuestToGuestMapper;
+    }
+
+    public GuestService getGuestService() {
+        if (mGuestService == null) {
+            mGuestService = new GuestServiceImpl(getGuestDatabaseReference());
+        }
+        return mGuestService;
     }
 }

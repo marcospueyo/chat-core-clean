@@ -127,6 +127,7 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onMessageSent(Message message) {
+        // TODO: 06/10/2017 Update room last activity date 
         mRoomView.handleMessageSendSuccess();
         mRoomView.addMessage(mMessageMapper.reverseMap(message));
     }
