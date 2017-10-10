@@ -10,4 +10,7 @@ public interface SharedPreferencesRepository {
     void setLoggedIn();
     boolean isFirstLaunch();
     void setFirstLaunchFinished();
+
+    String getUserID();
+    String getUserName();
 }

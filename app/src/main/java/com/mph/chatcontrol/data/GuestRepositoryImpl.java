@@ -10,7 +10,6 @@ import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -56,7 +55,7 @@ public class GuestRepositoryImpl implements GuestRepository {
     }
 
     @Override
-    public void getGuests(final GuestGuestsCallback callback) {
+    public void getGuests(final GetGuestsCallback callback) {
         // TODO: 27/09/2017 Define strategy
         int count = dataStore.count(Chat.class).get().value();
         if (forceSync || count == 0) {

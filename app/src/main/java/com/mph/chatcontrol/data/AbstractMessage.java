@@ -14,8 +14,8 @@ public abstract class AbstractMessage {
 
     String text;
     Date date;
-    boolean ownMessage;
 
     String roomId;
     String senderName;
+    String senderId;
 }

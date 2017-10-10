@@ -6,7 +6,7 @@ import com.mph.chatcontrol.base.UpdateOperationCallback;
 import java.util.List;
 
 public interface GuestRepository {
-    interface GuestGuestsCallback {
+    interface GetGuestsCallback {
 
         void onGuestsLoaded(List<Guest> guests);
 
@@ -20,7 +20,7 @@ public interface GuestRepository {
         void onGuestNotAvailable();
     }
 
-    void getGuests(GuestGuestsCallback callback);
+    void getGuests(GetGuestsCallback callback);
 
     void getGuest(String id, GetSingleGuestCallback callback);
 

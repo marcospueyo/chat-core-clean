@@ -24,20 +24,16 @@ public class SendMessageInteractorImpl implements SendMessageInteractor {
 
     @Override
     public void execute(final String roomID, final String text, final OnFinishedListener listener) {
-        new Handler().postDelayed(new Runnable() {
+        messagesRepository.insertOwnMessage(roomID, text, new MessagesRepository.SendMessageCallback() {
             @Override
-            public void run() {
-                Message insertedMessage = messagesRepository.insertOwnMessage(roomID, text);
-                if (insertedMessage == null)
-                    listener.onMessageSendError();
-                else
-                    listener.onMessageSent(insertedMessage);
+            public void onMessageSent(Message message) {
+                listener.onMessageSent(message);
             }
-        }, 500);
-    }
 
-    @Override
-    public void execute(Chat chat, String text, OnFinishedListener listener) {
-        execute(chat.getId(), text, listener);
+            @Override
+            public void onMessageSendError(Message message) {
+                listener.onMessageSendError(message);
+            }
+        });
     }
 }

@@ -28,7 +28,7 @@ import com.mph.chatcontrol.data.ChatsRepository;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.data.MessagesRepositoryImpl;
-import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
+import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
 import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
 import com.mph.chatcontrol.room.adapter.MessagesAdapter;
@@ -37,13 +37,14 @@ import com.mph.chatcontrol.room.contract.RoomView;
 import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
 import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 import com.mph.chatcontrol.utils.CCUtils;
-import com.mph.chatcontrol.widget.DividerItemDecoration;
 import com.mph.chatcontrol.widget.MPHEditText;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.requery.Persistable;
+import io.requery.sql.EntityDataStore;
 
 /* Created by macmini on 24/07/2017. */
 
@@ -97,26 +98,32 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     private void initializePresenter() {
         ChatsRepository chatsRepository =
                 new ChatsRepositoryImpl(
-                        new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                        getSharedPreferencesRepository(),
                         ((ChatcontrolApplication) getApplication()).getData(),
                         new RoomFirebaseServiceImpl(getDatabaseReference()),
                         new RestRoomToChatMapper()
                 );
 
         MessagesRepository messagesRepository =
-                new MessagesRepositoryImpl(
-                        new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                        (((ChatcontrolApplication) getApplication()).getData()));
+                ((ChatcontrolApplication) getApplication()).getMessagesRepository(this);
 
         mPresenter = new RoomPresenterImpl(
                 this,
                 getRoomID(),
                 new ChatViewModelToChatMapper(),
-                new MessageViewModelToMessageMapper(),
+                new MessageViewModelToMessageMapper(getSharedPreferencesRepository()),
                 new GetRoomInteractorImpl(chatsRepository),
                 new GetMessagesInteractorImpl(messagesRepository),
                 new SendMessageInteractorImpl(messagesRepository),
                 new UpdateSeenStatusInteractorImpl(chatsRepository));
+    }
+
+    private SharedPreferencesRepository getSharedPreferencesRepository() {
+        return ((ChatcontrolApplication) getApplication()).getSharedPreferencesRepository(this);
+    }
+
+    public EntityDataStore<Persistable> getDataStore() {
+        return (((ChatcontrolApplication) getApplication()).getData());
     }
 
     private void setupToolbar() {
@@ -231,9 +238,6 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     private void initializeRecyclerView(LinearLayoutManager layoutManager) {
         layoutManager.setStackFromEnd(true);
         mListView.setLayoutManager(layoutManager);
-//        mListView.addItemDecoration(
-//                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST,
-//                        ContextCompat.getColor(this, R.color.brand_color)));
         mListView.setHasFixedSize(true);
     }
 

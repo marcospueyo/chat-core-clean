@@ -5,13 +5,27 @@ import java.util.List;
 
 public interface MessagesRepository {
 
-    List<Message> getRoomMessages(String roomID);
+    interface GetMessagesCallback {
 
-    List<Message> getRoomMessages(Chat room);
+        void onMessagesLoaded(List<Message> messages);
+
+        void onMessagesNotAvailable();
+    }
+
+    interface SendMessageCallback {
+
+        void onMessageSent(Message message);
+
+        void onMessageSendError(Message message);
+    }
+
+    void getRoomMessages(String roomID, GetMessagesCallback callback);
+
+    void getRoomMessages(Chat room, GetMessagesCallback callback);
 
     Message getMessage(String messageID);
 
-    Message insertOwnMessage(String roomID, String text);
+    void insertOwnMessage(String roomID, String text, SendMessageCallback callback);
 
     Message getLastMessage(String roomID);
 }

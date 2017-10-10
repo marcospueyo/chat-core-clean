@@ -11,8 +11,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.login.contract.LoginPresenter;
 import com.mph.chatcontrol.login.contract.LoginView;
+import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.main.MainActivity;
 import com.mph.chatcontrol.R;
 
@@ -45,8 +47,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
         mPresenter = new LoginPresenterImpl(
                 this,
                 new LoginInteractorImpl(
-                        new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
+                        getSharedPreferencesRepository(),
                         new FirebaseLoginRepositoryImpl(FirebaseAuth.getInstance())));
+    }
+
+    public SharedPreferencesRepository getSharedPreferencesRepository() {
+        return ((ChatcontrolApplication) getApplication()).getSharedPreferencesRepository(this);
     }
 
     @Override

@@ -27,19 +27,21 @@ public class GetMessagesInteractorImpl implements GetMessagesInteractor {
 
     @Override
     public void execute(final String roomID, final OnFinishedListener listener) {
-        List<Message> messages = messagesRepository.getRoomMessages(roomID);
-        if (messages == null)
-            listener.onMessagesLoadError();
-        else
-            listener.onMessagesLoaded(messages);
+        messagesRepository.getRoomMessages(roomID, new MessagesRepository.GetMessagesCallback() {
+            @Override
+            public void onMessagesLoaded(List<Message> messages) {
+                listener.onMessagesLoaded(messages);
+            }
+
+            @Override
+            public void onMessagesNotAvailable() {
+                listener.onMessagesLoadError();
+            }
+        });
     }
 
     @Override
-    public void execute(Chat room, OnFinishedListener listener) {
-        List<Message> messages = messagesRepository.getRoomMessages(room);
-        if (messages == null)
-            listener.onMessagesLoadError();
-        else
-            listener.onMessagesLoaded(messages);
+    public void execute(final Chat room, final OnFinishedListener listener) {
+        execute(room.getId(), listener);
     }
 }

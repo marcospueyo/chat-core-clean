@@ -8,10 +8,8 @@ public interface SendMessageInteractor {
 
     interface OnFinishedListener {
         void onMessageSent(Message message);
-        void onMessageSendError();
+        void onMessageSendError(Message message);
     }
 
     void execute(String roomID, String text, OnFinishedListener listener);
-
-    void execute(Chat chat, String text, OnFinishedListener listener);
 }

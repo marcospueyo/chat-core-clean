@@ -4,6 +4,10 @@ import android.content.SharedPreferences;
 
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 
+import javax.annotation.Nonnull;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /* Created by macmini on 27/07/2017. */
 
 public class SharedPreferencesRepositoryImpl implements SharedPreferencesRepository {
@@ -13,9 +17,12 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     private static final String IS_FIRST_LAUNCH = "is_first_launch";
 
     private SharedPreferences mSharedPreferences;
+    private FirebaseAuthData mFirebaseAuthData;
 
-    public SharedPreferencesRepositoryImpl(SharedPreferences sharedPreferences) {
-        mSharedPreferences = sharedPreferences;
+    public SharedPreferencesRepositoryImpl(@Nonnull SharedPreferences sharedPreferences,
+                                           @Nonnull FirebaseAuthData firebaseAuthData) {
+        mSharedPreferences = checkNotNull(sharedPreferences);
+        mFirebaseAuthData = checkNotNull(firebaseAuthData);
     }
 
     @Override
@@ -36,5 +43,15 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     @Override
     public void setFirstLaunchFinished() {
         mSharedPreferences.edit().putBoolean(IS_FIRST_LAUNCH, true).apply();
+    }
+
+    @Override
+    public String getUserID() {
+        return mFirebaseAuthData.getUserID();
+    }
+
+    @Override
+    public String getUserName() {
+        return mFirebaseAuthData.getUserName();
     }
 }

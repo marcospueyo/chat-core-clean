@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
@@ -40,8 +41,8 @@ import com.mph.chatcontrol.guestlist.GuestListPresenterImpl;
 import com.mph.chatcontrol.guestlist.contract.FindGuestsInteractor;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
+import com.mph.chatcontrol.login.FirebaseAuthData;
 import com.mph.chatcontrol.login.LoginActivity;
-import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.GuestService;
 import com.mph.chatcontrol.network.GuestServiceImpl;
@@ -118,8 +119,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private ChatsRepository mChatsRepository;
     private GuestRepository mGuestRepository;
-    private MessagesRepository mMessagesRepository;
-    private SharedPreferencesRepository mSharedPreferencesRepository;
+    //private MessagesRepository mMessagesRepository;
+    //private SharedPreferencesRepository mSharedPreferencesRepository;
+    //private FirebaseAuthData mFirebaseAuthData;
 
     private RoomService mRoomService;
 
@@ -242,27 +244,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mGuestListFragment == null)
             mGuestListFragment = GuestListFragment.newInstance();
 
-        mGuestListPresenter = new GuestListPresenterImpl(
-                mGuestListFragment,
-                new GuestViewModelToGuestMapper(),
-                new ChatViewModelToChatMapper(),
-                new FindGuestsInteractorImpl(
-                        new GuestRepositoryImpl(
-                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore(),
-                                new GuestServiceImpl(getGuestDatabaseReference()),
-                                new RestGuestToGuestMapper()
-                        )
-                ),
-                new GetRoomInteractorImpl(
-                        new ChatsRepositoryImpl(
-                                new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE)),
-                                getDataStore(),
-                                new RoomFirebaseServiceImpl(getChatDatabaseReference()),
-                                new RestRoomToChatMapper()
-                        )
-                )
-        );
+        mGuestListPresenter = getGuestListPresenter();
 
         showFragment(mGuestListFragment);
     }
@@ -380,7 +362,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public MessageViewModelToMessageMapper getMessageViewModelToMessageMapper() {
         if (messageViewModelToMessageMapper == null) {
-            messageViewModelToMessageMapper = new MessageViewModelToMessageMapper();
+            messageViewModelToMessageMapper =
+                    new MessageViewModelToMessageMapper(getSharedPreferencesRepository());
         }
         return messageViewModelToMessageMapper;
     }
@@ -426,12 +409,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public MessagesRepository getMessagesRepository() {
-        if (mMessagesRepository == null) {
-            mMessagesRepository = new MessagesRepositoryImpl(
-                    getSharedPreferencesRepository(),
-                    getDataStore());
-        }
-        return mMessagesRepository;
+        return ((ChatcontrolApplication) getApplication()).getMessagesRepository(this);
     }
 
     public LogoutInteractor getLogoutInteractor() {
@@ -479,11 +457,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public SharedPreferencesRepository getSharedPreferencesRepository() {
-        if (mSharedPreferencesRepository == null) {
-            mSharedPreferencesRepository =
-                    new SharedPreferencesRepositoryImpl(getPreferences(MODE_PRIVATE));
-        }
-        return mSharedPreferencesRepository;
+        return ((ChatcontrolApplication) getApplication()).getSharedPreferencesRepository(this);
+    }
+
+    public FirebaseAuthData getFirebaseAuthData() {
+        return ((ChatcontrolApplication) getApplication()).getFirebaseAuthData();
     }
 
     public RoomService getRoomService() {
