@@ -9,6 +9,8 @@ public interface MessagesRepository {
 
         void onMessagesLoaded(List<Message> messages);
 
+        void onNextMessage(Message message);
+
         void onMessagesNotAvailable();
     }
 

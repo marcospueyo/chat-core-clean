@@ -1,13 +1,17 @@
 package com.mph.chatcontrol.utils;
 /* Created by macmini on 18/07/2017. */
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DateUtils {
+    private static final String TAG = DateUtils.class.getSimpleName();
 
     /** Número de segons en una hora */
     public final static long SECONDS_HOUR = 3600;
@@ -22,7 +26,7 @@ public class DateUtils {
     public final static long MILLISECONDS_WEEK = MILLISECONDS_DAY * 7;
 
     /** Format de data complert ("dd/MM/yyyy HH:mm:ss") */
-    public final static String FULL_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    public final static String FULL_DATE_FORMAT = "dd/MM/yyyy HH:mm";
 
     /** Format de data ("dd/MM/yyyy") */
     public final static String DATE_FORMAT = "dd/MM/yyyy";
@@ -111,8 +115,15 @@ public class DateUtils {
      * @return Date amb el valor del String
      */
     public static Date stringToDate(String date, String format) {
+        return stringToDate(date, format, null);
+    }
+
+    public static Date stringToDate(String date, String format, TimeZone timeZone) {
         format = getFormat(format);
         SimpleDateFormat form = new SimpleDateFormat(format, Locale.getDefault());
+        if (timeZone != null) {
+            form.setTimeZone(timeZone);
+        }
         Date d;
         try {
             d = form.parse(date);
@@ -253,7 +264,19 @@ public class DateUtils {
     }
 
     public static Date stringToDateISO8601(String dateStr) {
-        return stringToDate(dateStr, "yyyy-MM-dd'T'HH:mm:ssZ");
+        return stringToDateISO8601(dateStr, null);
+    }
+
+    public static Date stringToDateISO8601(String dateStr, TimeZone timeZone) {
+        return stringToDate(dateStr, "yyyy-MM-dd'T'HH:mm:ssZ", timeZone);
+    }
+
+    public static Date addSecondToDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(date);
+        calendar.add(Calendar.SECOND, 1);
+        return calendar.getTime();
     }
 
     public static boolean dateIsInsideInterval(Date input, Date start, Date end) {

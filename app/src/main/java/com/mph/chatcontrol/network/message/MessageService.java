@@ -18,6 +18,8 @@ public interface MessageService {
 
         void onMessagesLoaded(List<RestMessage> messages);
 
+        void onNextMessage(RestMessage message);
+
         void onMessagesNotAvailable();
     }
 

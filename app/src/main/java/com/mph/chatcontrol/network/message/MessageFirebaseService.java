@@ -9,6 +9,8 @@ public interface MessageFirebaseService {
 
         void onMessagesLoaded(List<RestMessage> messages);
 
+        void onNextMessage(RestMessage message);
+
         void onMessagesNotAvailable();
     }
 

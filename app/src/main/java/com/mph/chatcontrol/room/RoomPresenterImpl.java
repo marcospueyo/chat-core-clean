@@ -121,6 +121,12 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     }
 
     @Override
+    public void onNextMessage(Message message) {
+        Log.d(TAG, "onNextMessage: ");
+        mRoomView.addMessage(mMessageMapper.reverseMap(message));
+    }
+
+    @Override
     public void onMessagesLoadError() {
         mRoomView.showLoadError();
     }

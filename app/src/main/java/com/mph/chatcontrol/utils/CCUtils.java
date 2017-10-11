@@ -18,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mph.chatcontrol.Manifest;
 import com.mph.chatcontrol.R;
 
 import java.util.Date;

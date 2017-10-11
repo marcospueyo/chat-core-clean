@@ -34,6 +34,11 @@ public class GetMessagesInteractorImpl implements GetMessagesInteractor {
             }
 
             @Override
+            public void onNextMessage(Message message) {
+                listener.onNextMessage(message);
+            }
+
+            @Override
             public void onMessagesNotAvailable() {
                 listener.onMessagesLoadError();
             }

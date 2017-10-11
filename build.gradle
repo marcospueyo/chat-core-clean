@@ -38,7 +38,7 @@ ext {
     eventbusVersion = '3.0.0'
     butterknifeVersion = '8.6.0'
     autovalueVersion = '1.2'
-    requeryVersion = '1.4.0'
+    requeryVersion = '1.4.1'
     daggerVersion = '2.11'
     jUnitVersion = '4.12'
     mockitoVersion = '1.10.19'

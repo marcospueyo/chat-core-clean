@@ -2,6 +2,7 @@ package com.mph.chatcontrol.data;
 /* Created by Marcos on 04/08/2017.*/
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.message.MessageService;
@@ -62,6 +63,16 @@ public class MessagesRepositoryImpl implements MessagesRepository {
                 }
 
                 @Override
+                public void onNextMessage(RestMessage restMessage) {
+                    if (!messageExists(restMessage.getId())) {
+                        Log.d(TAG, "onNextMessage: It is a new message");
+                        Message message = mapper.map(restMessage);
+                        persistEntities(message);
+                        callback.onNextMessage(message);
+                    }
+                }
+
+                @Override
                 public void onMessagesNotAvailable() {
                     callback.onMessagesNotAvailable();
                 }
@@ -70,6 +81,11 @@ public class MessagesRepositoryImpl implements MessagesRepository {
         else {
             callback.onMessagesLoaded(getLocalRoomMessages(roomID));
         }
+    }
+
+    private boolean messageExists(final String messageID) {
+        int count = dataStore.count(Message.class).where(Message.ID.eq(messageID)).get().value();
+        return count != 0;
     }
 
     private boolean shouldLoadFromRemoteStore(String roomID) {
@@ -175,6 +191,10 @@ public class MessagesRepositoryImpl implements MessagesRepository {
 
     private void persistEntities(Iterable<Message> messages) {
         dataStore.insert(messages);
+    }
+
+    private void persistEntities(Message message) {
+        dataStore.insert(message);
     }
 
 }

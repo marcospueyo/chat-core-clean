@@ -50,6 +50,11 @@ public class MessageServiceImpl implements MessageService {
             }
 
             @Override
+            public void onNextMessage(RestMessage message) {
+                callback.onNextMessage(message);
+            }
+
+            @Override
             public void onMessagesNotAvailable() {
                 callback.onMessagesNotAvailable();
             }

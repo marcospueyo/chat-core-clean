@@ -9,7 +9,11 @@ import java.util.List;
 public interface GetMessagesInteractor {
 
     interface OnFinishedListener {
+
         void onMessagesLoaded(List<Message> messages);
+
+        void onNextMessage(Message message);
+
         void onMessagesLoadError();
     }
 
