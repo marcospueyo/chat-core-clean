@@ -25,6 +25,11 @@ public class LoginPresenterImpl implements LoginPresenter, LoginInteractor.OnLog
             loginView.navigateToHome();
     }
 
+    @Override
+    public void stop() {
+
+    }
+
     @Override public void validateCredentials(String email, String password) {
         if (loginView != null)
             loginView.showProgress();

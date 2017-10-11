@@ -4,4 +4,6 @@ package com.mph.chatcontrol.base.presenter;
 public interface BasePresenter {
 
     void start();
+
+    void stop();
 }

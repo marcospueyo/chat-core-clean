@@ -26,4 +26,6 @@ public interface MessageService {
     void sendMessage(Message message, SendMessageCallback callback);
 
     void getRoomMessages(String roomID, GetMessagesCallback callback);
+
+    void stopListeningForMessages();
 }

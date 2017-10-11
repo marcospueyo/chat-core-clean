@@ -12,7 +12,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.mph.chatcontrol.utils.CCUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -24,15 +26,17 @@ public class MessageFirebaseServiceImpl implements MessageFirebaseService {
 
     @Nonnull private final DatabaseReference mDatabaseReference;
 
+    private Map<DatabaseReference, ChildEventListener> referenceListenersMap;
+
     public MessageFirebaseServiceImpl(@Nonnull DatabaseReference databaseReference) {
         this.mDatabaseReference = checkNotNull(databaseReference);
+        referenceListenersMap = new HashMap<>();
     }
 
     @Override
     public void getRoomMessages(final String roomID, final GetMessagesCallback callback) {
         DatabaseReference messagesReference = getReferenceForRoom(roomID);
-        Query query = messagesReference.orderByChild("date");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
@@ -54,20 +58,19 @@ public class MessageFirebaseServiceImpl implements MessageFirebaseService {
             public void onCancelled(DatabaseError databaseError) {
                 callback.onMessagesNotAvailable();
             }
-        });
+        };
+
+        Query query = messagesReference.orderByChild("date");
+        query.addListenerForSingleValueEvent(listener);
     }
 
     private void listenForNewMessages(final String roomID, final GetMessagesCallback callback,
                                       final RestMessage lastMessage) {
         DatabaseReference messagesReference = getReferenceForRoom(roomID);
-        Query query = messagesReference.orderByChild("date");
-        if (lastMessage != null) {
-            Log.d(TAG, "listenForNewMessages: startAtDate " + lastMessage.getDate());
-            query = query.startAt(lastMessage.getDate());
-        }
-        query.addChildEventListener(new ChildEventListener() {
+        ChildEventListener listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "onChildAdded: ");
                 RestMessage message = dataSnapshot.getValue(RestMessage.class);
                 if (message != null) {
                     Log.d(TAG, "onChildAdded: date=" + message.getDate());
@@ -94,10 +97,29 @@ public class MessageFirebaseServiceImpl implements MessageFirebaseService {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+
+        Query query = messagesReference.orderByChild("date");
+        if (lastMessage != null) {
+            Log.d(TAG, "listenForNewMessages: startAtDate " + lastMessage.getDate());
+            query = query.startAt(lastMessage.getDate());
+        }
+        query.addChildEventListener(listener);
+
+        referenceListenersMap.put(messagesReference, listener);
     }
 
     private DatabaseReference getReferenceForRoom(final String roomID) {
         return mDatabaseReference.child(roomID);
+    }
+
+    @Override
+    public void stopListeningForMessages() {
+        for (Map.Entry<DatabaseReference, ChildEventListener> entry : referenceListenersMap.entrySet()) {
+            DatabaseReference reference = entry.getKey();
+            ChildEventListener listener = entry.getValue();
+            reference.removeEventListener(listener);
+        }
+        referenceListenersMap.clear();
     }
 }

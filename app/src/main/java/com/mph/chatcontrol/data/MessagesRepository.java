@@ -25,6 +25,8 @@ public interface MessagesRepository {
 
     void getRoomMessages(Chat room, GetMessagesCallback callback);
 
+    void stopListeningForMessages();
+
     Message getMessage(String messageID);
 
     void insertOwnMessage(String roomID, String text, SendMessageCallback callback);

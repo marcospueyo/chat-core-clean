@@ -83,6 +83,11 @@ public class MessagesRepositoryImpl implements MessagesRepository {
         }
     }
 
+    @Override
+    public void stopListeningForMessages() {
+        messageService.stopListeningForMessages();
+    }
+
     private boolean messageExists(final String messageID) {
         int count = dataStore.count(Message.class).where(Message.ID.eq(messageID)).get().value();
         return count != 0;
@@ -128,11 +133,11 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     @Override
     public void insertOwnMessage(String roomID, String text, final SendMessageCallback callback) {
         final Message message = createMessage(roomID, text);
+        persistEntities(message);
+        callback.onMessageSent(message);
         messageService.sendMessage(message, new MessageService.SendMessageCallback() {
             @Override
             public void onMessageSent(RestMessage restMessage) {
-                persistEntities(Collections.singletonList(message));
-                callback.onMessageSent(message);
             }
 
             @Override
@@ -190,11 +195,14 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     }
 
     private void persistEntities(Iterable<Message> messages) {
-        dataStore.insert(messages);
+        for (Message message : messages)
+                persistEntities(message);
     }
 
     private void persistEntities(Message message) {
-        dataStore.insert(message);
+        if (!messageExists(message.getId())) {
+            dataStore.insert(message);
+        }
     }
 
 }

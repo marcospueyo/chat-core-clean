@@ -44,6 +44,11 @@ public class SettingsPresenterImpl implements SettingsPresenter,
     }
 
     @Override
+    public void stop() {
+
+    }
+
+    @Override
     public void onLogoutFinished() {
         mSettingsView.handleLogoutSuccess();
     }

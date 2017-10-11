@@ -55,6 +55,11 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     }
 
     @Override
+    public void stop() {
+
+    }
+
+    @Override
     public void onItemClicked(BaseViewModel item) {
         Log.d(TAG, "onItemClicked: " + item.toString());
     }

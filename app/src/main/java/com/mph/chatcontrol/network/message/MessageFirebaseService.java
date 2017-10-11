@@ -15,4 +15,6 @@ public interface MessageFirebaseService {
     }
 
     void getRoomMessages(String roomID, GetMessagesCallback callback);
+
+    void stopListeningForMessages();
 }

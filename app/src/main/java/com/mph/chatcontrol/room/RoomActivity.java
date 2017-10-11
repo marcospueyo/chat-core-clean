@@ -122,10 +122,6 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         return ((ChatcontrolApplication) getApplication()).getSharedPreferencesRepository(this);
     }
 
-    public EntityDataStore<Persistable> getDataStore() {
-        return (((ChatcontrolApplication) getApplication()).getData());
-    }
-
     private void setupToolbar() {
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
@@ -157,6 +153,12 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     protected void onResume() {
         super.onResume();
         mPresenter.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.stop();
     }
 
     @Override

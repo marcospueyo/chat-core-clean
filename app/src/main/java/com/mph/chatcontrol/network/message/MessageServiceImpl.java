@@ -60,4 +60,9 @@ public class MessageServiceImpl implements MessageService {
             }
         });
     }
+
+    @Override
+    public void stopListeningForMessages() {
+        mFirebaseService.stopListeningForMessages();
+    }
 }

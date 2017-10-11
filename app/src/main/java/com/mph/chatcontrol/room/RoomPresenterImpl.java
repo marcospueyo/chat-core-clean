@@ -67,6 +67,11 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     }
 
     @Override
+    public void stop() {
+        mGetMessagesInteractor.stop();
+    }
+
+    @Override
     public void onItemClicked(BaseViewModel item) {
         Log.d(TAG, "onItemClicked: " + item.toString());
     }

@@ -49,4 +49,9 @@ public class GetMessagesInteractorImpl implements GetMessagesInteractor {
     public void execute(final Chat room, final OnFinishedListener listener) {
         execute(room.getId(), listener);
     }
+
+    @Override
+    public void stop() {
+        messagesRepository.stopListeningForMessages();
+    }
 }
