@@ -18,15 +18,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.MainActivity">
+        <activity
+            android:name=".main.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".login.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".room.RoomActivity"
-            android:parentActivityName=".main.MainActivity">
+            android:parentActivityName=".main.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

@@ -1,6 +1,8 @@
 package com.mph.chatcontrol.chatlist.viewmodel.mapper;
 /* Created by macmini on 17/07/2017. */
 
+import android.util.Log;
+
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.Mapper;

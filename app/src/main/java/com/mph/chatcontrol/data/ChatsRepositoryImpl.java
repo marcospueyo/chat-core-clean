@@ -1,6 +1,7 @@
 package com.mph.chatcontrol.data;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.RestRoom;
@@ -99,7 +100,8 @@ public class ChatsRepositoryImpl implements ChatsRepository {
 
     @Override
     public void getChat(String id, GetSingleChatCallback callback) {
-        callback.onSingleChatLoaded(getLocalChat(id));
+        Chat chat = getLocalChat(id);
+        callback.onSingleChatLoaded(chat);
     }
 
     private Chat getLocalChat(String id) {
