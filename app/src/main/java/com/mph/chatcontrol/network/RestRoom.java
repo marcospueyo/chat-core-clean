@@ -3,6 +3,7 @@ package com.mph.chatcontrol.network;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.PropertyName;
+import com.google.gson.annotations.SerializedName;
 import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.utils.DateUtils;
 
@@ -10,30 +11,39 @@ import com.mph.chatcontrol.utils.DateUtils;
 @IgnoreExtraProperties
 public class RestRoom {
 
+    @SerializedName("id")
     @PropertyName("id")
     public String id;
 
+    @SerializedName("guest_name")
     @PropertyName("guest_name")
     public String guestName;
 
+    @SerializedName("date_start")
     @PropertyName("date_start")
     public String startDate;
 
+    @SerializedName("date_end")
     @PropertyName("date_end")
     public String endDate;
 
+    @SerializedName("date_last_msg")
     @PropertyName("date_last_msg")
     public String lastMsgDate;
 
+    @SerializedName("message_count")
     @PropertyName("message_count")
     public int messageCount;
 
+    @SerializedName("property_name")
     @PropertyName("property_name")
     public String propertyName;
 
+    @SerializedName("last_msg_str")
     @PropertyName("last_msg_str")
     public String lastMsgStr;
 
+    @SerializedName("guest_id")
     @PropertyName("guest_id")
     public String guestID;
 

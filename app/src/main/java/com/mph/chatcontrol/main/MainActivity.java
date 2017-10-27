@@ -44,11 +44,13 @@ import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMappe
 import com.mph.chatcontrol.login.FirebaseAuthData;
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
+import com.mph.chatcontrol.network.ChatcontrolService;
 import com.mph.chatcontrol.network.GuestService;
 import com.mph.chatcontrol.network.GuestServiceImpl;
 import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
 import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
+import com.mph.chatcontrol.network.RoomRestServiceImpl;
 import com.mph.chatcontrol.network.RoomService;
 import com.mph.chatcontrol.room.GetRoomInteractorImpl;
 import com.mph.chatcontrol.room.RoomActivity;
@@ -76,6 +78,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.requery.Persistable;
 import io.requery.sql.EntityDataStore;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener, MainView {
@@ -466,7 +470,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public RoomService getRoomService() {
         if (mRoomService == null) {
-            mRoomService = new RoomFirebaseServiceImpl(getChatDatabaseReference());
+            //mRoomService = new RoomFirebaseServiceImpl(getChatDatabaseReference());
+            mRoomService = new RoomRestServiceImpl(getService(), getSharedPreferencesRepository());
         }
         return mRoomService;
     }
@@ -494,5 +499,9 @@ public class MainActivity extends AppCompatActivity implements
             mGuestService = new GuestServiceImpl(getGuestDatabaseReference());
         }
         return mGuestService;
+    }
+
+    public ChatcontrolService getService() {
+        return ((ChatcontrolApplication) getApplication()).getService();
     }
 }
