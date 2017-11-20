@@ -497,7 +497,6 @@ public class MainActivity extends AppCompatActivity implements
 
     public GuestService getGuestService() {
         if (mGuestService == null) {
-            //mGuestService = new GuestServiceImpl(getGuestDatabaseReference());
             mGuestService = new GuestServiceCloudImpl(getService(),
                     getSharedPreferencesRepository());
         }
