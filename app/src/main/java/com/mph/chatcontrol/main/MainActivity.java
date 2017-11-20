@@ -46,6 +46,7 @@ import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.ChatcontrolService;
 import com.mph.chatcontrol.network.GuestService;
+import com.mph.chatcontrol.network.GuestServiceCloudImpl;
 import com.mph.chatcontrol.network.GuestServiceImpl;
 import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
@@ -496,7 +497,9 @@ public class MainActivity extends AppCompatActivity implements
 
     public GuestService getGuestService() {
         if (mGuestService == null) {
-            mGuestService = new GuestServiceImpl(getGuestDatabaseReference());
+            //mGuestService = new GuestServiceImpl(getGuestDatabaseReference());
+            mGuestService = new GuestServiceCloudImpl(getService(),
+                    getSharedPreferencesRepository());
         }
         return mGuestService;
     }

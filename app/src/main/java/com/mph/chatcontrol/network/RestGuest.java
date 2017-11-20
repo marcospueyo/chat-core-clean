@@ -2,29 +2,37 @@ package com.mph.chatcontrol.network;
 /* Created by macmini on 29/09/2017. */
 
 import com.google.firebase.database.PropertyName;
+import com.google.gson.annotations.SerializedName;
 import com.mph.chatcontrol.data.Guest;
 import com.mph.chatcontrol.utils.DateUtils;
 
 public class RestGuest {
 
+    @SerializedName("id")
     @PropertyName("id")
     public String id;
 
+    @SerializedName("email")
     @PropertyName("email")
     public String email;
 
+    @SerializedName("end_date")
     @PropertyName("end_date")
     public String endDate;
 
+    @SerializedName("name")
     @PropertyName("name")
     public String name;
 
+    @SerializedName("phone")
     @PropertyName("phone")
     public String phone;
 
+    @SerializedName("related_room_id")
     @PropertyName("related_room_id")
     public String relatedRoomID;
 
+    @SerializedName("start_date")
     @PropertyName("start_date")
     public String startDate;
 

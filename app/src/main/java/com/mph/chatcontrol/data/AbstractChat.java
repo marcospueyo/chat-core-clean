@@ -4,7 +4,6 @@ package com.mph.chatcontrol.data;
 import java.util.Date;
 
 import io.requery.Entity;
-import io.requery.Generated;
 import io.requery.Key;
 
 @Entity

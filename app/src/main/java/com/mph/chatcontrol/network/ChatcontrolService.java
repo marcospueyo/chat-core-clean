@@ -18,4 +18,8 @@ public interface ChatcontrolService {
     @FormUrlEncoded
     @POST("getRooms")
     Call<List<RestRoom>> getRooms(@FieldMap Map<String, String> names);
+
+    @FormUrlEncoded
+    @POST("getGuests")
+    Call<List<RestGuest>> getGuests(@FieldMap Map<String, String> names);
 }

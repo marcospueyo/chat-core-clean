@@ -27,7 +27,7 @@ android {
         applicationId "com.mph.chatcontrol"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
+        versionCode 17
         versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -92,6 +92,7 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
