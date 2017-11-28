@@ -1,6 +1,7 @@
 package com.mph.chatcontrol.network;
 /* Created by macmini on 10/10/2017. */
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -13,4 +14,12 @@ public interface ChatcontrolService {
     @FormUrlEncoded
     @POST("addMessage")
     Call<ResponseBody> sendMessage(@FieldMap Map<String, String> names);
+
+    @FormUrlEncoded
+    @POST("getRooms")
+    Call<List<RestRoom>> getRooms(@FieldMap Map<String, String> names);
+
+    @FormUrlEncoded
+    @POST("getGuests")
+    Call<List<RestGuest>> getGuests(@FieldMap Map<String, String> names);
 }
