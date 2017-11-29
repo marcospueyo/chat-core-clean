@@ -9,11 +9,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class RoomFirebaseServiceImpl implements RoomService {
+public class RoomFirebaseServiceImpl implements RoomRealtimeService {
 
     @NonNull private final DatabaseReference databaseReference;
 
@@ -27,13 +29,13 @@ public class RoomFirebaseServiceImpl implements RoomService {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                List<RestRoom> rooms = new ArrayList<>();
+                Map<String, RestRoom> map = new HashMap<>();
                 for (DataSnapshot postSnapshot : children) {
                     RestRoom room = postSnapshot.getValue(RestRoom.class);
                     if (room != null)
-                        rooms.add(room);
+                       map.put(room.getId(), room);
                 }
-                callback.onRoomsLoaded(rooms);
+                callback.onRoomsLoaded(map);
             }
 
             @Override
@@ -41,5 +43,10 @@ public class RoomFirebaseServiceImpl implements RoomService {
                 callback.onDataNotAvailable();
             }
         });
+    }
+
+    @Override
+    public void observeRooms(Iterable<String> roomIDs, RoomObserverCallback callback) {
+
     }
 }

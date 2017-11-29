@@ -45,8 +45,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.requery.Persistable;
-import io.requery.sql.EntityDataStore;
 
 /* Created by macmini on 24/07/2017. */
 
@@ -98,10 +96,12 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     }
 
     private void initializePresenter() {
+        // TODO: 29/11/2017 User REST and Firebase services
         ChatsRepository chatsRepository =
                 new ChatsRepositoryImpl(
                         getSharedPreferencesRepository(),
                         ((ChatcontrolApplication) getApplication()).getData(),
+                        new RoomFirebaseServiceImpl(getDatabaseReference()),
                         new RoomFirebaseServiceImpl(getDatabaseReference()),
                         new RestRoomToChatMapper()
                 );

@@ -29,9 +29,10 @@ public class MessagesRepositoryImpl implements MessagesRepository {
     @NonNull
     private SharedPreferencesRepository sharedPreferencesRepository;
 
-    @Nonnull MessageService messageService;
+    @NonNull
+    MessageService messageService;
 
-    @Nonnull
+    @NonNull
     RestMessageToMessageMapper mapper;
 
     @NonNull

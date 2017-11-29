@@ -9,7 +9,11 @@ public interface ChatsRepository {
     interface GetChatsCallback {
         void onChatsLoaded(List<Chat> chats);
 
+        void onChatChanged(Chat chat);
+
         void onChatsNotAvailable();
+
+        void onChatUpdateError();
     }
 
     interface GetSingleChatCallback {

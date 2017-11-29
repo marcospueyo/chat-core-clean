@@ -6,11 +6,14 @@ import android.util.Log;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.RestRoom;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
+import com.mph.chatcontrol.network.RoomRealtimeService;
 import com.mph.chatcontrol.network.RoomService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -27,20 +30,32 @@ public class ChatsRepositoryImpl implements ChatsRepository {
 
     private static final String TAG = ChatsRepositoryImpl.class.getSimpleName();
 
-    @Nonnull private SharedPreferencesRepository sharedPreferencesRepository;
-    @Nonnull private EntityDataStore<Persistable> dataStore;
-    @NonNull private final RoomService service;
-    @NonNull private final RestRoomToChatMapper mapper;
+    @Nonnull
+    private SharedPreferencesRepository sharedPreferencesRepository;
+
+    @Nonnull
+    private EntityDataStore<Persistable> dataStore;
+
+    @NonNull
+    private final RoomService service;
+
+    @NonNull
+    private final RoomRealtimeService mRealtimeService;
+
+    @NonNull
+    private final RestRoomToChatMapper mapper;
 
     private final boolean forceSync = true;
 
-    public ChatsRepositoryImpl(@Nonnull SharedPreferencesRepository sharedPreferencesRepository,
-                               @Nonnull EntityDataStore<Persistable> dataStore,
+    public ChatsRepositoryImpl(@NonNull SharedPreferencesRepository sharedPreferencesRepository,
+                               @NonNull EntityDataStore<Persistable> dataStore,
                                @NonNull RoomService service,
+                               @NonNull RoomRealtimeService realtimeService,
                                @NonNull RestRoomToChatMapper mapper) {
         this.sharedPreferencesRepository = checkNotNull(sharedPreferencesRepository);
         this.dataStore = checkNotNull(dataStore);
         this.service = checkNotNull(service);
+        mRealtimeService = checkNotNull(realtimeService);
         this.mapper = checkNotNull(mapper);
     }
 
@@ -71,12 +86,12 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         if (forceSync || count == 0) {
             service.getRooms(new RoomService.GetRoomsCallback() {
                 @Override
-                public void onRoomsLoaded(List<RestRoom> rooms) {
+                public void onRoomsLoaded(Map<String, RestRoom> roomMap) {
                     deleteEntities();
-                    persistEntities(mapper.map(rooms));
+                    persistEntities(mapper.map(new ArrayList<>(roomMap.values())));
                     callback.onChatsLoaded(getLocalChats(active, inputDate));
+                    observeRooms(roomMap.keySet(), callback);
                 }
-
                 @Override
                 public void onDataNotAvailable() {
                     callback.onChatsNotAvailable();
@@ -86,6 +101,20 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         else {
             callback.onChatsLoaded(getLocalChats(active, inputDate));
         }
+    }
+
+    private void observeRooms(Collection<String> roomIDs, final GetChatsCallback callback) {
+        mRealtimeService.observeRooms(roomIDs, new RoomRealtimeService.RoomObserverCallback() {
+            @Override
+            public void onRoomChanged(RestRoom room) {
+                callback.onChatChanged(mapper.map(room));
+            }
+
+            @Override
+            public void onError() {
+                callback.onChatUpdateError();
+            }
+        });
     }
 
     @Override

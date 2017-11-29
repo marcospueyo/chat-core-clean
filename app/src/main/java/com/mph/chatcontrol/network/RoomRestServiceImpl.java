@@ -44,8 +44,18 @@ public class RoomRestServiceImpl implements RoomService {
         rooms.enqueue(new Callback<List<RestRoom>>() {
             @Override
             public void onResponse(Call<List<RestRoom>> call, Response<List<RestRoom>> response) {
+                Map<String, RestRoom> map = new HashMap<>();
+                try {
+                    for (RestRoom restRoom : response.body()) {
+                        map.put(restRoom.getId(), restRoom);
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+
                 if (response.isSuccessful()) {
-                    callback.onRoomsLoaded(response.body());
+                    callback.onRoomsLoaded(map);
                 }
                 else {
                     callback.onDataNotAvailable();

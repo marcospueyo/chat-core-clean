@@ -53,6 +53,7 @@ import com.mph.chatcontrol.network.GuestServiceImpl;
 import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
 import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
+import com.mph.chatcontrol.network.RoomRealtimeService;
 import com.mph.chatcontrol.network.RoomRestServiceImpl;
 import com.mph.chatcontrol.network.RoomService;
 import com.mph.chatcontrol.room.GetRoomInteractorImpl;
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements
     //private FirebaseAuthData mFirebaseAuthData;
 
     private RoomService mRoomService;
+    private RoomRealtimeService mRoomRealtimeService;
 
     private RestGuestToGuestMapper mRestGuestToGuestMapper;
     private GuestService mGuestService;
@@ -450,6 +452,7 @@ public class MainActivity extends AppCompatActivity implements
                     getSharedPreferencesRepository(),
                     getDataStore(),
                     getRoomService(),
+                    getRoomRealtimeService(),
                     getRestRoomToChatMapper());
         }
         return mChatsRepository;
@@ -488,6 +491,13 @@ public class MainActivity extends AppCompatActivity implements
             mRoomService = new RoomRestServiceImpl(getService(), getSharedPreferencesRepository());
         }
         return mRoomService;
+    }
+
+    public RoomRealtimeService getRoomRealtimeService() {
+        if (mRoomRealtimeService == null) {
+            mRoomRealtimeService = new RoomFirebaseServiceImpl(getChatDatabaseReference());
+        }
+        return mRoomRealtimeService;
     }
 
     public GetLastMessageInteractor getGetLastMessageInteractor() {

@@ -2,6 +2,7 @@ package com.mph.chatcontrol.chatlist;
 /* Created by macmini on 17/07/2017. */
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.util.Pair;
 
 import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
@@ -45,6 +46,16 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
             }
 
             @Override
+            public void onChatChanged(Chat chat) {
+                Log.d(TAG, "onChatChanged: fired");
+            }
+
+            @Override
+            public void onChatUpdateError() {
+
+            }
+
+            @Override
             public void onChatsNotAvailable() {
                 handleError(listener);
             }
@@ -57,6 +68,16 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
             @Override
             public void onChatsLoaded(List<Chat> chats) {
                 getChatInfoRecords(chats, listener);
+            }
+
+            @Override
+            public void onChatChanged(Chat chat) {
+
+            }
+
+            @Override
+            public void onChatUpdateError() {
+
             }
 
             @Override
