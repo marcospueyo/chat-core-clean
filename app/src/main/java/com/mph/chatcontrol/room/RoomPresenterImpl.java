@@ -4,10 +4,12 @@ package com.mph.chatcontrol.room;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 
 import com.mph.chatcontrol.base.BaseViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.Chat;
+import com.mph.chatcontrol.data.ChatInfo;
 import com.mph.chatcontrol.data.Message;
 import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
 import com.mph.chatcontrol.room.contract.GetRoomInteractor;
@@ -32,7 +34,6 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @NonNull private final RoomView mRoomView;
     @NonNull private String mRoomID;
-    private Chat mRoom;
 
     @NonNull private final ChatViewModelToChatMapper mChatMapper;
     @NonNull private final MessageViewModelToMessageMapper mMessageMapper;
@@ -94,24 +95,20 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     }
 
     @Override
-    public void onRoomLoaded(Chat chat) {
-        if (!RoomUtils.roomIsActive(chat, new Date()))
+    public void onRoomLoaded(Pair<Chat, ChatInfo> bundle) {
+        Chat chat = bundle.first;
+        if (!RoomUtils.roomIsActive(chat, new Date())) {
             mRoomView.disableChat();
-        processRoom(chat);
+        }
 
-        mRoomView.setRoom(mChatMapper.reverseMap(chat));
-        setRoomSeen(chat);
+        mRoomView.setRoom(mChatMapper.reverseMap(bundle));
+        setRoomSeen(chat.getId());
 
-        mRoom = chat;
-        mGetMessagesInteractor.execute(mRoom, this);
+        mGetMessagesInteractor.execute(chat.getId(), this);
     }
 
-    private void processRoom(Chat chat) {
-        chat.setPendingCount(0);
-    }
-
-    private void setRoomSeen(final Chat chat) {
-        mUpdateSeenStatusInteractor.execute(chat.getId(), true, this);
+    private void setRoomSeen(final String roomID) {
+        mUpdateSeenStatusInteractor.execute(roomID, true, this);
     }
 
     @Override
@@ -127,8 +124,8 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onNextMessage(Message message) {
-        Log.d(TAG, "onNextMessage: ");
         mRoomView.addMessage(mMessageMapper.reverseMap(message));
+        setRoomSeen(mRoomID);
     }
 
     @Override
@@ -138,7 +135,6 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onMessageSent(Message message) {
-        // TODO: 06/10/2017 Update room last activity date
         mRoomView.handleMessageSendSuccess();
         mRoomView.addMessage(mMessageMapper.reverseMap(message));
     }

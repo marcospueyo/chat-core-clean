@@ -27,6 +27,8 @@ import com.mph.chatcontrol.chatlist.ChatlistFragment;
 import com.mph.chatcontrol.chatlist.FindChatsInteractorImpl;
 import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.data.ChatInfoRepository;
+import com.mph.chatcontrol.data.ChatInfoRepositoryImpl;
 import com.mph.chatcontrol.data.ChatsRepository;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
 import com.mph.chatcontrol.data.GuestRepository;
@@ -123,7 +125,9 @@ public class MainActivity extends AppCompatActivity implements
     private GetNotificationPreferenceInteractor mGetNotificationPreferenceInteractor;
 
     private ChatsRepository mChatsRepository;
+    private ChatInfoRepository mChatInfoRepository;
     private GuestRepository mGuestRepository;
+
     //private MessagesRepository mMessagesRepository;
     //private SharedPreferencesRepository mSharedPreferencesRepository;
     //private FirebaseAuthData mFirebaseAuthData;
@@ -308,7 +312,6 @@ public class MainActivity extends AppCompatActivity implements
                     activeChatListFragment,
                     getChatViewModelToChatMapper(),
                     getFindChatsInteractor(),
-                    getGetLastMessageInteractor(),
                     true /* should load active chats */);
         }
         return mActiveChatListPresenter;
@@ -320,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements
                     archivedChatListFragment,
                     getChatViewModelToChatMapper(),
                     getFindChatsInteractor(),
-                    getGetLastMessageInteractor(),
                     false /* should NOT load active chats */);
         }
         return mArchivedChatListPresenter;
@@ -382,7 +384,9 @@ public class MainActivity extends AppCompatActivity implements
 
     public FindChatsInteractor getFindChatsInteractor() {
         if (mFindChatsInteractor == null) {
-            mFindChatsInteractor = new FindChatsInteractorImpl(getChatsRepository());
+            mFindChatsInteractor = new FindChatsInteractorImpl(
+                    getChatsRepository(),
+                    getChatInfoRepository());
         }
         return mFindChatsInteractor;
     }
@@ -396,7 +400,9 @@ public class MainActivity extends AppCompatActivity implements
 
     public GetRoomInteractor getGetRoomInteractor() {
         if (mGetRoomInteractor == null) {
-            mGetRoomInteractor = new GetRoomInteractorImpl(getChatsRepository());
+            mGetRoomInteractor = new GetRoomInteractorImpl(
+                    getChatsRepository(),
+                    getChatInfoRepository());
         }
         return mGetRoomInteractor;
     }
@@ -447,6 +453,13 @@ public class MainActivity extends AppCompatActivity implements
                     getRestRoomToChatMapper());
         }
         return mChatsRepository;
+    }
+
+    public ChatInfoRepository getChatInfoRepository() {
+        if (mChatInfoRepository == null) {
+            mChatInfoRepository = new ChatInfoRepositoryImpl(getDataStore());
+        }
+        return mChatInfoRepository;
     }
 
     public GuestRepository getGuestRepository() {

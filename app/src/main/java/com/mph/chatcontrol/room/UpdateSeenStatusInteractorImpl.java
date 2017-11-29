@@ -3,7 +3,10 @@ package com.mph.chatcontrol.room;
 import android.support.annotation.NonNull;
 
 import com.mph.chatcontrol.data.Chat;
+import com.mph.chatcontrol.data.ChatInfo;
+import com.mph.chatcontrol.data.ChatInfoRepository;
 import com.mph.chatcontrol.data.ChatsRepository;
+import com.mph.chatcontrol.room.contract.GetRoomInteractor;
 import com.mph.chatcontrol.room.contract.UpdateSeenStatusInteractor;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,28 +18,48 @@ public class UpdateSeenStatusInteractorImpl implements UpdateSeenStatusInteracto
     @NonNull
     private final ChatsRepository mChatsRepository;
 
-    public UpdateSeenStatusInteractorImpl(@NonNull ChatsRepository mChatsRepository) {
+    @NonNull
+    private final ChatInfoRepository mChatInfoRepository;
+
+    public UpdateSeenStatusInteractorImpl(@NonNull ChatsRepository mChatsRepository,
+                                          @NonNull ChatInfoRepository chatInfoRepository) {
         this.mChatsRepository = checkNotNull(mChatsRepository);
+        mChatInfoRepository = checkNotNull(chatInfoRepository);
     }
 
     @Override
     public void execute(String roomID, final boolean seen, final OnFinishedListener listener) {
         mChatsRepository.getChat(roomID, new ChatsRepository.GetSingleChatCallback() {
             @Override
-            public void onSingleChatLoaded(Chat chat) {
+            public void onSingleChatLoaded(final Chat chat) {
                 if (chat == null)
-                    listener.onSeenStatusUpdateError();
+                    handleError(listener);
                 else {
-                    chat.setPendingCount(seen ? 0 : 1);
-                    mChatsRepository.updateChat(chat);
-                    listener.onSeenStatusUpdated();
+                    mChatInfoRepository.getSingleChatInfo(chat.getId(),
+                            new ChatInfoRepository.GetSingleChatInfoCallback() {
+                        @Override
+                        public void onChatInfoLoaded(ChatInfo chatInfo) {
+                            chatInfo.setReadCount(chat.getMessageCount());
+                            mChatInfoRepository.updateChatInfo(chatInfo);
+                            listener.onSeenStatusUpdated();
+                        }
+
+                        @Override
+                        public void onChatInfoLoadError() {
+                            handleError(listener);
+                        }
+                    });
                 }
             }
 
             @Override
             public void onChatNotAvailable() {
-                listener.onSeenStatusUpdateError();
+                handleError(listener);
             }
         });
+    }
+
+    private void handleError(final OnFinishedListener listener) {
+        listener.onSeenStatusUpdateError();
     }
 }

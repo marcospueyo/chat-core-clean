@@ -13,7 +13,7 @@ public abstract class AbstractChat {
     String id;
     String guestName;
     String propertyName;
-    Integer pendingCount;
+    Integer messageCount;
     Date startDate;
     Date endDate;
     Date lastMsgDate;

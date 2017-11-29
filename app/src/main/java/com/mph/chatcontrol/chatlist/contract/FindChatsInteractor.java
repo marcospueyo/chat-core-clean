@@ -1,5 +1,8 @@
 package com.mph.chatcontrol.chatlist.contract;
+import android.util.Pair;
+
 import com.mph.chatcontrol.data.Chat;
+import com.mph.chatcontrol.data.ChatInfo;
 
 import java.util.Date;
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
 public interface FindChatsInteractor {
 
     interface OnFinishedListener {
-        void onFinished(List<Chat> chats);
+        void onFinished(List<Pair<Chat, ChatInfo>> chats);
         void onDataNotAvailable();
     }
 

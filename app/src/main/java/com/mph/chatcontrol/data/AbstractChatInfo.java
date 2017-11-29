@@ -9,7 +9,7 @@ import io.requery.Key;
 @Entity
 public abstract class AbstractChatInfo {
 
-    @Key @Generated
+    @Key
     String id;
 
     String roomID;

@@ -24,6 +24,8 @@ import com.mph.chatcontrol.base.adapter.BaseListAdapter;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
+import com.mph.chatcontrol.data.ChatInfoRepository;
+import com.mph.chatcontrol.data.ChatInfoRepositoryImpl;
 import com.mph.chatcontrol.data.ChatsRepository;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
 import com.mph.chatcontrol.data.MessagesRepository;
@@ -104,6 +106,9 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
                         new RestRoomToChatMapper()
                 );
 
+        ChatInfoRepository chatInfoRepository =
+                new ChatInfoRepositoryImpl(((ChatcontrolApplication) getApplication()).getData());
+
         MessagesRepository messagesRepository =
                 ((ChatcontrolApplication) getApplication()).getMessagesRepository(this);
 
@@ -112,10 +117,10 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
                 getRoomID(),
                 new ChatViewModelToChatMapper(),
                 new MessageViewModelToMessageMapper(getSharedPreferencesRepository()),
-                new GetRoomInteractorImpl(chatsRepository),
+                new GetRoomInteractorImpl(chatsRepository, chatInfoRepository),
                 new GetMessagesInteractorImpl(messagesRepository),
                 new SendMessageInteractorImpl(messagesRepository),
-                new UpdateSeenStatusInteractorImpl(chatsRepository));
+                new UpdateSeenStatusInteractorImpl(chatsRepository, chatInfoRepository));
     }
 
     private SharedPreferencesRepository getSharedPreferencesRepository() {

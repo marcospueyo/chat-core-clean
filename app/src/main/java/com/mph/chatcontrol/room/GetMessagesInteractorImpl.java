@@ -1,17 +1,14 @@
 package com.mph.chatcontrol.room;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.Message;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
 
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
-import java.util.UUID;
+
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,11 +40,6 @@ public class GetMessagesInteractorImpl implements GetMessagesInteractor {
                 listener.onMessagesLoadError();
             }
         });
-    }
-
-    @Override
-    public void execute(final Chat room, final OnFinishedListener listener) {
-        execute(room.getId(), listener);
     }
 
     @Override

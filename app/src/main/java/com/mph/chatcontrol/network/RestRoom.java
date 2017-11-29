@@ -56,6 +56,7 @@ public class RestRoom {
         startDate = chat.getStartDate().toString();
         endDate = chat.getEndDate().toString();
         lastMsgDate = chat.getLastMsgDate().toString();
+        messageCount = chat.getMessageCount();
     }
 
     public String getId() {
@@ -137,7 +138,7 @@ public class RestRoom {
         chat.setStartDate(DateUtils.stringToDateISO8601(getStartDate()));
         chat.setEndDate(DateUtils.stringToDateISO8601(getEndDate()));
         chat.setLastMsgDate(DateUtils.stringToDateISO8601(getLastMsgDate()));
-        chat.setPendingCount(0);
+        chat.setMessageCount(getMessageCount());
         chat.setPropertyName(getPropertyName());
         chat.setLastMsg(getLastMsgStr());
         chat.setGuestID(getGuestID());

@@ -2,22 +2,38 @@ package com.mph.chatcontrol.chatlist;
 /* Created by macmini on 17/07/2017. */
 
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
 import com.mph.chatcontrol.chatlist.contract.FindChatsInteractor;
 import com.mph.chatcontrol.data.Chat;
+import com.mph.chatcontrol.data.ChatInfo;
+import com.mph.chatcontrol.data.ChatInfoRepository;
 import com.mph.chatcontrol.data.ChatsRepository;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FindChatsInteractorImpl implements FindChatsInteractor {
 
-    @NonNull private final ChatsRepository mChatsRepository;
+    @SuppressWarnings("unused")
+    private static final String TAG = FindChatsInteractorImpl.class.getSimpleName();
 
-    public FindChatsInteractorImpl(@NonNull ChatsRepository mChatsRepository) {
+    @NonNull
+    private final ChatsRepository mChatsRepository;
+
+    @NonNull
+    private final ChatInfoRepository mChatInfoRepository;
+
+
+    public FindChatsInteractorImpl(@NonNull ChatsRepository mChatsRepository,
+                                   @NonNull ChatInfoRepository chatInfoRepository) {
         this.mChatsRepository = checkNotNull(mChatsRepository);
+        mChatInfoRepository = checkNotNull(chatInfoRepository);
     }
 
     @Override
@@ -25,12 +41,12 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
         mChatsRepository.findActiveChats(inputDate, new ChatsRepository.GetChatsCallback() {
             @Override
             public void onChatsLoaded(List<Chat> chats) {
-                listener.onFinished(chats);
+                getChatInfoRecords(chats, listener);
             }
 
             @Override
             public void onChatsNotAvailable() {
-                listener.onDataNotAvailable();
+                handleError(listener);
             }
         });
     }
@@ -40,13 +56,48 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
         mChatsRepository.findArchivedChats(inputDate, new ChatsRepository.GetChatsCallback() {
             @Override
             public void onChatsLoaded(List<Chat> chats) {
-                listener.onFinished(chats);
+                getChatInfoRecords(chats, listener);
             }
 
             @Override
             public void onChatsNotAvailable() {
-                listener.onDataNotAvailable();
+                handleError(listener);
             }
         });
+    }
+
+    private void getChatInfoRecords(final List<Chat> chatList,
+                                    final OnFinishedListener listener) {
+        final Map<String, Chat> chatMap = mapChats(chatList);
+        mChatInfoRepository.getChatInfoMap(chatMap.keySet(),
+                new ChatInfoRepository.GetChatInfoCallback() {
+            @Override
+            public void onChatInfoMapLoaded(Map<String, ChatInfo> chatInfoMap) {
+                List<Pair<Chat, ChatInfo>> pairList = new ArrayList<>();
+                for (Map.Entry<String, ChatInfo> entry : chatInfoMap.entrySet()) {
+                    Pair<Chat, ChatInfo> pair =
+                            new Pair<>(chatMap.get(entry.getKey()), entry.getValue());
+                    pairList.add(pair);
+                }
+                listener.onFinished(pairList);
+            }
+
+            @Override
+            public void onChatInfoMapLoadError() {
+                handleError(listener);
+            }
+        });
+    }
+
+    private void handleError(final OnFinishedListener listener) {
+        listener.onDataNotAvailable();
+    }
+
+    private Map<String, Chat> mapChats(final List<Chat> chatList) {
+        Map<String, Chat> map = new HashMap<>();
+        for (Chat chat : chatList) {
+            map.put(chat.getId(), chat);
+        }
+        return map;
     }
 }

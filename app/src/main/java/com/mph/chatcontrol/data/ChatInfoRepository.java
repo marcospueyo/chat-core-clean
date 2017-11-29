@@ -3,7 +3,6 @@ package com.mph.chatcontrol.data;
 /*Created by Marcos on 28/11/2017.*/
 
 import java.util.Map;
-import java.util.Set;
 
 public interface ChatInfoRepository {
 
@@ -21,7 +20,9 @@ public interface ChatInfoRepository {
         void onChatInfoMapLoadError();
     }
 
-    void getSingleChatInfo(String roomID);
+    void getSingleChatInfo(String roomID, GetSingleChatInfoCallback callback);
 
-    void getChatInfoMap(Set<String> roomIDSet);
+    void getChatInfoMap(Iterable<String> roomIDs, GetChatInfoCallback callback);
+
+    void updateChatInfo(ChatInfo chatInfo);
 }

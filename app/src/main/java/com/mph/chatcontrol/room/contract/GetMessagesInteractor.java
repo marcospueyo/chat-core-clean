@@ -19,7 +19,5 @@ public interface GetMessagesInteractor {
 
     void execute(String roomID, OnFinishedListener listener);
 
-    void execute(Chat room, OnFinishedListener listener);
-
     void stop();
 }

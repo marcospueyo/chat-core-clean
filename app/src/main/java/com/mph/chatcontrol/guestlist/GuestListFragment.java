@@ -3,6 +3,7 @@ package com.mph.chatcontrol.guestlist;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.base.BaseListFragment;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
+import com.mph.chatcontrol.data.Chat;
+import com.mph.chatcontrol.data.ChatInfo;
 import com.mph.chatcontrol.events.OpenChatEvent;
 import com.mph.chatcontrol.guestlist.adapter.GuestsAdapter;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
@@ -61,8 +64,8 @@ public class GuestListFragment extends BaseListFragment implements GuestListView
     }
 
     @Override
-    public void openChat(ChatViewModel chat) {
-        EventBus.getDefault().post(OpenChatEvent.create(chat.id()));
+    public void openChat(String chatID) {
+        EventBus.getDefault().post(chatID);
     }
 
     private void initializeAdapter() {

@@ -2,10 +2,12 @@ package com.mph.chatcontrol.guestlist;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.Pair;
 
 import com.mph.chatcontrol.base.BaseViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.Chat;
+import com.mph.chatcontrol.data.ChatInfo;
 import com.mph.chatcontrol.data.Guest;
 import com.mph.chatcontrol.guestlist.contract.FindGuestsInteractor;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
@@ -90,8 +92,8 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     }
 
     @Override
-    public void onRoomLoaded(Chat chat) {
-        mGuestListView.openChat(mChatMapper.reverseMap(chat));
+    public void onRoomLoaded(Pair<Chat, ChatInfo> bundle) {
+        mGuestListView.openChat(bundle.first.getId());
     }
 
     @Override
