@@ -9,7 +9,9 @@ import com.mph.chatcontrol.data.ChatInfoRepository;
 import com.mph.chatcontrol.data.ChatsRepository;
 import com.mph.chatcontrol.room.contract.GetRoomInteractor;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,9 +26,9 @@ public class GetRoomInteractorImpl implements GetRoomInteractor {
     @NonNull
     private final ChatInfoRepository mChatInfoRepository;
 
-    public GetRoomInteractorImpl(@NonNull ChatsRepository mChatsRepository,
+    public GetRoomInteractorImpl(@NonNull ChatsRepository chatsRepository,
                                  @NonNull ChatInfoRepository chatInfoRepository) {
-        this.mChatsRepository = checkNotNull(mChatsRepository);
+        mChatsRepository = checkNotNull(chatsRepository);
         mChatInfoRepository = checkNotNull(chatInfoRepository);
     }
 
@@ -36,6 +38,7 @@ public class GetRoomInteractorImpl implements GetRoomInteractor {
             @Override
             public void onSingleChatLoaded(Chat chat) {
                 getSingleChatInfoRecord(chat, listener);
+
             }
 
             @Override
@@ -45,12 +48,39 @@ public class GetRoomInteractorImpl implements GetRoomInteractor {
         });
     }
 
+    @Override
+    public void stop(String roomID) {
+        mChatsRepository.stopListeningSingleRoom(roomID);
+    }
+
     private void getSingleChatInfoRecord(final Chat chat, final OnFinishedListener listener) {
         mChatInfoRepository.getSingleChatInfo(chat.getId(),
                 new ChatInfoRepository.GetSingleChatInfoCallback() {
             @Override
-            public void onChatInfoLoaded(ChatInfo chatInfo) {
+            public void onChatInfoLoaded(final ChatInfo chatInfo) {
                 listener.onRoomLoaded(new Pair<>(chat, chatInfo));
+                mChatsRepository.observeRooms(Collections.singleton(chat.getId()),
+                        new ChatsRepository.GetChatsCallback() {
+                    @Override
+                    public void onChatsLoaded(List<Chat> chats) {
+
+                    }
+
+                    @Override
+                    public void onChatChanged(Chat updatedChat) {
+                        listener.onRoomChanged(new Pair<>(updatedChat, chatInfo));
+                    }
+
+                    @Override
+                    public void onChatsNotAvailable() {
+
+                    }
+
+                    @Override
+                    public void onChatUpdateError() {
+
+                    }
+                });
             }
 
             @Override

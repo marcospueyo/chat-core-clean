@@ -4,10 +4,13 @@ package com.mph.chatcontrol.chatlist;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.base.BaseListFragment;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.chatlist.adapter.ChatsAdapter;
@@ -21,6 +24,9 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 public class ChatlistFragment extends BaseListFragment implements ChatListView {
+
+    @SuppressWarnings("unused")
+    private static final String TAG = ChatlistFragment.class.getSimpleName();
 
     public static ChatlistFragment newInstance() {
         return new ChatlistFragment();
@@ -52,8 +58,20 @@ public class ChatlistFragment extends BaseListFragment implements ChatListView {
     }
 
     @Override
+    public void updateItem(ChatViewModel chat) {
+        Log.d(TAG, "updateItem: fired");
+        mAdapter.updateItem(chat);
+    }
+
+    @Override
     public void openChat(ChatViewModel chat) {
         EventBus.getDefault().post(OpenChatEvent.create(chat.id()));
+    }
+
+    @Override
+    public void showUpdateError() {
+        Snackbar.make(mContentView, R.string.chat_update_error, Snackbar.LENGTH_LONG).show();
+
     }
 
     private void initializeAdapter() {

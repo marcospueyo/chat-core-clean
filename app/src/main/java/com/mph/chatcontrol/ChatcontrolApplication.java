@@ -16,6 +16,8 @@ import com.mph.chatcontrol.login.FirebaseAuthDataImpl;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.ChatcontrolService;
+import com.mph.chatcontrol.network.FirebaseDatabaseData;
+import com.mph.chatcontrol.network.FirebaseDatabaseDataImpl;
 import com.mph.chatcontrol.network.message.MessageFirebaseService;
 import com.mph.chatcontrol.network.message.MessageFirebaseServiceImpl;
 import com.mph.chatcontrol.network.message.MessageRestService;
@@ -35,11 +37,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /* Created by Marcos on 03/08/2017. */
 
 public class ChatcontrolApplication extends Application {
+
+    @SuppressWarnings("unused")
     private static final String API_URL = "https://us-central1-triptips-50da0.cloudfunctions.net/";
+
+    @SuppressWarnings("unused")
     private static final String LOCAL_URL = "http://localhost:5000/triptips-50da0/us-central1/";
 
     private SharedPreferencesRepository mSharedPreferencesRepository;
     private FirebaseAuthData mFirebaseAuthData;
+    private FirebaseDatabaseData mFirebaseDatabaseData;
 
     private MessagesRepository messagesRepository;
     private MessageService messageService;
@@ -70,16 +77,8 @@ public class ChatcontrolApplication extends Application {
         return dataStore;
     }
 
-    public DatabaseReference getChatDatabaseReference() {
-        return FirebaseDatabase.getInstance().getReference().child("rooms");
-    }
-
-    public DatabaseReference getGuestDatabaseReference() {
-        return FirebaseDatabase.getInstance().getReference().child("users");
-    }
-
-    public DatabaseReference getMessageDatabaseReference() {
-        return FirebaseDatabase.getInstance().getReference().child("messages");
+    public DatabaseReference getFirebaseRootDatabaseReference() {
+        return FirebaseDatabase.getInstance().getReference();
     }
 
     public SharedPreferencesRepository getSharedPreferencesRepository(Context context) {
@@ -97,6 +96,13 @@ public class ChatcontrolApplication extends Application {
             mFirebaseAuthData = new FirebaseAuthDataImpl(FirebaseAuth.getInstance());
         }
         return mFirebaseAuthData;
+    }
+
+    public FirebaseDatabaseData getFirebaseDatabaseData() {
+        if (mFirebaseDatabaseData == null) {
+            mFirebaseDatabaseData = new FirebaseDatabaseDataImpl(getFirebaseRootDatabaseReference());
+        }
+        return mFirebaseDatabaseData;
     }
 
     public MessagesRepository getMessagesRepository(Context context) {
@@ -122,7 +128,7 @@ public class ChatcontrolApplication extends Application {
 
     private MessageFirebaseService getMessageFirebaseService() {
         if (messageFirebaseService == null) {
-            messageFirebaseService = new MessageFirebaseServiceImpl(getMessageDatabaseReference());
+            messageFirebaseService = new MessageFirebaseServiceImpl(getFirebaseDatabaseData());
         }
         return messageFirebaseService;
     }

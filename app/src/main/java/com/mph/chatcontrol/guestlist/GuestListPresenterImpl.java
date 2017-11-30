@@ -97,6 +97,11 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     }
 
     @Override
+    public void onRoomChanged(Pair<Chat, ChatInfo> bundle) {
+        // Might be interesting to apply UI changes.
+    }
+
+    @Override
     public void onRoomLoadError() {
         mGuestListView.showRoomLoadError();
     }

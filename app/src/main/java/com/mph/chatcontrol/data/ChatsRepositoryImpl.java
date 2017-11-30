@@ -14,12 +14,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
 import io.requery.Persistable;
-import io.requery.query.Condition;
 import io.requery.sql.EntityDataStore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -30,7 +28,7 @@ public class ChatsRepositoryImpl implements ChatsRepository {
 
     private static final String TAG = ChatsRepositoryImpl.class.getSimpleName();
 
-    @Nonnull
+    @NonNull
     private SharedPreferencesRepository sharedPreferencesRepository;
 
     @Nonnull
@@ -103,11 +101,13 @@ public class ChatsRepositoryImpl implements ChatsRepository {
         }
     }
 
-    private void observeRooms(Collection<String> roomIDs, final GetChatsCallback callback) {
+    public void observeRooms(Collection<String> roomIDs, final GetChatsCallback callback) {
         mRealtimeService.observeRooms(roomIDs, new RoomRealtimeService.RoomObserverCallback() {
             @Override
             public void onRoomChanged(RestRoom room) {
-                callback.onChatChanged(mapper.map(room));
+                deleteChat(room.getId());
+                persistEntities(mapper.map(room));
+                callback.onChatChanged(getLocalChat(room.getId()));
             }
 
             @Override
@@ -130,6 +130,16 @@ public class ChatsRepositoryImpl implements ChatsRepository {
     @Override
     public void updateChat(Chat chat) {
         dataStore.update(chat);
+    }
+
+    @Override
+    public void stopListeningAllRooms() {
+        mRealtimeService.stop();
+    }
+
+    @Override
+    public void stopListeningSingleRoom(String roomID) {
+        mRealtimeService.stopObservingRoom(roomID);
     }
 
     private List<Chat> getLocalChats(boolean active, Date inputDate) {
@@ -157,6 +167,14 @@ public class ChatsRepositoryImpl implements ChatsRepository {
 
     private void persistEntities(List<Chat> entities) {
         dataStore.insert(entities);
+    }
+
+    private void persistEntities(Chat chat) {
+        dataStore.insert(chat);
+    }
+
+    private void deleteChat(String chatID) {
+        dataStore.delete(Chat.class).where(Chat.ID.eq(chatID)).get().value();
     }
 
     private void deleteEntities() {

@@ -1,6 +1,7 @@
 package com.mph.chatcontrol.network.message;
 /* Created by macmini on 09/10/2017. */
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -9,7 +10,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.mph.chatcontrol.utils.CCUtils;
+import com.mph.chatcontrol.network.FirebaseDatabaseData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,18 +25,20 @@ public class MessageFirebaseServiceImpl implements MessageFirebaseService {
 
     private static final String TAG = MessageFirebaseServiceImpl.class.getSimpleName();
 
-    @Nonnull private final DatabaseReference mDatabaseReference;
+    @NonNull
+    private final FirebaseDatabaseData mFirebaseDatabaseData;
 
     private Map<DatabaseReference, ChildEventListener> referenceListenersMap;
 
-    public MessageFirebaseServiceImpl(@Nonnull DatabaseReference databaseReference) {
-        this.mDatabaseReference = checkNotNull(databaseReference);
+    public MessageFirebaseServiceImpl(@Nonnull FirebaseDatabaseData firebaseDatabaseData) {
+        mFirebaseDatabaseData = checkNotNull(firebaseDatabaseData);
         referenceListenersMap = new HashMap<>();
     }
 
     @Override
     public void getRoomMessages(final String roomID, final GetMessagesCallback callback) {
-        DatabaseReference messagesReference = getReferenceForRoom(roomID);
+        DatabaseReference messagesReference
+                = mFirebaseDatabaseData.getReferenceForRoomMessages(roomID);
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,7 +69,8 @@ public class MessageFirebaseServiceImpl implements MessageFirebaseService {
 
     private void listenForNewMessages(final String roomID, final GetMessagesCallback callback,
                                       final RestMessage lastMessage) {
-        DatabaseReference messagesReference = getReferenceForRoom(roomID);
+        DatabaseReference messagesReference
+                = mFirebaseDatabaseData.getReferenceForRoomMessages(roomID);
         ChildEventListener listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -107,10 +111,6 @@ public class MessageFirebaseServiceImpl implements MessageFirebaseService {
         query.addChildEventListener(listener);
 
         referenceListenersMap.put(messagesReference, listener);
-    }
-
-    private DatabaseReference getReferenceForRoom(final String roomID) {
-        return mDatabaseReference.child(roomID);
     }
 
     @Override

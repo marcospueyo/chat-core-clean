@@ -10,5 +10,9 @@ public interface ChatListView extends BaseListView {
 
     void setItems(List<ChatViewModel> chats);
 
+    void updateItem(ChatViewModel chat);
+
     void openChat(ChatViewModel chat);
+
+    void showUpdateError();
 }

@@ -9,9 +9,15 @@ import com.mph.chatcontrol.data.ChatInfo;
 public interface GetRoomInteractor {
 
     interface OnFinishedListener {
+
         void onRoomLoaded(Pair<Chat, ChatInfo> bundle);
+
+        void onRoomChanged(Pair<Chat, ChatInfo> bundle);
+
         void onRoomLoadError();
     }
 
     void execute(String roomID, OnFinishedListener listener);
+
+    void stop(String roomID);
 }

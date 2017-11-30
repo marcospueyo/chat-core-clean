@@ -1,5 +1,6 @@
 package com.mph.chatcontrol.data;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -33,4 +34,10 @@ public interface ChatsRepository {
     void getChat(String id, GetSingleChatCallback callback);
 
     void updateChat(Chat chat);
+
+    void observeRooms(Collection<String> roomIDs, final GetChatsCallback callback);
+
+    void stopListeningAllRooms();
+
+    void stopListeningSingleRoom(String roomID);
 }

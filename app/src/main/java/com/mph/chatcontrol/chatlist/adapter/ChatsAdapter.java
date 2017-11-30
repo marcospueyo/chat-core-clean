@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.base.BaseViewModel;
 import com.mph.chatcontrol.base.adapter.BaseListAdapter;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
+import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,5 +37,17 @@ public class ChatsAdapter extends BaseListAdapter<ChatViewHolderImpl> {
     public void onBindViewHolder(ChatViewHolderImpl holder, int position) {
         holder.render(mItemList.get(position),
                 mColorPalette.getColor(position % mColorPalette.length(), 0));
+    }
+
+    @Override
+    public void updateItem(BaseViewModel item) {
+        ChatViewModel chat = (ChatViewModel) item;
+        for (int i = 0; i < mItemList.size(); i++) {
+            ChatViewModel model = (ChatViewModel) mItemList.get(i);
+            if (model.id().equals(chat.id())) {
+                updateItem(i, item);
+                break;
+            }
+        }
     }
 }

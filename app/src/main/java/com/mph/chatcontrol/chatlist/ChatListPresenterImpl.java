@@ -2,6 +2,7 @@ package com.mph.chatcontrol.chatlist;
 /* Created by macmini on 17/07/2017. */
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.util.Pair;
 
 import com.mph.chatcontrol.base.BaseViewModel;
@@ -28,7 +29,6 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     @NonNull
     private final ChatListView mChatListView;
 
-    // TODO: 29/11/2017 Create interactor to follow live updates from the rooms on display
     @NonNull
     private final FindChatsInteractor mFindChatsInteractor;
 
@@ -60,7 +60,7 @@ public class ChatListPresenterImpl implements ChatListPresenter,
 
     @Override
     public void stop() {
-
+        mFindChatsInteractor.stopUpdates();
     }
 
     @Override
@@ -75,25 +75,16 @@ public class ChatListPresenterImpl implements ChatListPresenter,
         mChatListView.hideProgress();
     }
 
-//    private void processChats(List<Pair<Chat, ChatInfo>> chats) {
-//        for (final Pair<Chat, ChatInfo> pair : chats) {
-//            final Chat chat = pair.first;
-//            ChatInfo info = pair.second;
-            //chat.setPendingCount();
-//            mGetLastMessageInteractor.execute(chat.getId(), new GetLastMessageInteractor.OnFinishedListener() {
-//                @Override
-//                public void onLastMessageFetched(Message message) {
-//                    chat.setLastMsgDate(message == null ? null : message.getDate());
-//                    chat.setLastMsg(message == null ? "" : message.getText());
-//                }
-//
-//                @Override
-//                public void onLastActivityLoadError() {
-//
-//                }
-//            });
-//        }
-//    }
+    @Override
+    public void onChatChanged(Pair<Chat, ChatInfo> chatInfoPair) {
+        Log.d(TAG, "onChatChanged: fired");
+        mChatListView.updateItem(mMapper.reverseMap(chatInfoPair));
+    }
+
+    @Override
+    public void onChatChangedError() {
+        mChatListView.showUpdateError();
+    }
 
     @Override
     public void onDataNotAvailable() {

@@ -42,12 +42,38 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
         mChatsRepository.findActiveChats(inputDate, new ChatsRepository.GetChatsCallback() {
             @Override
             public void onChatsLoaded(List<Chat> chats) {
-                getChatInfoRecords(chats, listener);
+                handleChatList(chats, listener);
             }
 
             @Override
             public void onChatChanged(Chat chat) {
                 Log.d(TAG, "onChatChanged: fired");
+                handleChatChanged(chat, listener);
+            }
+
+            @Override
+            public void onChatUpdateError() {
+                listener.onChatChangedError();
+            }
+
+            @Override
+            public void onChatsNotAvailable() {
+                handleError(listener);
+            }
+        });
+    }
+
+    @Override
+    public void findArchivedChats(Date inputDate, final OnFinishedListener listener) {
+        mChatsRepository.findArchivedChats(inputDate, new ChatsRepository.GetChatsCallback() {
+            @Override
+            public void onChatsLoaded(List<Chat> chats) {
+                handleChatList(chats, listener);
+            }
+
+            @Override
+            public void onChatChanged(Chat chat) {
+
             }
 
             @Override
@@ -63,32 +89,11 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
     }
 
     @Override
-    public void findArchivedChats(Date inputDate, final OnFinishedListener listener) {
-        mChatsRepository.findArchivedChats(inputDate, new ChatsRepository.GetChatsCallback() {
-            @Override
-            public void onChatsLoaded(List<Chat> chats) {
-                getChatInfoRecords(chats, listener);
-            }
-
-            @Override
-            public void onChatChanged(Chat chat) {
-
-            }
-
-            @Override
-            public void onChatUpdateError() {
-
-            }
-
-            @Override
-            public void onChatsNotAvailable() {
-                handleError(listener);
-            }
-        });
+    public void stopUpdates() {
+        mChatsRepository.stopListeningAllRooms();
     }
 
-    private void getChatInfoRecords(final List<Chat> chatList,
-                                    final OnFinishedListener listener) {
+    private void handleChatList(final List<Chat> chatList, final OnFinishedListener listener) {
         final Map<String, Chat> chatMap = mapChats(chatList);
         mChatInfoRepository.getChatInfoMap(chatMap.keySet(),
                 new ChatInfoRepository.GetChatInfoCallback() {
@@ -106,6 +111,20 @@ public class FindChatsInteractorImpl implements FindChatsInteractor {
             @Override
             public void onChatInfoMapLoadError() {
                 handleError(listener);
+            }
+        });
+    }
+
+    private void handleChatChanged(final Chat chat, final OnFinishedListener listener) {
+        mChatInfoRepository.getSingleChatInfo(chat.getId(), new ChatInfoRepository.GetSingleChatInfoCallback() {
+            @Override
+            public void onChatInfoLoaded(ChatInfo chatInfo) {
+                listener.onChatChanged(new Pair<>(chat, chatInfo));
+            }
+
+            @Override
+            public void onChatInfoLoadError() {
+
             }
         });
     }

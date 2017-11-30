@@ -64,12 +64,14 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     @Override
     public void start() {
         mRoomView.showProgress();
-        mGetRoomInteractor.execute(mRoomID, this);
+        startListeningForRoom();
+        startListeningForMessages();
     }
 
     @Override
     public void stop() {
-        mGetMessagesInteractor.stop();
+        stopListeningForMessages();
+        stopListeningForRoomChanges();
     }
 
     @Override
@@ -96,6 +98,17 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void onRoomLoaded(Pair<Chat, ChatInfo> bundle) {
+        setRoom(bundle);
+    }
+
+    @Override
+    public void onRoomChanged(Pair<Chat, ChatInfo> bundle) {
+        Log.d(TAG, "onRoomChanged: Chat msg count=" + bundle.first.getMessageCount()
+                + " read count=" + bundle.second.getReadCount());
+        setRoom(bundle);
+    }
+
+    private void setRoom(Pair<Chat, ChatInfo> bundle) {
         Chat chat = bundle.first;
         if (!RoomUtils.roomIsActive(chat, new Date())) {
             mRoomView.disableChat();
@@ -103,12 +116,26 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
         mRoomView.setRoom(mChatMapper.reverseMap(bundle));
         setRoomSeen(chat.getId());
-
-        mGetMessagesInteractor.execute(chat.getId(), this);
     }
 
     private void setRoomSeen(final String roomID) {
         mUpdateSeenStatusInteractor.execute(roomID, true, this);
+    }
+
+    private void startListeningForRoom() {
+        mGetRoomInteractor.execute(mRoomID, this);
+    }
+
+    private void startListeningForMessages() {
+        mGetMessagesInteractor.execute(mRoomID, this);
+    }
+
+    private void stopListeningForMessages() {
+        mGetMessagesInteractor.stop();
+    }
+
+    private void stopListeningForRoomChanges() {
+        mGetRoomInteractor.stop(mRoomID);
     }
 
     @Override
@@ -125,7 +152,7 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     @Override
     public void onNextMessage(Message message) {
         mRoomView.addMessage(mMessageMapper.reverseMap(message));
-        setRoomSeen(mRoomID);
+//        setRoomSeen(mRoomID);
     }
 
     @Override

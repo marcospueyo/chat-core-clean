@@ -15,12 +15,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
-import com.mph.chatcontrol.chatlist.GetLastMessageInteractor;
-import com.mph.chatcontrol.chatlist.GetLastMessageInteractorImpl;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.ChatListPresenterImpl;
 import com.mph.chatcontrol.chatlist.ChatlistFragment;
@@ -33,8 +29,6 @@ import com.mph.chatcontrol.data.ChatsRepository;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
 import com.mph.chatcontrol.data.GuestRepository;
 import com.mph.chatcontrol.data.GuestRepositoryImpl;
-import com.mph.chatcontrol.data.MessagesRepository;
-import com.mph.chatcontrol.data.MessagesRepositoryImpl;
 import com.mph.chatcontrol.events.LogoutEvent;
 import com.mph.chatcontrol.events.OpenChatEvent;
 import com.mph.chatcontrol.guestlist.FindGuestsInteractorImpl;
@@ -43,26 +37,22 @@ import com.mph.chatcontrol.guestlist.GuestListPresenterImpl;
 import com.mph.chatcontrol.guestlist.contract.FindGuestsInteractor;
 import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
-import com.mph.chatcontrol.login.FirebaseAuthData;
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.ChatcontrolService;
+import com.mph.chatcontrol.network.FirebaseDatabaseDataImpl;
 import com.mph.chatcontrol.network.GuestService;
 import com.mph.chatcontrol.network.GuestServiceCloudImpl;
-import com.mph.chatcontrol.network.GuestServiceImpl;
 import com.mph.chatcontrol.network.RestGuestToGuestMapper;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
 import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
+import com.mph.chatcontrol.network.RoomListenerRepositoryManagerImpl;
 import com.mph.chatcontrol.network.RoomRealtimeService;
 import com.mph.chatcontrol.network.RoomRestServiceImpl;
 import com.mph.chatcontrol.network.RoomService;
 import com.mph.chatcontrol.room.GetRoomInteractorImpl;
 import com.mph.chatcontrol.room.RoomActivity;
-import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
 import com.mph.chatcontrol.room.contract.GetRoomInteractor;
-import com.mph.chatcontrol.room.contract.SendMessageInteractor;
-import com.mph.chatcontrol.room.contract.UpdateSeenStatusInteractor;
-import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 import com.mph.chatcontrol.settings.GetNotificationPreferenceInteractorImpl;
 import com.mph.chatcontrol.settings.LogoutInteractorImpl;
 import com.mph.chatcontrol.settings.SetNotificationPreferenceInteractorImpl;
@@ -82,8 +72,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.requery.Persistable;
 import io.requery.sql.EntityDataStore;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener, MainView {
@@ -110,17 +98,12 @@ public class MainActivity extends AppCompatActivity implements
 
     private ChatViewModelToChatMapper mChatViewModelToChatMapper;
     private RestRoomToChatMapper mRestRoomToChatMapper;
-    private MessageViewModelToMessageMapper messageViewModelToMessageMapper;
     private GuestViewModelToGuestMapper mGuestViewModelToGuestMapper;
 
 
     private FindChatsInteractor mFindChatsInteractor;
     private FindGuestsInteractor mFindGuestsInteractor;
     private GetRoomInteractor mGetRoomInteractor;
-    private GetMessagesInteractor mGetMessagesInteractor;
-    private GetLastMessageInteractor mGetLastMessageInteractor;
-    private SendMessageInteractor mSendMessageInteractor;
-    private UpdateSeenStatusInteractor mUpdateSeenStatusInteractor;
     private LogoutInteractor mLogoutInteractor;
     private SetNotificationPreferenceInteractor mSetNotificationPreferenceInteractor;
     private GetNotificationPreferenceInteractor mGetNotificationPreferenceInteractor;
@@ -129,9 +112,6 @@ public class MainActivity extends AppCompatActivity implements
     private ChatInfoRepository mChatInfoRepository;
     private GuestRepository mGuestRepository;
 
-    //private MessagesRepository mMessagesRepository;
-    //private SharedPreferencesRepository mSharedPreferencesRepository;
-    //private FirebaseAuthData mFirebaseAuthData;
 
     private RoomService mRoomService;
     private RoomRealtimeService mRoomRealtimeService;
@@ -157,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
+        if (ab == null) throw new AssertionError();
         ab.setDisplayShowHomeEnabled(false);
         ab.setDisplayHomeAsUpEnabled(false);
         ab.setDisplayShowCustomEnabled(true);
@@ -303,11 +284,6 @@ public class MainActivity extends AppCompatActivity implements
         return ((ChatcontrolApplication) getApplication()).getData();
     }
 
-    private DatabaseReference getChatDatabaseReference() {
-        return ((ChatcontrolApplication) getApplication()).getChatDatabaseReference();
-    }
-
-
     public ChatListPresenter getActiveChatListPresenter() {
         if (mActiveChatListPresenter == null) {
             mActiveChatListPresenter = new ChatListPresenterImpl(
@@ -369,14 +345,6 @@ public class MainActivity extends AppCompatActivity implements
         return mRestRoomToChatMapper;
     }
 
-    public MessageViewModelToMessageMapper getMessageViewModelToMessageMapper() {
-        if (messageViewModelToMessageMapper == null) {
-            messageViewModelToMessageMapper =
-                    new MessageViewModelToMessageMapper(getSharedPreferencesRepository());
-        }
-        return messageViewModelToMessageMapper;
-    }
-
     public GuestViewModelToGuestMapper getGuestViewModelToGuestMapper() {
         if (mGuestViewModelToGuestMapper == null) {
             mGuestViewModelToGuestMapper = new GuestViewModelToGuestMapper();
@@ -407,22 +375,6 @@ public class MainActivity extends AppCompatActivity implements
                     getChatInfoRepository());
         }
         return mGetRoomInteractor;
-    }
-
-    public GetMessagesInteractor getGetMessagesInteractor() {
-        return mGetMessagesInteractor;
-    }
-
-    public SendMessageInteractor getSendMessageInteractor() {
-        return mSendMessageInteractor;
-    }
-
-    public UpdateSeenStatusInteractor getUpdateSeenStatusInteractor() {
-        return mUpdateSeenStatusInteractor;
-    }
-
-    public MessagesRepository getMessagesRepository() {
-        return ((ChatcontrolApplication) getApplication()).getMessagesRepository(this);
     }
 
     public LogoutInteractor getLogoutInteractor() {
@@ -481,13 +433,8 @@ public class MainActivity extends AppCompatActivity implements
         return ((ChatcontrolApplication) getApplication()).getSharedPreferencesRepository(this);
     }
 
-    public FirebaseAuthData getFirebaseAuthData() {
-        return ((ChatcontrolApplication) getApplication()).getFirebaseAuthData();
-    }
-
     public RoomService getRoomService() {
         if (mRoomService == null) {
-            //mRoomService = new RoomFirebaseServiceImpl(getChatDatabaseReference());
             mRoomService = new RoomRestServiceImpl(getService(), getSharedPreferencesRepository());
         }
         return mRoomService;
@@ -495,20 +442,13 @@ public class MainActivity extends AppCompatActivity implements
 
     public RoomRealtimeService getRoomRealtimeService() {
         if (mRoomRealtimeService == null) {
-            mRoomRealtimeService = new RoomFirebaseServiceImpl(getChatDatabaseReference());
+            mRoomRealtimeService = new RoomFirebaseServiceImpl(
+                    new FirebaseDatabaseDataImpl(
+                            ((ChatcontrolApplication) getApplication())
+                                    .getFirebaseRootDatabaseReference()),
+                    new RoomListenerRepositoryManagerImpl());
         }
         return mRoomRealtimeService;
-    }
-
-    public GetLastMessageInteractor getGetLastMessageInteractor() {
-        if (mGetLastMessageInteractor == null) {
-            mGetLastMessageInteractor = new GetLastMessageInteractorImpl(getMessagesRepository());
-        }
-        return mGetLastMessageInteractor;
-    }
-
-    private DatabaseReference getGuestDatabaseReference() {
-        return ((ChatcontrolApplication) getApplication()).getGuestDatabaseReference();
     }
 
     public RestGuestToGuestMapper getRestGuestToGuestMapper() {

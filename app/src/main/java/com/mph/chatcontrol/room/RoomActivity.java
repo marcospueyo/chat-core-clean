@@ -31,8 +31,11 @@ import com.mph.chatcontrol.data.ChatsRepositoryImpl;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.data.MessagesRepositoryImpl;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
+import com.mph.chatcontrol.network.FirebaseDatabaseDataImpl;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
 import com.mph.chatcontrol.network.RoomFirebaseServiceImpl;
+import com.mph.chatcontrol.network.RoomListenerRepositoryManagerImpl;
+import com.mph.chatcontrol.network.RoomRestServiceImpl;
 import com.mph.chatcontrol.room.adapter.MessagesAdapter;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
 import com.mph.chatcontrol.room.contract.RoomView;
@@ -90,19 +93,19 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         initializeListView();
         onSendListener();
     }
-
-    private DatabaseReference getDatabaseReference() {
-        return ((ChatcontrolApplication) getApplication()).getChatDatabaseReference();
-    }
-
     private void initializePresenter() {
-        // TODO: 29/11/2017 User REST and Firebase services
         ChatsRepository chatsRepository =
                 new ChatsRepositoryImpl(
                         getSharedPreferencesRepository(),
                         ((ChatcontrolApplication) getApplication()).getData(),
-                        new RoomFirebaseServiceImpl(getDatabaseReference()),
-                        new RoomFirebaseServiceImpl(getDatabaseReference()),
+                        new RoomRestServiceImpl(
+                                ((ChatcontrolApplication) getApplication()).getService(),
+                                getSharedPreferencesRepository()),
+                        new RoomFirebaseServiceImpl(
+                                new FirebaseDatabaseDataImpl(
+                                        ((ChatcontrolApplication) getApplication())
+                                                .getFirebaseRootDatabaseReference()),
+                                new RoomListenerRepositoryManagerImpl()),
                         new RestRoomToChatMapper()
                 );
 
@@ -130,7 +133,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     private void setupToolbar() {
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
-        assert ab != null;
+        if (ab == null) throw new AssertionError();
         ab.setDisplayShowHomeEnabled(false);
         ab.setDisplayHomeAsUpEnabled(false);
         ab.setDisplayShowCustomEnabled(true);

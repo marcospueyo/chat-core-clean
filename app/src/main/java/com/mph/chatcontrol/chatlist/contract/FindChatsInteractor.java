@@ -11,10 +11,20 @@ import java.util.List;
 public interface FindChatsInteractor {
 
     interface OnFinishedListener {
+
         void onFinished(List<Pair<Chat, ChatInfo>> chats);
+
+        void onChatChanged(Pair<Chat, ChatInfo> chatInfoPair);
+
+        void onChatChangedError();
+
         void onDataNotAvailable();
+
     }
 
     void findActiveChats(Date inputDate, OnFinishedListener listener);
+
     void findArchivedChats(Date inputDate, OnFinishedListener listener);
+
+    void stopUpdates();
 }

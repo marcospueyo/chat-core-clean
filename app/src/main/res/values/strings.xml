@@ -24,6 +24,7 @@
     <string name="email_error">Dirección de correo electrónico no válida</string>
     <string name="password_error">Contraseña incorrecta</string>
     <string name="chat_load_error">No ha sido posible cargar las salas de chat</string>
+    <string name="chat_update_error">No ha sido posible actualizar las salas de chat</string>
     <string name="logout_error">No ha sido posible cerrar la sesión</string>
     <string name="login_error">No ha sido posible iniciar la sesión. Revise sus credenciales.</string>
 

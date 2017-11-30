@@ -59,4 +59,14 @@ public abstract class BaseListAdapter<VH extends BaseViewHolderImpl> extends Rec
         mItemList.add(item);
         notifyItemInserted(mItemList.size() - 1);
     }
+
+    public void updateItem(int position, BaseViewModel item) {
+        mItemList.set(position, item);
+        notifyItemChanged(position, item);
+    }
+
+    public void updateItem(BaseViewModel item) {
+
+    }
+
 }
