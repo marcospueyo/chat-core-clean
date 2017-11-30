@@ -144,4 +144,12 @@ public class RestRoom {
         chat.setGuestID(getGuestID());
         return chat;
     }
+
+    @Override
+    public String toString() {
+        return "id:" + getId()
+                + "\nLastMsgDate:" + getLastMsgDate()
+                + "\nLastMsgStr:" + getLastMsgStr()
+                + "\nMessageCount:" + getMessageCount();
+    }
 }

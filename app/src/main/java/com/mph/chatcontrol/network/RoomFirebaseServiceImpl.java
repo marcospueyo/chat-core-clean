@@ -47,13 +47,14 @@ public class RoomFirebaseServiceImpl implements RoomRealtimeService {
     }
 
     private void addListenerToRoom(String roomID, final RoomObserverCallback callback) {
+        Log.d(TAG, "addListenerToRoom: " + roomID);
         DatabaseReference reference = mFirebaseDatabaseData.getReferenceForRoom(roomID);
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange: fired");
                 RestRoom room = dataSnapshot.getValue(RestRoom.class);
                 if (room != null) {
+                    Log.d(TAG, "onDataChange: ROOM:" + room.toString());
                     callback.onRoomChanged(room);
                 }
                 else {
