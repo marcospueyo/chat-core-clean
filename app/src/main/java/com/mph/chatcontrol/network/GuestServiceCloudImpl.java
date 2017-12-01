@@ -1,7 +1,7 @@
 package com.mph.chatcontrol.network;
 /* Created by macmini on 20/11/2017. */
 
-import android.util.Log;
+import android.support.annotation.NonNull;
 
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 
@@ -9,35 +9,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class GuestServiceCloudImpl implements GuestService {
 
+    @SuppressWarnings("unused")
     private static final String TAG = GuestServiceCloudImpl.class.getSimpleName();
 
+    @NonNull
     private final ChatcontrolService mService;
 
-    @Nonnull
-    private final SharedPreferencesRepository sharedPreferencesRepository;
+    @NonNull
+    private final SharedPreferencesRepository mSharedPreferencesRepository;
 
-    public GuestServiceCloudImpl(ChatcontrolService service,
-                                 @Nonnull SharedPreferencesRepository sharedPreferencesRepository) {
-        mService = service;
-        this.sharedPreferencesRepository = sharedPreferencesRepository;
+    public GuestServiceCloudImpl(@NonNull ChatcontrolService service,
+                                 @NonNull SharedPreferencesRepository sharedPreferencesRepository) {
+        mService = checkNotNull(service);
+        mSharedPreferencesRepository = checkNotNull(sharedPreferencesRepository);
     }
 
     @Override
     public void getGuests(final GetGuestsCallback callback) {
-        Log.d(TAG, "getGuests: userID:" + sharedPreferencesRepository.getUserID());
         Call<List<RestGuest>>  call = mService.getGuests(
-                getCallParameterMap(sharedPreferencesRepository.getUserID()));
+                getCallParameterMap(mSharedPreferencesRepository.getUserID()));
         call.enqueue(new Callback<List<RestGuest>>() {
             @Override
-            public void onResponse(Call<List<RestGuest>> call, Response<List<RestGuest>> response) {
+            public void onResponse(@NonNull Call<List<RestGuest>> call,
+                                   @NonNull Response<List<RestGuest>> response) {
                 if (response.isSuccessful()) {
                     callback.onGuestsLoaded(response.body());
                 }
@@ -47,7 +49,7 @@ public class GuestServiceCloudImpl implements GuestService {
             }
 
             @Override
-            public void onFailure(Call<List<RestGuest>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<RestGuest>> call, @NonNull Throwable t) {
                 callback.onDataNotAvailable();
             }
         });

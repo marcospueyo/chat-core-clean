@@ -1,7 +1,6 @@
 package com.mph.chatcontrol.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.RestRoom;

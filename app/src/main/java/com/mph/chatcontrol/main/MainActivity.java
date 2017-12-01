@@ -39,6 +39,7 @@ import com.mph.chatcontrol.guestlist.contract.GuestListPresenter;
 import com.mph.chatcontrol.guestlist.viewmodel.mapper.GuestViewModelToGuestMapper;
 import com.mph.chatcontrol.login.LoginActivity;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
+import com.mph.chatcontrol.network.ChatComparator;
 import com.mph.chatcontrol.network.ChatcontrolService;
 import com.mph.chatcontrol.network.FirebaseDatabaseDataImpl;
 import com.mph.chatcontrol.network.GuestService;
@@ -99,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements
     private ChatViewModelToChatMapper mChatViewModelToChatMapper;
     private RestRoomToChatMapper mRestRoomToChatMapper;
     private GuestViewModelToGuestMapper mGuestViewModelToGuestMapper;
+
+    private ChatComparator mChatComparator;
 
 
     private FindChatsInteractor mFindChatsInteractor;
@@ -289,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements
             mActiveChatListPresenter = new ChatListPresenterImpl(
                     activeChatListFragment,
                     getChatViewModelToChatMapper(),
+                    getChatComparator(),
                     getFindChatsInteractor(),
                     true /* should load active chats */);
         }
@@ -300,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements
             mArchivedChatListPresenter = new ChatListPresenterImpl(
                     archivedChatListFragment,
                     getChatViewModelToChatMapper(),
+                    getChatComparator(),
                     getFindChatsInteractor(),
                     false /* should NOT load active chats */);
         }
@@ -329,6 +334,13 @@ public class MainActivity extends AppCompatActivity implements
                     getGetNotificationPreferenceInteractor());
         }
         return mSettingsPresenter;
+    }
+
+    public ChatComparator getChatComparator() {
+        if (mChatComparator == null) {
+            mChatComparator = new ChatComparator();
+        }
+        return mChatComparator;
     }
 
     public ChatViewModelToChatMapper getChatViewModelToChatMapper() {
