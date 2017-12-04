@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.google.gms:google-services:3.1.0'
     }
 }
@@ -22,31 +22,31 @@ task clean(type: Delete) {
 
 ext {
     minSdkVersion = 19
-    targetSdkVersion = 25
-    compileSdkVersion = 25
-    buildToolsVersion = '25.0.3'
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.1'
 
     // App dependencies
-    supportLibraryVersion = '25.3.1'
+    supportLibraryVersion = '27.0.1'
     contraintLayoutVersion = '1.0.2'
-    firebaseLibraryVersion = '11.0.4'
-    firebaseUILibraryVersion = '2.0.1'
-    playServicesLibraryVersion = '11.0.4'
-    guavaVersion = '22.0-android'
-    glideVersion = '3.8.0'
-    glideTransVersion = '2.0.1'
+    firebaseLibraryVersion = '11.6.2'
+    firebaseUILibraryVersion = '2.2.0'
+    playServicesLibraryVersion = '11.6.2'
+    guavaVersion = '23.5-android'
+    glideVersion = '4.3.1'
+    glideTransVersion = '2.0.2'
     retrofitVersion = '2.3.0'
     okhttpVersion = '3.6.0'
     eventbusVersion = '3.0.0'
-    butterknifeVersion = '8.6.0'
-    autovalueVersion = '1.2'
+    butterknifeVersion = '8.8.1'
+    autovalueVersion = '1.5'
     requeryVersion = '1.4.1'
-    daggerVersion = '2.11'
+    daggerVersion = '2.13'
     jUnitVersion = '4.12'
     mockitoVersion = '1.10.19'
     dexmakerVersion = '1.2'
     powerMockito = '1.6.2'
     runnerVersion = '0.5'
-    espressoVersion = '2.2.2'
+    espressoVersion = '3.0.1'
     hamcrestVersion = '1.3'
 }

@@ -9,7 +9,7 @@ android {
     def versionNumber = 0
 
     if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
+        Properties versionProps = new Properties()
         versionProps.load(new FileInputStream(versionPropsFile))
         versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
         versionProps['VERSION_BUILD'] = versionBuild.toString()
@@ -27,7 +27,7 @@ android {
         applicationId "com.mph.chatcontrol"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
+        versionCode 20
         versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -92,12 +92,12 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
-    buildToolsVersion '26.0.2'
+//    buildToolsVersion '26.0.2'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
