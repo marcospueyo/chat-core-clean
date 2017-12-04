@@ -18,6 +18,8 @@ import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.ChatcontrolService;
 import com.mph.chatcontrol.network.FirebaseDatabaseData;
 import com.mph.chatcontrol.network.FirebaseDatabaseDataImpl;
+import com.mph.chatcontrol.network.TokenService;
+import com.mph.chatcontrol.network.TokenServiceImpl;
 import com.mph.chatcontrol.network.message.MessageFirebaseService;
 import com.mph.chatcontrol.network.message.MessageFirebaseServiceImpl;
 import com.mph.chatcontrol.network.message.MessageRestService;
@@ -54,6 +56,7 @@ public class ChatcontrolApplication extends Application {
     private MessageRestService messageRestService;
 
     private ChatcontrolService service;
+    private TokenService mTokenService;
 
     private EntityDataStore<Persistable> dataStore;
     /**
@@ -149,5 +152,12 @@ public class ChatcontrolApplication extends Application {
             service = retrofit.create(ChatcontrolService.class);
         }
         return service;
+    }
+
+    public TokenService getTokenService(Context context) {
+        if (mTokenService == null) {
+            mTokenService = new TokenServiceImpl(getService(), getSharedPreferencesRepository(context));
+        }
+        return mTokenService;
     }
 }

@@ -1,7 +1,7 @@
 package com.mph.chatcontrol.login.contract;
 /* Created by macmini on 08/08/2017. */
 
-public interface FirebaseLoginRepository {
+public interface FirebaseLoginService {
 
     interface OnFinishedListener {
         void onLoginSuccess();

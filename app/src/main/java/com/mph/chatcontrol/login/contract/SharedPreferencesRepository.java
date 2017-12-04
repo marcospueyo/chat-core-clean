@@ -4,12 +4,26 @@ package com.mph.chatcontrol.login.contract;
 public interface SharedPreferencesRepository {
 
     interface OnFinishedListener {
+
         void onFinished();
+
     }
+
     boolean isLoggedIn();
+
     void setLoggedIn();
+
     boolean isFirstLaunch();
+
     void setFirstLaunchFinished();
+
+    void setFCMToken(String token);
+
+    void setFCMTokenSent();
+
+    boolean isTokenAlreadySent();
+
+    String getFCMToken();
 
     String getUserID();
     String getUserName();

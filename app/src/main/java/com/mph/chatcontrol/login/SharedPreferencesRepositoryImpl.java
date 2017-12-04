@@ -16,6 +16,10 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
 
     private static final String IS_FIRST_LAUNCH = "is_first_launch";
 
+    private static final String FCM_TOKEN = "fcm_token";
+
+    public static final String TOKEN_IS_SENT = "token_sent";
+
     private SharedPreferences mSharedPreferences;
     private FirebaseAuthData mFirebaseAuthData;
 
@@ -43,6 +47,26 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     @Override
     public void setFirstLaunchFinished() {
         mSharedPreferences.edit().putBoolean(IS_FIRST_LAUNCH, true).apply();
+    }
+
+    @Override
+    public void setFCMToken(String token) {
+        mSharedPreferences.edit().putString(FCM_TOKEN, token).apply();
+    }
+
+    @Override
+    public void setFCMTokenSent() {
+        mSharedPreferences.edit().putBoolean(TOKEN_IS_SENT, true).apply();
+    }
+
+    @Override
+    public boolean isTokenAlreadySent() {
+        return mSharedPreferences.getBoolean(TOKEN_IS_SENT, false);
+    }
+
+    @Override
+    public String getFCMToken() {
+        return mSharedPreferences.getString(FCM_TOKEN, null);
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.mph.chatcontrol.login.contract.LoginView;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.main.MainActivity;
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.network.TokenServiceImpl;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +49,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
                 this,
                 new LoginInteractorImpl(
                         getSharedPreferencesRepository(),
-                        new FirebaseLoginRepositoryImpl(FirebaseAuth.getInstance())));
+                        new FirebaseLoginServiceImpl(FirebaseAuth.getInstance()),
+                        ((ChatcontrolApplication) getApplication()).getTokenService(this)));
     }
 
     public SharedPreferencesRepository getSharedPreferencesRepository() {

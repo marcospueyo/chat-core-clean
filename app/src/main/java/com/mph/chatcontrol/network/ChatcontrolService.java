@@ -23,4 +23,8 @@ public interface ChatcontrolService {
     @FormUrlEncoded
     @POST("getGuests")
     Call<List<RestGuest>> getGuests(@FieldMap Map<String, String> names);
+
+    @FormUrlEncoded
+    @POST("tokenRefresh")
+    Call<ResponseBody> sendToken(@FieldMap Map<String, String> names);
 }

@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
@@ -131,9 +134,32 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupToolbar();
+        setupFCM();
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
         mPresenter = new MainPresenterImpl(this);
+    }
+
+    private void setupFCM() {
+        if (checkPlayServices()) {
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Log.d(TAG, "setupFCM: token=" + token);
+        }
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     private void setupToolbar() {

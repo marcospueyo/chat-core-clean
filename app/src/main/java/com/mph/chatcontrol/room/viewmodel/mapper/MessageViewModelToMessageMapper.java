@@ -2,7 +2,6 @@ package com.mph.chatcontrol.room.viewmodel.mapper;
 
 import com.mph.chatcontrol.data.Mapper;
 import com.mph.chatcontrol.data.Message;
-import com.mph.chatcontrol.login.FirebaseAuthData;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
 import com.mph.chatcontrol.utils.CCUtils;
