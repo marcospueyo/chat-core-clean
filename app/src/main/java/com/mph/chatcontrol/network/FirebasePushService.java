@@ -18,7 +18,6 @@ public class FirebasePushService extends FirebaseInstanceIdService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate: ");
         getDependencies();
     }
 

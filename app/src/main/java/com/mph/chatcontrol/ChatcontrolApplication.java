@@ -3,6 +3,7 @@ package com.mph.chatcontrol;
 import android.app.Application;
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationManagerCompat;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -11,6 +12,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.data.MessagesRepositoryImpl;
 import com.mph.chatcontrol.data.Models;
+import com.mph.chatcontrol.device.notification.NotificationFactory;
+import com.mph.chatcontrol.device.notification.NotificationFactoryImpl;
+import com.mph.chatcontrol.device.notification.Notifications;
+import com.mph.chatcontrol.device.notification.NotificationsImpl;
 import com.mph.chatcontrol.login.FirebaseAuthData;
 import com.mph.chatcontrol.login.FirebaseAuthDataImpl;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
@@ -43,8 +48,8 @@ public class ChatcontrolApplication extends Application {
     @SuppressWarnings("unused")
     private static final String API_URL = "https://us-central1-triptips-50da0.cloudfunctions.net/";
 
-    @SuppressWarnings("unused")
-    private static final String LOCAL_URL = "http://localhost:5000/triptips-50da0/us-central1/";
+//    @SuppressWarnings("unused")
+//    private static final String API_URL = "http://localhost:5000/triptips-50da0/us-central1/";
 
     private SharedPreferencesRepository mSharedPreferencesRepository;
     private FirebaseAuthData mFirebaseAuthData;
@@ -57,6 +62,8 @@ public class ChatcontrolApplication extends Application {
 
     private ChatcontrolService service;
     private TokenService mTokenService;
+    private Notifications mNotifications;
+    private NotificationFactory mNotificationFactory;
 
     private EntityDataStore<Persistable> dataStore;
     /**
@@ -159,5 +166,20 @@ public class ChatcontrolApplication extends Application {
             mTokenService = new TokenServiceImpl(getService(), getSharedPreferencesRepository(context));
         }
         return mTokenService;
+    }
+
+    public Notifications getNotifications() {
+        if (mNotifications == null) {
+            mNotifications = new NotificationsImpl(
+                    NotificationManagerCompat.from(getApplicationContext()));
+        }
+        return mNotifications;
+    }
+
+    public NotificationFactory getNotificationFactory() {
+        if (mNotificationFactory == null) {
+            mNotificationFactory = new NotificationFactoryImpl(getApplicationContext(), getResources());
+        }
+        return mNotificationFactory;
     }
 }

@@ -40,35 +40,6 @@ public class LoginInteractorImpl implements LoginInteractor,
     public void login(final String email, final String password,
                       final OnLoginFinishedListener listener) {
         mListener = listener;
-//        mFirebaseLoginService.login(email, password, new FirebaseLoginService.OnFinishedListener() {
-//            @Override
-//            public void onLoginSuccess() {
-//                mSharedPreferencesRepository.setLoggedIn();
-//                String tokenFCM = mSharedPreferencesRepository.getFCMToken();
-//                if (tokenFCM != null) {
-//                    mTokenService.saveToken(tokenFCM, new TokenService.TokenRefreshCallback() {
-//                        @Override
-//                        public void onTokenSaved() {
-//                            listener.onSuccess();
-//                        }
-//
-//                        @Override
-//                        public void onSaveError() {
-//                            // TODO: 04/12/2017 Should notify login success and token send error
-//                            listener.onSuccess();
-//                        }
-//                    });
-//                }
-//                else {
-//                    listener.onSuccess();
-//                }
-//            }
-//
-//            @Override
-//            public void onLoginError() {
-//                listener.onError();
-//            }
-//        });
         mFirebaseLoginService.login(email, password, this);
     }
 
