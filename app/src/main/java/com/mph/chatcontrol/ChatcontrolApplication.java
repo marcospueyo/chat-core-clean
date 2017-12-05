@@ -3,6 +3,7 @@ package com.mph.chatcontrol;
 import android.app.Application;
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.NotificationManagerCompat;
 
 
@@ -43,7 +44,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /* Created by Marcos on 03/08/2017. */
 
-public class ChatcontrolApplication extends Application {
+public class ChatcontrolApplication extends MultiDexApplication {
 
     @SuppressWarnings("unused")
     private static final String API_URL = "https://us-central1-triptips-50da0.cloudfunctions.net/";

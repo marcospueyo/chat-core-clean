@@ -27,6 +27,7 @@ ext {
     buildToolsVersion = '27.0.1'
 
     // App dependencies
+    multidexVersion = '1.0.2'
     supportLibraryVersion = '27.0.1'
     contraintLayoutVersion = '1.0.2'
     firebaseLibraryVersion = '11.6.2'
