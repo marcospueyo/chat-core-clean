@@ -7,9 +7,13 @@ public interface Notifications {
 
     void showNotification(int notificationID, Notification notification);
 
+    void showNotification(String tag, int notificationID, Notification notification);
+
     void updateNotification(int notificationID, Notification notification);
 
     void hideNotification(int notificationID);
+
+    void hideNotification(String tag, int notificationID);
 
     void hideNotifications();
 }

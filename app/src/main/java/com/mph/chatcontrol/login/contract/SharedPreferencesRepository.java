@@ -26,5 +26,12 @@ public interface SharedPreferencesRepository {
     String getFCMToken();
 
     String getUserID();
+
     String getUserName();
+
+    void setRoomOnDisplay(String roomID);
+
+    void deleteRoomOnDisplay(String roomID);
+
+    boolean isRoomOnDisplay(String roomID);
 }

@@ -7,6 +7,8 @@ import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.ChatInfo;
 import com.mph.chatcontrol.data.ChatInfoRepository;
 import com.mph.chatcontrol.data.ChatsRepository;
+import com.mph.chatcontrol.device.notification.NotificationFactory;
+import com.mph.chatcontrol.device.notification.Notifications;
 import com.mph.chatcontrol.room.contract.GetRoomInteractor;
 import com.mph.chatcontrol.room.contract.UpdateSeenStatusInteractor;
 
@@ -25,14 +27,27 @@ public class UpdateSeenStatusInteractorImpl implements UpdateSeenStatusInteracto
     @NonNull
     private final ChatInfoRepository mChatInfoRepository;
 
-    public UpdateSeenStatusInteractorImpl(@NonNull ChatsRepository mChatsRepository,
-                                          @NonNull ChatInfoRepository chatInfoRepository) {
-        this.mChatsRepository = checkNotNull(mChatsRepository);
+
+    // TODO: 11/12/2017 Create an interactor to manage Notifications component
+    @NonNull
+    private final Notifications mNotifications;
+
+    @NonNull
+    private final NotificationFactory mNotificationFactory;
+
+    public UpdateSeenStatusInteractorImpl(@NonNull ChatsRepository chatsRepository,
+                                          @NonNull ChatInfoRepository chatInfoRepository,
+                                          @NonNull Notifications notifications,
+                                          @NonNull NotificationFactory notificationFactory) {
+        mChatsRepository = checkNotNull(chatsRepository);
         mChatInfoRepository = checkNotNull(chatInfoRepository);
+        mNotifications = checkNotNull(notifications);
+        mNotificationFactory = checkNotNull(notificationFactory);
     }
 
     @Override
     public void execute(String roomID, final boolean seen, final OnFinishedListener listener) {
+        mNotifications.hideNotification(roomID, mNotificationFactory.getNewMessageNotificationID());
         mChatsRepository.getChat(roomID, new ChatsRepository.GetSingleChatCallback() {
             @Override
             public void onSingleChatLoaded(final Chat chat) {

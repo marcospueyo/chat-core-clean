@@ -17,6 +17,8 @@ import com.mph.chatcontrol.device.notification.NotificationFactory;
 import com.mph.chatcontrol.device.notification.NotificationFactoryImpl;
 import com.mph.chatcontrol.device.notification.Notifications;
 import com.mph.chatcontrol.device.notification.NotificationsImpl;
+import com.mph.chatcontrol.device.screen.ScreenSupervisor;
+import com.mph.chatcontrol.device.screen.ScreenSupervisorImpl;
 import com.mph.chatcontrol.login.FirebaseAuthData;
 import com.mph.chatcontrol.login.FirebaseAuthDataImpl;
 import com.mph.chatcontrol.login.SharedPreferencesRepositoryImpl;
@@ -33,6 +35,8 @@ import com.mph.chatcontrol.network.message.MessageRestServiceImpl;
 import com.mph.chatcontrol.network.message.MessageService;
 import com.mph.chatcontrol.network.message.MessageServiceImpl;
 import com.mph.chatcontrol.network.message.RestMessageToMessageMapper;
+import com.mph.chatcontrol.utils.IntentFactory;
+import com.mph.chatcontrol.utils.IntentFactoryImpl;
 
 import io.requery.Persistable;
 import io.requery.android.sqlite.DatabaseSource;
@@ -65,6 +69,9 @@ public class ChatcontrolApplication extends MultiDexApplication {
     private TokenService mTokenService;
     private Notifications mNotifications;
     private NotificationFactory mNotificationFactory;
+    private ScreenSupervisor mScreenSupervisor;
+    private IntentFactory mIntentFactory;
+    private Context mContext;
 
     private EntityDataStore<Persistable> dataStore;
     /**
@@ -172,15 +179,37 @@ public class ChatcontrolApplication extends MultiDexApplication {
     public Notifications getNotifications() {
         if (mNotifications == null) {
             mNotifications = new NotificationsImpl(
-                    NotificationManagerCompat.from(getApplicationContext()));
+                    NotificationManagerCompat.from(getContext()));
         }
         return mNotifications;
     }
 
     public NotificationFactory getNotificationFactory() {
         if (mNotificationFactory == null) {
-            mNotificationFactory = new NotificationFactoryImpl(getApplicationContext(), getResources());
+            mNotificationFactory = new NotificationFactoryImpl(getContext(), getResources());
         }
         return mNotificationFactory;
+    }
+
+    public ScreenSupervisor getScreenSupervisor() {
+        if (mScreenSupervisor == null) {
+            mScreenSupervisor = new ScreenSupervisorImpl(
+                    getSharedPreferencesRepository(getContext()));
+        }
+        return mScreenSupervisor;
+    }
+
+    public IntentFactory getIntentFactory() {
+        if (mIntentFactory == null) {
+            mIntentFactory = new IntentFactoryImpl(getContext());
+        }
+        return mIntentFactory;
+    }
+
+    public Context getContext() {
+        if (mContext == null) {
+            mContext = getApplicationContext();
+        }
+        return mContext;
     }
 }

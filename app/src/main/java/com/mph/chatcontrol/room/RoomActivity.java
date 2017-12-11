@@ -30,6 +30,9 @@ import com.mph.chatcontrol.data.ChatsRepository;
 import com.mph.chatcontrol.data.ChatsRepositoryImpl;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.data.MessagesRepositoryImpl;
+import com.mph.chatcontrol.device.notification.NotificationFactory;
+import com.mph.chatcontrol.device.notification.Notifications;
+import com.mph.chatcontrol.device.screen.ScreenSupervisor;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
 import com.mph.chatcontrol.network.FirebaseDatabaseDataImpl;
 import com.mph.chatcontrol.network.RestRoomToChatMapper;
@@ -115,6 +118,14 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         MessagesRepository messagesRepository =
                 ((ChatcontrolApplication) getApplication()).getMessagesRepository(this);
 
+        ScreenSupervisor screenSupervisor =
+                ((ChatcontrolApplication) getApplication()).getScreenSupervisor();
+
+        Notifications notifications = ((ChatcontrolApplication) getApplication()).getNotifications();
+
+        NotificationFactory notificationFactory =
+                ((ChatcontrolApplication) getApplication()).getNotificationFactory();
+
         mPresenter = new RoomPresenterImpl(
                 this,
                 getRoomID(),
@@ -123,11 +134,14 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
                 new GetRoomInteractorImpl(chatsRepository, chatInfoRepository),
                 new GetMessagesInteractorImpl(messagesRepository),
                 new SendMessageInteractorImpl(messagesRepository),
-                new UpdateSeenStatusInteractorImpl(chatsRepository, chatInfoRepository));
+                new UpdateSeenStatusInteractorImpl(chatsRepository, chatInfoRepository,
+                        notifications, notificationFactory),
+                screenSupervisor);
     }
 
     private SharedPreferencesRepository getSharedPreferencesRepository() {
-        return ((ChatcontrolApplication) getApplication()).getSharedPreferencesRepository(this);
+        return ((ChatcontrolApplication) getApplication())
+                .getSharedPreferencesRepository(this);
     }
 
     private void setupToolbar() {

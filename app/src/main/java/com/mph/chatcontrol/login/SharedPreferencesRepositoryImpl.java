@@ -20,6 +20,8 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
 
     public static final String TOKEN_IS_SENT = "token_sent";
 
+    public static final String ROOM_ON_DISPLAY = "room_on_display";
+
     private SharedPreferences mSharedPreferences;
     private FirebaseAuthData mFirebaseAuthData;
 
@@ -77,5 +79,21 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     @Override
     public String getUserName() {
         return mFirebaseAuthData.getUserName();
+    }
+
+    @Override
+    public void setRoomOnDisplay(String roomID) {
+        mSharedPreferences.edit().putString(ROOM_ON_DISPLAY, roomID).apply();
+    }
+
+    @Override
+    public void deleteRoomOnDisplay(String roomID) {
+        mSharedPreferences.edit().remove(ROOM_ON_DISPLAY).apply();
+    }
+
+    @Override
+    public boolean isRoomOnDisplay(String roomID) {
+        return mSharedPreferences.contains(ROOM_ON_DISPLAY)
+                && mSharedPreferences.getString(ROOM_ON_DISPLAY, "").equals(roomID);
     }
 }

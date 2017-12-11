@@ -20,7 +20,12 @@ public class NotificationsImpl implements Notifications {
 
     @Override
     public void showNotification(final int notificationID, final Notification notification) {
-        mNotificationManagerCompat.notify(notificationID, notification);
+        showNotification(null, notificationID, notification);
+    }
+
+    @Override
+    public void showNotification(String tag, int notificationID, Notification notification) {
+        mNotificationManagerCompat.notify(tag, notificationID, notification);
     }
 
     @Override
@@ -30,7 +35,12 @@ public class NotificationsImpl implements Notifications {
 
     @Override
     public void hideNotification(final int notificationID) {
-        mNotificationManagerCompat.cancel(notificationID);
+        hideNotification(null, notificationID);
+    }
+
+    @Override
+    public void hideNotification(String tag, int notificationID) {
+        mNotificationManagerCompat.cancel(tag, notificationID);
     }
 
     @Override

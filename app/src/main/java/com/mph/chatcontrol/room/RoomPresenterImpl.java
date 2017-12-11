@@ -11,6 +11,7 @@ import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.ChatInfo;
 import com.mph.chatcontrol.data.Message;
+import com.mph.chatcontrol.device.screen.ScreenSupervisor;
 import com.mph.chatcontrol.room.contract.GetMessagesInteractor;
 import com.mph.chatcontrol.room.contract.GetRoomInteractor;
 import com.mph.chatcontrol.room.contract.RoomPresenter;
@@ -43,13 +44,18 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     @NonNull private final SendMessageInteractor mSendMessageInteractor;
     @NonNull private final UpdateSeenStatusInteractor mUpdateSeenStatusInteractor;
 
-    public RoomPresenterImpl(@NonNull RoomView roomView, @NonNull String roomID,
+    @NonNull
+    private final ScreenSupervisor mScreenSupervisor;
+
+    public RoomPresenterImpl(@NonNull RoomView roomView,
+                             @NonNull String roomID,
                              @NonNull ChatViewModelToChatMapper chatMapper,
                              @NonNull MessageViewModelToMessageMapper messageMapper,
                              @NonNull GetRoomInteractor getRoomInteractor,
                              @NonNull GetMessagesInteractor getMessagesInteractor,
                              @NonNull SendMessageInteractor sendMessageInteractor,
-                             @NonNull UpdateSeenStatusInteractor updateSeenStatusInteractor) {
+                             @NonNull UpdateSeenStatusInteractor updateSeenStatusInteractor,
+                             @NonNull ScreenSupervisor screenSupervisor) {
         mRoomID = checkNotNull(roomID);
         mChatMapper = checkNotNull(chatMapper);
         mMessageMapper = checkNotNull(messageMapper);
@@ -57,6 +63,7 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
         mGetMessagesInteractor = checkNotNull(getMessagesInteractor);
         mSendMessageInteractor = checkNotNull(sendMessageInteractor);
         mUpdateSeenStatusInteractor = checkNotNull(updateSeenStatusInteractor);
+        mScreenSupervisor = checkNotNull(screenSupervisor);
         mRoomView = checkNotNull(roomView);
         mRoomView.setPresenter(this);
     }
@@ -66,12 +73,14 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
         mRoomView.showProgress();
         startListeningForRoom();
         startListeningForMessages();
+        setRoomOnDisplay();
     }
 
     @Override
     public void stop() {
         stopListeningForMessages();
         stopListeningForRoomChanges();
+        removeRoomOnDisplay();
     }
 
     @Override
@@ -136,6 +145,14 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     private void stopListeningForRoomChanges() {
         mGetRoomInteractor.stop(mRoomID);
+    }
+
+    private void setRoomOnDisplay() {
+        mScreenSupervisor.setRoomOnDisplay(mRoomID);
+    }
+
+    private void removeRoomOnDisplay() {
+        mScreenSupervisor.deleteRoomOnDisplay(mRoomID);
     }
 
     @Override
