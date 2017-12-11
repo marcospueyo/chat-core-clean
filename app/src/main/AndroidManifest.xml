@@ -48,6 +48,7 @@
         <activity
             android:name=".room.RoomActivity"
             android:parentActivityName=".main.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
     </application>

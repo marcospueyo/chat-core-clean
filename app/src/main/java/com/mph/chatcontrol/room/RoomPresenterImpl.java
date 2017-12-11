@@ -56,6 +56,7 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
                              @NonNull SendMessageInteractor sendMessageInteractor,
                              @NonNull UpdateSeenStatusInteractor updateSeenStatusInteractor,
                              @NonNull ScreenSupervisor screenSupervisor) {
+        Log.d(TAG, "RoomPresenterImpl: roomID = " + roomID);
         mRoomID = checkNotNull(roomID);
         mChatMapper = checkNotNull(chatMapper);
         mMessageMapper = checkNotNull(messageMapper);
@@ -66,6 +67,12 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
         mScreenSupervisor = checkNotNull(screenSupervisor);
         mRoomView = checkNotNull(roomView);
         mRoomView.setPresenter(this);
+    }
+
+    @Override
+    public void setNewRoomID(@NonNull String roomID) {
+        Log.d(TAG, "setNewRoomID: " + roomID);
+        mRoomID = checkNotNull(roomID);
     }
 
     @Override

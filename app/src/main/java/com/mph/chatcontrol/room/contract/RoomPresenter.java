@@ -11,4 +11,6 @@ public interface RoomPresenter extends BaseListPresenter {
     void bindView();
 
     void unbindView();
+
+    void setNewRoomID(String roomID);
 }

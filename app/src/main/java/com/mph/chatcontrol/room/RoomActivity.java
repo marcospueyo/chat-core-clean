@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -89,6 +90,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: fired");
         setContentView(R.layout.activity_room);
         ButterKnife.bind(this);
         setupToolbar();
@@ -96,6 +98,19 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         initializeListView();
         onSendListener();
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent: fired");
+        if (mPresenter != null) {
+            mPresenter.stop();
+            setIntent(intent);
+            mPresenter.setNewRoomID(getRoomID());
+
+        }
+    }
+
     private void initializePresenter() {
         ChatsRepository chatsRepository =
                 new ChatsRepositoryImpl(
@@ -174,6 +189,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: fired");
         mPresenter.start();
     }
 
