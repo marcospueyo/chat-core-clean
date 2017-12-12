@@ -67,6 +67,8 @@ import com.mph.chatcontrol.settings.contract.LogoutInteractor;
 import com.mph.chatcontrol.settings.contract.SetNotificationPreferenceInteractor;
 import com.mph.chatcontrol.settings.contract.SettingsPresenter;
 import com.mph.chatcontrol.utils.CCUtils;
+import com.mph.chatcontrol.utils.EventFactoryImpl;
+import com.mph.chatcontrol.utils.RouterImpl;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -137,7 +139,9 @@ public class MainActivity extends AppCompatActivity implements
         setupFCM();
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
-        mPresenter = new MainPresenterImpl(this);
+        mPresenter = new MainPresenterImpl(
+                this,
+                new RouterImpl(EventBus.getDefault(), new EventFactoryImpl()));
     }
 
     private void setupFCM() {
@@ -153,7 +157,8 @@ public class MainActivity extends AppCompatActivity implements
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
 
-            } else {
+            }
+            else {
                 Log.i(TAG, "This device is not supported.");
                 finish();
             }
@@ -181,14 +186,18 @@ public class MainActivity extends AppCompatActivity implements
         ibRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: refresh");
+                int selectedView = getOrderFromSelectedItem(
+                        mBottomNavigationView.getSelectedItemId());
+                mPresenter.onRefresh(selectedView);
             }
         });
 
         ibSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: search");
+                int selectedView = getOrderFromSelectedItem(
+                        mBottomNavigationView.getSelectedItemId());
+                mPresenter.onSearch(selectedView);
             }
         });
     }
@@ -221,8 +230,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        mPresenter.onMenuOptionSelected(getOrderFromSelectedItem(item.getItemId()));
+        return true;
+    }
+
+    private int getOrderFromSelectedItem(int itemID) {
         int order = 0;
-        switch (item.getItemId()) {
+        switch (itemID) {
             case R.id.action_active:
                 order = 0;
                 break;
@@ -236,8 +250,7 @@ public class MainActivity extends AppCompatActivity implements
                 order = 3;
                 break;
         }
-        mPresenter.onMenuOptionSelected(order);
-        return true;
+        return order;
     }
 
     @Override
@@ -320,7 +333,8 @@ public class MainActivity extends AppCompatActivity implements
                     getChatViewModelToChatMapper(),
                     getChatComparator(),
                     getFindChatsInteractor(),
-                    true /* should load active chats */);
+                    true /* should load active chats */,
+                    EventBus.getDefault());
         }
         return mActiveChatListPresenter;
     }
@@ -332,7 +346,9 @@ public class MainActivity extends AppCompatActivity implements
                     getChatViewModelToChatMapper(),
                     getChatComparator(),
                     getFindChatsInteractor(),
-                    false /* should NOT load active chats */);
+                    false /* should NOT load active chats */,
+                    EventBus.getDefault()
+            );
         }
         return mArchivedChatListPresenter;
     }
@@ -344,7 +360,8 @@ public class MainActivity extends AppCompatActivity implements
                     getGuestViewModelToGuestMapper(),
                     getChatViewModelToChatMapper(),
                     getFindGuestsInteractor(),
-                    getGetRoomInteractor()
+                    getGetRoomInteractor(),
+                    EventBus.getDefault()
             );
         }
 

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import butterknife.BindView;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseListFragment extends BaseFragment implements BaseListView {
+
+    @SuppressWarnings("unused")
+    private static final String TAG = BaseListFragment.class.getSimpleName();
 
     @BindView(R.id.rv_elements) protected RecyclerView mListView;
     @BindView(R.id.ll_progress) View mProgressView;
@@ -41,7 +45,15 @@ public abstract class BaseListFragment extends BaseFragment implements BaseListV
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: ");
         mPresenter.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        mPresenter.stop();
     }
 
     protected void setAdapter(BaseListAdapter adapter) {

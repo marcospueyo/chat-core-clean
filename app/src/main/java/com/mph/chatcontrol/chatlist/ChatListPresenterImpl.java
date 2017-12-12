@@ -13,7 +13,13 @@ import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
 import com.mph.chatcontrol.chatlist.viewmodel.mapper.ChatViewModelToChatMapper;
 import com.mph.chatcontrol.data.Chat;
 import com.mph.chatcontrol.data.ChatInfo;
+import com.mph.chatcontrol.events.RefreshRoomsEvent;
+import com.mph.chatcontrol.events.SearchRoomsEvent;
 import com.mph.chatcontrol.network.ChatComparator;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,34 +52,48 @@ public class ChatListPresenterImpl implements ChatListPresenter,
 
     private final boolean mShouldShowActiveChats;
 
+    @NonNull
+    private final EventBus mEventBus;
+
     private Map<String, Pair<Chat, ChatInfo>> mRoomMap;
 
     public ChatListPresenterImpl(@NonNull ChatListView chatListView,
                                  @NonNull ChatViewModelToChatMapper mapper,
                                  @NonNull ChatComparator chatComparator,
                                  @NonNull FindChatsInteractor findChatsInteractor,
-                                 boolean shouldShowActiveChats) {
+                                 boolean shouldShowActiveChats,
+                                 @NonNull EventBus eventBus) {
         mChatListView = checkNotNull(chatListView);
         mFindChatsInteractor = checkNotNull(findChatsInteractor);
         mMapper = checkNotNull(mapper);
         mChatComparator = checkNotNull(chatComparator);
         mChatListView.setPresenter(this);
         mShouldShowActiveChats = shouldShowActiveChats;
+        mEventBus = checkNotNull(eventBus);
         mRoomMap = new HashMap<>();
     }
 
     @Override
     public void start() {
+        mEventBus.register(this);
+        loadRooms();
+    }
+
+    private void loadRooms() {
         mChatListView.showProgress();
         Date currentDate = new Date();
-        if (mShouldShowActiveChats)
+        if (mShouldShowActiveChats) {
             mFindChatsInteractor.findActiveChats(currentDate, this);
-        else
+        }
+
+        else {
             mFindChatsInteractor.findArchivedChats(currentDate, this);
+        }
     }
 
     @Override
     public void stop() {
+        mEventBus.unregister(this);
         mFindChatsInteractor.stopUpdates();
     }
 
@@ -115,5 +135,15 @@ public class ChatListPresenterImpl implements ChatListPresenter,
     public void onDataNotAvailable() {
         mChatListView.hideProgress();
         mChatListView.showLoadError();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshRoomsEvent(RefreshRoomsEvent event) {
+        loadRooms();
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSearchRoomsEvent(SearchRoomsEvent event) {
+        Log.d(TAG, "onSearchRoomsEvent: ");
     }
 }

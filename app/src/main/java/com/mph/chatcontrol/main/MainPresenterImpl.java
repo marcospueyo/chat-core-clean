@@ -1,60 +1,114 @@
 package com.mph.chatcontrol.main;
 /* Created by Marcos on 13/07/2017.*/
 
+import android.support.annotation.NonNull;
+
 import com.mph.chatcontrol.utils.MenuOptions;
+import com.mph.chatcontrol.utils.Router;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MainPresenterImpl implements MainPresenter {
-    private MainView mainView;
+
+    @NonNull
+    private final MainView mView;
+
+    @NonNull
+    private final Router mRouter;
+
     //private MainInteractor mainInteractor;
 
-    public MainPresenterImpl(MainView mainView) {
-        this.mainView = mainView;
+    public MainPresenterImpl(@NonNull MainView mainView, @NonNull Router router) {
+        mView = checkNotNull(mainView);
+        mRouter = checkNotNull(router);
     }
 
-    @Override public void onMenuOptionSelected(Integer order) {
-        if (mainView != null) {
-            MenuOptions.Option option = MenuOptions.getOption(order);
-            if (option == null)
-                mainView.showMenuError();
-            else {
-                switch (option) {
-                    case ACTIVE:
-                        mainView.showActiveChatView();
-                        break;
-                    case ARCHIVED:
-                        mainView.showArchivedChatView();
-                        break;
-                    case GUESTLIST:
-                        mainView.showGuestlistView();
-                        break;
-                    case CONFIG:
-                        mainView.showConfigView();
-                }
+    @Override
+    public void onMenuOptionSelected(Integer order) {
+        MenuOptions.Option option = MenuOptions.getOption(order);
+        if (option == null)
+            mView.showMenuError();
+        else {
+            switch (option) {
+                case ACTIVE:
+                    mView.showActiveChatView();
+                    break;
+                case ARCHIVED:
+                    mView.showArchivedChatView();
+                    break;
+                case GUESTLIST:
+                    mView.showGuestlistView();
+                    break;
+                case CONFIG:
+                    mView.showConfigView();
             }
         }
     }
 
-    @Override public void onStart() {
-        if (mainView != null)
-            mainView.showActiveChatView();
+    @Override
+    public void onRefresh(Integer order) {
+        MenuOptions.Option option = MenuOptions.getOption(order);
+        if (option == null)
+            mView.showMenuError();
+        else {
+            switch (option) {
+                case ACTIVE:
+                    mRouter.refreshActiveRooms();
+                    break;
+                case ARCHIVED:
+                    mRouter.refreshArchivedRooms();
+                    break;
+                case GUESTLIST:
+                    mRouter.refreshGuests();
+                    break;
+                case CONFIG:
+                    break;
+            }
+        }
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onSearch(Integer order) {
+        MenuOptions.Option option = MenuOptions.getOption(order);
+        if (option == null)
+            mView.showMenuError();
+        else {
+            switch (option) {
+                case ACTIVE:
+                    mRouter.showActiveRoomSearch();
+                    break;
+                case ARCHIVED:
+                    mRouter.showArchivedRoomSearch();
+                    break;
+                case GUESTLIST:
+                    mRouter.showGuestSearch();
+                    break;
+                case CONFIG:
+                    break;
+            }
+        }
     }
 
-    @Override public void onDestroy() {
-        mainView = null;
+    @Override
+    public void onStart() {
+        mView.showActiveChatView();
+    }
+
+    @Override
+    public void onResume() {
+    }
+
+    @Override
+    public void onDestroy() {
     }
 
     @Override
     public void onLogout() {
-        if (mainView != null)
-            mainView.navigateToLogin();
+        mView.navigateToLogin();
     }
 
     @Override
     public void onOpenChat(String chatID) {
-        if (mainView != null)
-            mainView.showRoom(chatID);
+        mView.showRoom(chatID);
     }
 }
