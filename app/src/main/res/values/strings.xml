@@ -44,4 +44,6 @@
     <string name="guestlist_room_load_error">No se ha podido cargar la sala asociada</string>
 
     <string name="new_message_in_room">Nuevo mensaje en</string>
+
+    <string name="search_hint">Buscar en Triptips Chat</string>
 </resources>
