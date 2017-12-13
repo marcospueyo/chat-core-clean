@@ -92,8 +92,18 @@ public class GuestListPresenterImpl implements GuestListPresenter,
     }
 
     private void loadGuests() {
-        mGuestListView.showProgress();
+        if (cacheContainsGuests()) {
+            showGuests();
+        }
+        else {
+            mGuestListView.showProgress();
+        }
+
         mFindGuestsInteractor.findGuests(this);
+    }
+
+    private boolean cacheContainsGuests() {
+        return mGuests.size() > 0;
     }
 
     @Override
