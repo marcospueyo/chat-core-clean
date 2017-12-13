@@ -68,20 +68,42 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onSearch(Integer order) {
+    public void onSearch(Integer order, String query) {
         MenuOptions.Option option = MenuOptions.getOption(order);
         if (option == null)
             mView.showMenuError();
         else {
             switch (option) {
                 case ACTIVE:
-                    mRouter.showActiveRoomSearch();
+                    mRouter.showActiveRoomSearch(query);
                     break;
                 case ARCHIVED:
-                    mRouter.showArchivedRoomSearch();
+                    mRouter.showArchivedRoomSearch(query);
                     break;
                 case GUESTLIST:
-                    mRouter.showGuestSearch();
+                    mRouter.showGuestSearch(query);
+                    break;
+                case CONFIG:
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onSearchDisabled(Integer order) {
+        MenuOptions.Option option = MenuOptions.getOption(order);
+        if (option == null)
+            mView.showMenuError();
+        else {
+            switch (option) {
+                case ACTIVE:
+                    mRouter.hideActiveRoomSearch();
+                    break;
+                case ARCHIVED:
+                    mRouter.hideArchivedRoomSearch();
+                    break;
+                case GUESTLIST:
+                    mRouter.hideGuestSearch();
                     break;
                 case CONFIG:
                     break;

@@ -3,15 +3,21 @@ package com.mph.chatcontrol.utils;
 
 public interface Router {
 
-    void showActiveRoomSearch();
+    void showActiveRoomSearch(String query);
+
+    void hideActiveRoomSearch();
 
     void refreshActiveRooms();
 
-    void showArchivedRoomSearch();
+    void showArchivedRoomSearch(String query);
+
+    void hideArchivedRoomSearch();
 
     void refreshArchivedRooms();
 
-    void showGuestSearch();
+    void showGuestSearch(String query);
+
+    void hideGuestSearch();
 
     void refreshGuests();
 }

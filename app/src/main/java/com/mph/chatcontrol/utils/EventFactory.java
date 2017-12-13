@@ -5,9 +5,13 @@ public interface EventFactory {
 
     Object getRefreshRoomsEvent();
 
-    Object getSearchRoomsEvent();
+    Object getSearchRoomsEvent(String query);
+
+    Object getSearchRoomsDisableEvent();
 
     Object getRefreshGuestsEvent();
 
-    Object getSearchGuestsEvent();
+    Object getSearchGuestsEvent(String query);
+
+    Object getSearchGuestsDisableEvent();
 }

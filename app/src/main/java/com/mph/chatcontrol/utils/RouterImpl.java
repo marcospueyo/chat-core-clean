@@ -21,8 +21,8 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void showActiveRoomSearch() {
-        mEventBus.post(mEventFactory.getSearchRoomsEvent());
+    public void showActiveRoomSearch(String query) {
+        mEventBus.post(mEventFactory.getSearchRoomsEvent(query));
     }
 
     @Override
@@ -31,8 +31,8 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void showArchivedRoomSearch() {
-        mEventBus.post(mEventFactory.getSearchRoomsEvent());
+    public void showArchivedRoomSearch(String query) {
+        mEventBus.post(mEventFactory.getSearchRoomsEvent(query));
     }
 
     @Override
@@ -41,12 +41,27 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public void showGuestSearch() {
-        mEventBus.post(mEventFactory.getSearchGuestsEvent());
+    public void showGuestSearch(String query) {
+        mEventBus.post(mEventFactory.getSearchGuestsEvent(query));
     }
 
     @Override
     public void refreshGuests() {
         mEventBus.post(mEventFactory.getRefreshGuestsEvent());
+    }
+
+    @Override
+    public void hideActiveRoomSearch() {
+        mEventBus.post(mEventFactory.getSearchRoomsDisableEvent());
+    }
+
+    @Override
+    public void hideArchivedRoomSearch() {
+        mEventBus.post(mEventFactory.getSearchRoomsDisableEvent());
+    }
+
+    @Override
+    public void hideGuestSearch() {
+        mEventBus.post(mEventFactory.getSearchGuestsDisableEvent());
     }
 }

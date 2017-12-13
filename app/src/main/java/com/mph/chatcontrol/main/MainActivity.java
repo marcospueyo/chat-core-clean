@@ -8,12 +8,14 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -69,6 +71,7 @@ import com.mph.chatcontrol.settings.contract.SettingsPresenter;
 import com.mph.chatcontrol.utils.CCUtils;
 import com.mph.chatcontrol.utils.EventFactoryImpl;
 import com.mph.chatcontrol.utils.RouterImpl;
+import com.mph.chatcontrol.utils.StringComparatorImpl;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -79,15 +82,17 @@ import butterknife.ButterKnife;
 import io.requery.Persistable;
 import io.requery.sql.EntityDataStore;
 
+import static android.view.View.GONE;
+
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener, MainView {
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.bottom_nav_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.content_frame) FrameLayout mFrameLayout;
     private Toolbar mToolbar;
     private ImageButton ibRefresh;
-    private ImageButton ibSearch;
     private MainPresenter mPresenter;
 
     // TODO: 17/07/2017 Add fragments with tags using fragment manager. Check whether they exist
@@ -155,10 +160,7 @@ public class MainActivity extends AppCompatActivity implements
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-
-            }
-            else {
+            if (!apiAvailability.isUserResolvableError(resultCode)) {
                 Log.i(TAG, "This device is not supported.");
                 finish();
             }
@@ -167,8 +169,9 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
+    // TODO: 12/12/2017 Encapsulate all toolbar logic inside a custom component
     private void setupToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
         if (ab == null) throw new AssertionError();
@@ -180,8 +183,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setupToolbarButtons() {
-        ibRefresh = (ImageButton) mToolbar.findViewById(R.id.ib_refresh);
-        ibSearch = (ImageButton) mToolbar.findViewById(R.id.ib_search);
+        ibRefresh = mToolbar.findViewById(R.id.ib_refresh);
 
         ibRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,14 +194,48 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        ibSearch.setOnClickListener(new View.OnClickListener() {
+        final ImageView ivLogo = mToolbar.findViewById(R.id.iv_logo);
+        SearchView searchView = mToolbar.findViewById(R.id.sv_search);
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                int selectedView = getOrderFromSelectedItem(
-                        mBottomNavigationView.getSelectedItemId());
-                mPresenter.onSearch(selectedView);
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: ");
+                ivLogo.setVisibility(GONE);
+                ibRefresh.setVisibility(GONE);
             }
         });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                ivLogo.setVisibility(View.VISIBLE);
+                ibRefresh.setVisibility(View.VISIBLE);
+                int selectedView = getOrderFromSelectedItem(
+                        mBottomNavigationView.getSelectedItemId());
+                mPresenter.onSearchDisabled(selectedView);
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, "onQueryTextSubmit: " + query);
+                handleSearchInput(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d(TAG, "onQueryTextChange: " + newText);
+                handleSearchInput(newText);
+                return false;
+            }
+        });
+    }
+
+    private void handleSearchInput(String query) {
+        int selectedView = getOrderFromSelectedItem(
+                mBottomNavigationView.getSelectedItemId());
+        mPresenter.onSearch(selectedView, query);
     }
 
 
@@ -334,7 +370,8 @@ public class MainActivity extends AppCompatActivity implements
                     getChatComparator(),
                     getFindChatsInteractor(),
                     true /* should load active chats */,
-                    EventBus.getDefault());
+                    EventBus.getDefault(),
+                    new StringComparatorImpl());
         }
         return mActiveChatListPresenter;
     }
@@ -347,7 +384,8 @@ public class MainActivity extends AppCompatActivity implements
                     getChatComparator(),
                     getFindChatsInteractor(),
                     false /* should NOT load active chats */,
-                    EventBus.getDefault()
+                    EventBus.getDefault(),
+                    new StringComparatorImpl()
             );
         }
         return mArchivedChatListPresenter;
@@ -361,7 +399,8 @@ public class MainActivity extends AppCompatActivity implements
                     getChatViewModelToChatMapper(),
                     getFindGuestsInteractor(),
                     getGetRoomInteractor(),
-                    EventBus.getDefault()
+                    EventBus.getDefault(),
+                    new StringComparatorImpl()
             );
         }
 

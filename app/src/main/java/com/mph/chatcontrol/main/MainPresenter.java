@@ -17,5 +17,7 @@ public interface MainPresenter {
 
     void onRefresh(Integer order);
 
-    void onSearch(Integer order);
+    void onSearch(Integer order, String query);
+
+    void onSearchDisabled(Integer order);
 }

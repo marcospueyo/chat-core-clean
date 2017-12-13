@@ -3,7 +3,9 @@ package com.mph.chatcontrol.utils;
 
 import com.mph.chatcontrol.events.RefreshGuestsEvent;
 import com.mph.chatcontrol.events.RefreshRoomsEvent;
+import com.mph.chatcontrol.events.SearchGuestsDisableEvent;
 import com.mph.chatcontrol.events.SearchGuestsEvent;
+import com.mph.chatcontrol.events.SearchRoomsDisableEvent;
 import com.mph.chatcontrol.events.SearchRoomsEvent;
 
 public class EventFactoryImpl implements EventFactory {
@@ -17,8 +19,8 @@ public class EventFactoryImpl implements EventFactory {
     }
 
     @Override
-    public Object getSearchRoomsEvent() {
-        return SearchRoomsEvent.create();
+    public Object getSearchRoomsEvent(String query) {
+        return SearchRoomsEvent.create(query);
     }
 
     @Override
@@ -27,7 +29,17 @@ public class EventFactoryImpl implements EventFactory {
     }
 
     @Override
-    public Object getSearchGuestsEvent() {
-        return SearchGuestsEvent.create();
+    public Object getSearchGuestsEvent(String query) {
+        return SearchGuestsEvent.create(query);
+    }
+
+    @Override
+    public Object getSearchRoomsDisableEvent() {
+        return SearchRoomsDisableEvent.create();
+    }
+
+    @Override
+    public Object getSearchGuestsDisableEvent() {
+        return SearchGuestsDisableEvent.create();
     }
 }

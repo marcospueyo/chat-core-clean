@@ -5,7 +5,10 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class SearchRoomsEvent {
-    public static SearchRoomsEvent create() {
-        return new AutoValue_SearchRoomsEvent();
+
+    public abstract String query();
+
+    public static SearchRoomsEvent create(String query) {
+        return new AutoValue_SearchRoomsEvent(query);
     }
 }
