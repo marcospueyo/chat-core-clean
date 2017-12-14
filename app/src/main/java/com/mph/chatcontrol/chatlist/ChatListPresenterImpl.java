@@ -3,7 +3,6 @@ package com.mph.chatcontrol.chatlist;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 
 import com.mph.chatcontrol.base.BaseViewModel;
@@ -112,7 +111,6 @@ public class ChatListPresenterImpl implements ChatListPresenter,
 
     @Override
     public void onChatChanged(Pair<Chat, ChatInfo> item) {
-        Log.d(TAG, "onChatChanged: fired");
         mRoomMap.put(item.first.getId(), item);
         showRooms();
     }
@@ -137,19 +135,30 @@ public class ChatListPresenterImpl implements ChatListPresenter,
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearchRoomsEvent(SearchRoomsEvent event) {
-        Log.d(TAG, "onSearchRoomsEvent: " + event.query());
         enableFilter(event.query());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearchRoomsDisableEvent(SearchRoomsDisableEvent event) {
-        Log.d(TAG, "onSearchRoomsDisableEvent: ");
         disableFilter();
     }
 
 
     private void loadRooms() {
-        mChatListView.showProgress();
+        if (cacheContainsRooms()) {
+            showRooms();
+        }
+        else {
+            mChatListView.showProgress();
+        }
+        remoteFetchRooms();
+    }
+
+    private boolean cacheContainsRooms() {
+        return mRoomMap.size() > 0;
+    }
+
+    private void remoteFetchRooms() {
         Date currentDate = new Date();
         if (mShouldShowActiveChats) {
             mFindChatsInteractor.findActiveChats(currentDate, this);

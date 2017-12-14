@@ -68,11 +68,13 @@ public class ChatsRepositoryImpl implements ChatsRepository {
 
     @Override
     public void findActiveChats(Date inputDate, final GetChatsCallback callback) {
+        callback.onChatsLoaded(getLocalChats(true, inputDate));
         fetchChats(callback, true, inputDate);
     }
 
     @Override
     public void findArchivedChats(Date inputDate, GetChatsCallback callback) {
+        callback.onChatsLoaded(getLocalChats(false, inputDate));
         fetchChats(callback, false, inputDate);
     }
 

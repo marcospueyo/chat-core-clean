@@ -56,7 +56,21 @@ public class GuestRepositoryImpl implements GuestRepository {
 
     @Override
     public void getGuests(final GetGuestsCallback callback) {
-        // TODO: 27/09/2017 Define strategy
+        callback.onGuestsLoaded(getLocalGuests());
+        fetchGuests(callback);
+    }
+
+    @Override
+    public void getGuest(String id, GetSingleGuestCallback callback) {
+        callback.onSingleGuestLoaded(getLocalGuest(id));
+    }
+
+    @Override
+    public void updateGuest(Guest guest, UpdateOperationCallback callback) {
+        dataStore.update(guest);
+    }
+
+    private void fetchGuests(final GetGuestsCallback callback) {
         int count = dataStore.count(Chat.class).get().value();
         if (forceSync || count == 0) {
             service.getGuests(new GuestService.GetGuestsCallback() {
@@ -76,16 +90,6 @@ public class GuestRepositoryImpl implements GuestRepository {
         else {
             callback.onGuestsLoaded(getLocalGuests());
         }
-    }
-
-    @Override
-    public void getGuest(String id, GetSingleGuestCallback callback) {
-        callback.onSingleGuestLoaded(getLocalGuest(id));
-    }
-
-    @Override
-    public void updateGuest(Guest guest, UpdateOperationCallback callback) {
-        dataStore.update(guest);
     }
 
     private Guest getLocalGuest(String id) {
