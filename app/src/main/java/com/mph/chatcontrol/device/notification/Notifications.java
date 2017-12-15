@@ -16,4 +16,10 @@ public interface Notifications {
     void hideNotification(String tag, int notificationID);
 
     void hideNotifications();
+
+    void enableNotifications();
+
+    void disableNotifications();
+
+    boolean canShowNotifications();
 }

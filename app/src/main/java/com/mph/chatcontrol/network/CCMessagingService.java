@@ -54,14 +54,6 @@ public class CCMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d(TAG, "onMessageReceived: fired");
-//        String contentText = null;
-//        if (remoteMessage.getNotification() != null) {
-//            Log.d(TAG, "onMessageReceived: Title: " + remoteMessage.getNotification().getTitle());
-//            Log.d(TAG, "FCM Notification Body: " + remoteMessage.getNotification().getBody());
-//            contentText = remoteMessage.getNotification().getBody();
-//        }
-
         Map<String, String> data = remoteMessage.getData();
         String roomID = null;
         String propertyName = null;
@@ -88,7 +80,7 @@ public class CCMessagingService extends FirebaseMessagingService {
     }
 
     private boolean canShowNotification(String roomID) {
-        return !mScreenSupervisor.isRoomOnDisplay(roomID);
+        return mNotifications.canShowNotifications() && !mScreenSupervisor.isRoomOnDisplay(roomID);
     }
 
     private PendingIntent buildPendingIntent(Intent targetActivityIntent) {

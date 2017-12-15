@@ -34,4 +34,12 @@ public interface SharedPreferencesRepository {
     void deleteRoomOnDisplay(String roomID);
 
     boolean isRoomOnDisplay(String roomID);
+
+    void setNotificationsEnabled();
+
+    void setNotificationsDisabled();
+
+    boolean areNotificationsEnabled();
+
+    void clearAllData();
 }

@@ -11,5 +11,4 @@ public interface TokenService {
     }
 
     void saveToken(String token, TokenRefreshCallback callback);
-
 }

@@ -31,6 +31,7 @@ public class LoginInteractorImpl implements LoginInteractor,
     public LoginInteractorImpl(@NonNull SharedPreferencesRepository sharedPreferencesRepository,
                                @NonNull FirebaseLoginService firebaseLoginService,
                                @NonNull TokenService tokenService) {
+        Log.d(TAG, "LoginInteractorImpl: UserID:" + sharedPreferencesRepository.getUserID());
         mSharedPreferencesRepository = checkNotNull(sharedPreferencesRepository);
         mFirebaseLoginService = checkNotNull(firebaseLoginService);
         mTokenService = checkNotNull(tokenService);

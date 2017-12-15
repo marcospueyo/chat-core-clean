@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:text="@string/logout"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+        android:textAppearance="@android:style/TextAppearance.Material"
         android:typeface="normal"
         tools:layout_constraintTop_creator="1"
         android:layout_marginStart="16dp"

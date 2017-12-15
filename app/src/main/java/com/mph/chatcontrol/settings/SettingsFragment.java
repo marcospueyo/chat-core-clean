@@ -14,6 +14,7 @@ import com.mph.chatcontrol.base.BaseFragment;
 import com.mph.chatcontrol.events.LogoutEvent;
 import com.mph.chatcontrol.settings.contract.SettingsPresenter;
 import com.mph.chatcontrol.settings.contract.SettingsView;
+import com.mph.chatcontrol.widget.MPHSwitch;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,7 +25,7 @@ import butterknife.BindView;
 public class SettingsFragment extends BaseFragment implements SettingsView,
         CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
-    @BindView(R.id.switch_notificatiosn) Switch swNotifications;
+    @BindView(R.id.switch_notifications) MPHSwitch swNotifications;
 
     @BindView(R.id.textView_logout) View vLogout;
 
@@ -83,12 +84,7 @@ public class SettingsFragment extends BaseFragment implements SettingsView,
 
     @Override
     public void setNotificationsState(boolean enabled) {
-        swNotifications.setChecked(enabled);
-    }
-
-    @Override
-    public void handleLogoutSuccess() {
-        EventBus.getDefault().post(new LogoutEvent());
+        swNotifications.setCheckedSilently(enabled, this);
     }
 
     @Override

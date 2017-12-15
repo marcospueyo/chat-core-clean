@@ -8,6 +8,7 @@ import com.mph.chatcontrol.settings.contract.LogoutInteractor;
 import com.mph.chatcontrol.settings.contract.SetNotificationPreferenceInteractor;
 import com.mph.chatcontrol.settings.contract.SettingsPresenter;
 import com.mph.chatcontrol.settings.contract.SettingsView;
+import com.mph.chatcontrol.utils.Router;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,24 +18,33 @@ public class SettingsPresenterImpl implements SettingsPresenter,
 
     private static final String TAG = SettingsPresenterImpl.class.getSimpleName();
 
-    @NonNull private final SettingsView mSettingsView;
+    @NonNull
+    private final SettingsView mSettingsView;
 
-    @NonNull private final LogoutInteractor mLogoutInteractor;
+    @NonNull
+    private final LogoutInteractor mLogoutInteractor;
 
-    @NonNull private final SetNotificationPreferenceInteractor mSetNotificationPreferenceInteractor;
+    @NonNull
+    private final SetNotificationPreferenceInteractor mSetNotificationPreferenceInteractor;
 
-    @NonNull private final GetNotificationPreferenceInteractor mGetNotificationPreferenceInteractor;
+    @NonNull
+    private final GetNotificationPreferenceInteractor mGetNotificationPreferenceInteractor;
+
+    @NonNull
+    private final Router mRouter;
 
     public SettingsPresenterImpl(@NonNull SettingsView settingsView,
                                  @NonNull LogoutInteractor logoutInteractor,
                                  @NonNull SetNotificationPreferenceInteractor
                                          setNotificationPreferenceInteractor,
                                  @NonNull GetNotificationPreferenceInteractor
-                                         getNotificationPreferenceInteractor) {
+                                         getNotificationPreferenceInteractor,
+                                 @NonNull Router router) {
         mLogoutInteractor = checkNotNull(logoutInteractor);
         mSetNotificationPreferenceInteractor = checkNotNull(setNotificationPreferenceInteractor);
         mGetNotificationPreferenceInteractor = checkNotNull(getNotificationPreferenceInteractor);
         mSettingsView = checkNotNull(settingsView);
+        mRouter = checkNotNull(router);
         mSettingsView.setPresenter(this);
     }
 
@@ -50,7 +60,7 @@ public class SettingsPresenterImpl implements SettingsPresenter,
 
     @Override
     public void onLogoutFinished() {
-        mSettingsView.handleLogoutSuccess();
+        mRouter.showLoginScreen();
     }
 
     @Override

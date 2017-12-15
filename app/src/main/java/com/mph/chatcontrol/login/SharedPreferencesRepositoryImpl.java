@@ -22,7 +22,10 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
 
     public static final String ROOM_ON_DISPLAY = "room_on_display";
 
+    public static final String NOTIFICATIONS_PREFERENCE = "notifications_enabled";
+
     private SharedPreferences mSharedPreferences;
+
     private FirebaseAuthData mFirebaseAuthData;
 
     public SharedPreferencesRepositoryImpl(@Nonnull SharedPreferences sharedPreferences,
@@ -95,5 +98,30 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     public boolean isRoomOnDisplay(String roomID) {
         return mSharedPreferences.contains(ROOM_ON_DISPLAY)
                 && mSharedPreferences.getString(ROOM_ON_DISPLAY, "").equals(roomID);
+    }
+
+    @Override
+    public void setNotificationsEnabled() {
+        setNotificationsState(true);
+    }
+
+    @Override
+    public void setNotificationsDisabled() {
+        setNotificationsState(false);
+    }
+
+    private void setNotificationsState(boolean state) {
+        mSharedPreferences.edit().putBoolean(NOTIFICATIONS_PREFERENCE, state).apply();
+    }
+
+
+    @Override
+    public boolean areNotificationsEnabled() {
+        return mSharedPreferences.getBoolean(NOTIFICATIONS_PREFERENCE, true);
+    }
+
+    @Override
+    public void clearAllData() {
+        mSharedPreferences.edit().clear().apply();
     }
 }

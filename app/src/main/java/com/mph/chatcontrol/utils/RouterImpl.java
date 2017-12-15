@@ -64,4 +64,9 @@ public class RouterImpl implements Router {
     public void hideGuestSearch() {
         mEventBus.post(mEventFactory.getSearchGuestsDisableEvent());
     }
+
+    @Override
+    public void showLoginScreen() {
+        mEventBus.post(mEventFactory.getLogoutEvent());
+    }
 }

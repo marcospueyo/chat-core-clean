@@ -69,8 +69,6 @@ import com.mph.chatcontrol.settings.contract.LogoutInteractor;
 import com.mph.chatcontrol.settings.contract.SetNotificationPreferenceInteractor;
 import com.mph.chatcontrol.settings.contract.SettingsPresenter;
 import com.mph.chatcontrol.utils.CCUtils;
-import com.mph.chatcontrol.utils.EventFactoryImpl;
-import com.mph.chatcontrol.utils.RouterImpl;
 import com.mph.chatcontrol.utils.StringComparatorImpl;
 
 import org.greenrobot.eventbus.EventBus;
@@ -146,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
         mPresenter = new MainPresenterImpl(
                 this,
-                new RouterImpl(EventBus.getDefault(), new EventFactoryImpl()));
+                ((ChatcontrolApplication) getApplication()).getRouter());
     }
 
     private void setupFCM() {
@@ -413,7 +411,8 @@ public class MainActivity extends AppCompatActivity implements
                     mSettingsFragment,
                     getLogoutInteractor(),
                     getSetNotificationPreferenceInteractor(),
-                    getGetNotificationPreferenceInteractor());
+                    getGetNotificationPreferenceInteractor(),
+                    ((ChatcontrolApplication) getApplication()).getRouter());
         }
         return mSettingsPresenter;
     }
@@ -473,21 +472,26 @@ public class MainActivity extends AppCompatActivity implements
 
     public LogoutInteractor getLogoutInteractor() {
         if (mLogoutInteractor == null) {
-            mLogoutInteractor = new LogoutInteractorImpl();
+            mLogoutInteractor = new LogoutInteractorImpl(
+                    getSharedPreferencesRepository(),
+                    ((ChatcontrolApplication) getApplication()).getFirebaseLogoutService(),
+                    ((ChatcontrolApplication) getApplication()).getDatabase());
         }
         return mLogoutInteractor;
     }
 
     public SetNotificationPreferenceInteractor getSetNotificationPreferenceInteractor() {
         if (mSetNotificationPreferenceInteractor == null) {
-            mSetNotificationPreferenceInteractor = new SetNotificationPreferenceInteractorImpl();
+            mSetNotificationPreferenceInteractor = new SetNotificationPreferenceInteractorImpl(
+                    ((ChatcontrolApplication) getApplication()).getNotifications());
         }
         return mSetNotificationPreferenceInteractor;
     }
 
     public GetNotificationPreferenceInteractor getGetNotificationPreferenceInteractor() {
         if (mGetNotificationPreferenceInteractor == null) {
-            mGetNotificationPreferenceInteractor = new GetNotificationPreferenceInteractorImpl();
+            mGetNotificationPreferenceInteractor = new GetNotificationPreferenceInteractorImpl(
+                    ((ChatcontrolApplication) getApplication()).getNotifications());
         }
         return mGetNotificationPreferenceInteractor;
     }
