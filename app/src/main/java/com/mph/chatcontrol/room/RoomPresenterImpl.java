@@ -71,7 +71,6 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
 
     @Override
     public void setNewRoomID(@NonNull String roomID) {
-        Log.d(TAG, "setNewRoomID: " + roomID);
         mRoomID = checkNotNull(roomID);
     }
 

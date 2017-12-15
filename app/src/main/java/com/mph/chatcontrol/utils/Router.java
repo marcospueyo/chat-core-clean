@@ -20,4 +20,6 @@ public interface Router {
     void hideGuestSearch();
 
     void refreshGuests();
+
+    void showLoginScreen();
 }

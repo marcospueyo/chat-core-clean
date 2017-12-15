@@ -5,6 +5,8 @@ import android.app.Notification;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class NotificationsImpl implements Notifications {
@@ -12,10 +14,16 @@ public class NotificationsImpl implements Notifications {
     @SuppressWarnings("unused")
     private static final String TAG = NotificationsImpl.class.getSimpleName();
 
+    @NonNull
     private final NotificationManagerCompat mNotificationManagerCompat;
 
-    public NotificationsImpl(@NonNull final NotificationManagerCompat notificationManagerCompat) {
+    @NonNull
+    private final SharedPreferencesRepository mSharedPreferencesRepository;
+
+    public NotificationsImpl(@NonNull NotificationManagerCompat notificationManagerCompat,
+                             @NonNull SharedPreferencesRepository sharedPreferencesRepository) {
         mNotificationManagerCompat = checkNotNull(notificationManagerCompat);
+        mSharedPreferencesRepository = checkNotNull(sharedPreferencesRepository);
     }
 
     @Override
@@ -46,5 +54,20 @@ public class NotificationsImpl implements Notifications {
     @Override
     public void hideNotifications() {
         mNotificationManagerCompat.cancelAll();
+    }
+
+    @Override
+    public void enableNotifications() {
+        mSharedPreferencesRepository.setNotificationsEnabled();
+    }
+
+    @Override
+    public void disableNotifications() {
+        mSharedPreferencesRepository.setNotificationsDisabled();
+    }
+
+    @Override
+    public boolean canShowNotifications() {
+        return mSharedPreferencesRepository.areNotificationsEnabled();
     }
 }

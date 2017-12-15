@@ -1,6 +1,5 @@
 package com.mph.chatcontrol;
 
-import android.app.Application;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
@@ -12,7 +11,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mph.chatcontrol.data.MessagesRepository;
 import com.mph.chatcontrol.data.MessagesRepositoryImpl;
-import com.mph.chatcontrol.data.Models;
+import com.mph.chatcontrol.device.database.Database;
+import com.mph.chatcontrol.device.database.DatabaseImpl;
 import com.mph.chatcontrol.device.notification.NotificationFactory;
 import com.mph.chatcontrol.device.notification.NotificationFactoryImpl;
 import com.mph.chatcontrol.device.notification.Notifications;
@@ -35,14 +35,19 @@ import com.mph.chatcontrol.network.message.MessageRestServiceImpl;
 import com.mph.chatcontrol.network.message.MessageService;
 import com.mph.chatcontrol.network.message.MessageServiceImpl;
 import com.mph.chatcontrol.network.message.RestMessageToMessageMapper;
+import com.mph.chatcontrol.settings.FirebaseLogoutService;
+import com.mph.chatcontrol.settings.FirebaseLogoutServiceImpl;
+import com.mph.chatcontrol.utils.EventFactory;
+import com.mph.chatcontrol.utils.EventFactoryImpl;
 import com.mph.chatcontrol.utils.IntentFactory;
 import com.mph.chatcontrol.utils.IntentFactoryImpl;
+import com.mph.chatcontrol.utils.Router;
+import com.mph.chatcontrol.utils.RouterImpl;
+
+import org.greenrobot.eventbus.EventBus;
 
 import io.requery.Persistable;
-import io.requery.android.sqlite.DatabaseSource;
-import io.requery.sql.Configuration;
 import io.requery.sql.EntityDataStore;
-import io.requery.sql.TableCreationMode;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -71,32 +76,46 @@ public class ChatcontrolApplication extends MultiDexApplication {
     private NotificationFactory mNotificationFactory;
     private ScreenSupervisor mScreenSupervisor;
     private IntentFactory mIntentFactory;
+    private EventFactory mEventFactory;
+    private Database mDatabase;
+    private Router mRouter;
+    private FirebaseLogoutService mFirebaseLogoutService;
     private Context mContext;
 
-    private EntityDataStore<Persistable> dataStore;
-    /**
-     * @return {@link EntityDataStore} single instance for the application.
-     * <p/>
-     * Note if you're using Dagger you can make this part of your application level module returning
-     * {@code @Provides @Singleton}.
-     */
-
     public EntityDataStore<Persistable> getData() {
-        if (dataStore == null) {
-            // override onUpgrade to handle migrating to a new version
-            DatabaseSource source = new DatabaseSource(this, Models.DEFAULT, 8);
-            if (BuildConfig.DEBUG) {
-                // use this in development mode to drop and recreate the tables on every upgrade
-                source.setTableCreationMode(TableCreationMode.DROP_CREATE);
-            }
-            Configuration configuration = source.getConfiguration();
-            dataStore = new EntityDataStore<>(configuration);
+        return getDatabase().getDataStore();
+    }
+
+    public Database getDatabase() {
+        if (mDatabase == null) {
+            mDatabase = new DatabaseImpl(getContext());
         }
-        return dataStore;
+        return mDatabase;
     }
 
     public DatabaseReference getFirebaseRootDatabaseReference() {
         return FirebaseDatabase.getInstance().getReference();
+    }
+
+    public Router getRouter() {
+        if (mRouter == null) {
+            mRouter = new RouterImpl(EventBus.getDefault(), getEventFactory());
+        }
+        return mRouter;
+    }
+
+    public EventFactory getEventFactory() {
+        if (mEventFactory == null) {
+            mEventFactory = new EventFactoryImpl();
+        }
+        return mEventFactory;
+    }
+
+    public FirebaseLogoutService getFirebaseLogoutService() {
+        if (mFirebaseLogoutService == null) {
+            mFirebaseLogoutService = new FirebaseLogoutServiceImpl(getFirebaseAuthInstance());
+        }
+        return mFirebaseLogoutService;
     }
 
     public SharedPreferencesRepository getSharedPreferencesRepository(Context context) {
@@ -111,9 +130,13 @@ public class ChatcontrolApplication extends MultiDexApplication {
 
     public FirebaseAuthData getFirebaseAuthData() {
         if (mFirebaseAuthData == null) {
-            mFirebaseAuthData = new FirebaseAuthDataImpl(FirebaseAuth.getInstance());
+            mFirebaseAuthData = new FirebaseAuthDataImpl(getFirebaseAuthInstance());
         }
         return mFirebaseAuthData;
+    }
+
+    private FirebaseAuth getFirebaseAuthInstance() {
+        return FirebaseAuth.getInstance();
     }
 
     public FirebaseDatabaseData getFirebaseDatabaseData() {
@@ -179,7 +202,8 @@ public class ChatcontrolApplication extends MultiDexApplication {
     public Notifications getNotifications() {
         if (mNotifications == null) {
             mNotifications = new NotificationsImpl(
-                    NotificationManagerCompat.from(getContext()));
+                    NotificationManagerCompat.from(getContext()),
+                    getSharedPreferencesRepository(getContext()));
         }
         return mNotifications;
     }

@@ -14,4 +14,6 @@ public interface EventFactory {
     Object getSearchGuestsEvent(String query);
 
     Object getSearchGuestsDisableEvent();
+
+    Object getLogoutEvent();
 }

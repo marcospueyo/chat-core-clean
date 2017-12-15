@@ -7,8 +7,6 @@ public interface SettingsView extends BaseView<SettingsPresenter> {
 
     void setNotificationsState(boolean enabled);
 
-    void handleLogoutSuccess();
-
     void showLogoutError();
 
     void showPreferenceChangeSuccess();
