@@ -124,6 +124,7 @@ public class TokenServiceImpl implements TokenService {
         Map<String, String> map = new HashMap<>();
         map.put("id", id);
         map.put("token", token);
+        map.put("platform", "android");
         return map;
     }
 }
