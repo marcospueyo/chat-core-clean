@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.base.BaseActivity;
 import com.mph.chatcontrol.base.adapter.BaseListAdapter;
 import com.mph.chatcontrol.base.presenter.BaseListPresenter;
 import com.mph.chatcontrol.chatlist.viewmodel.ChatViewModel;
@@ -55,7 +56,7 @@ import butterknife.ButterKnife;
 
 /* Created by macmini on 24/07/2017. */
 
-public class RoomActivity extends AppCompatActivity implements RoomView {
+public class RoomActivity extends BaseActivity implements RoomView {
 
     public static final String ROOM_ID_KEY = "room_id_key";
 
@@ -109,6 +110,11 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
             mPresenter.setNewRoomID(getRoomID());
 
         }
+    }
+
+    @Override
+    protected String getViewName() {
+        return "Sala + " + getRoomID();
     }
 
     private void initializePresenter() {

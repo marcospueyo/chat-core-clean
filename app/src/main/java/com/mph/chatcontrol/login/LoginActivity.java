@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.mph.chatcontrol.ChatcontrolApplication;
+import com.mph.chatcontrol.base.BaseActivity;
 import com.mph.chatcontrol.login.contract.LoginPresenter;
 import com.mph.chatcontrol.login.contract.LoginView;
 import com.mph.chatcontrol.login.contract.SharedPreferencesRepository;
@@ -22,7 +23,7 @@ import com.mph.chatcontrol.network.TokenServiceImpl;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity implements LoginView, View.OnClickListener {
+public class LoginActivity extends BaseActivity implements LoginView, View.OnClickListener {
     public static final String TAG = "LoginActivity";
 
     @BindView(R.id.etEmail) EditText etEmail;
@@ -55,6 +56,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
 
     public SharedPreferencesRepository getSharedPreferencesRepository() {
         return ((ChatcontrolApplication) getApplication()).getSharedPreferencesRepository(this);
+    }
+
+    @Override
+    protected String getViewName() {
+        return "Login";
     }
 
     @Override

@@ -122,6 +122,8 @@ dependencies {
     compile "com.google.firebase:firebase-database:$rootProject.firebaseLibraryVersion"
     compile "com.google.firebase:firebase-messaging:$rootProject.firebaseLibraryVersion"
     compile "com.google.firebase:firebase-storage:$rootProject.firebaseLibraryVersion"
+    compile "com.google.firebase:firebase-core:$rootProject.firebaseLibraryVersion"
+
 
     //firebase UI
     compile "com.firebaseui:firebase-ui-database:$rootProject.firebaseUILibraryVersion"

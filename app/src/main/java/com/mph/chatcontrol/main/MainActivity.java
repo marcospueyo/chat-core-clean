@@ -22,6 +22,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.mph.chatcontrol.ChatcontrolApplication;
 import com.mph.chatcontrol.R;
+import com.mph.chatcontrol.base.BaseActivity;
 import com.mph.chatcontrol.chatlist.contract.ChatListPresenter;
 import com.mph.chatcontrol.chatlist.ChatListPresenterImpl;
 import com.mph.chatcontrol.chatlist.ChatlistFragment;
@@ -82,7 +83,7 @@ import io.requery.sql.EntityDataStore;
 
 import static android.view.View.GONE;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends BaseActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener, MainView {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -147,11 +148,18 @@ public class MainActivity extends AppCompatActivity implements
                 ((ChatcontrolApplication) getApplication()).getRouter());
     }
 
+
+
     private void setupFCM() {
         if (checkPlayServices()) {
             String token = FirebaseInstanceId.getInstance().getToken();
             Log.d(TAG, "setupFCM: token=" + token);
         }
+    }
+
+    @Override
+    protected String getViewName() {
+        return "Home";
     }
 
     private boolean checkPlayServices() {
