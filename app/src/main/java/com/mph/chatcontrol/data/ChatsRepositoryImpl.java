@@ -88,8 +88,9 @@ public class ChatsRepositoryImpl implements ChatsRepository {
                 public void onRoomsLoaded(Map<String, RestRoom> roomMap) {
                     deleteEntities();
                     persistEntities(mapper.map(new ArrayList<>(roomMap.values())));
-                    callback.onChatsLoaded(getLocalChats(active, inputDate));
-                    observeRooms(roomMap.keySet(), callback);
+                    Map<String, Chat> chatMap = getLocalChatMap(active, inputDate);
+                            callback.onChatsLoaded(new ArrayList<>(chatMap.values()));
+                    observeRooms(chatMap.keySet(), callback);
                 }
                 @Override
                 public void onDataNotAvailable() {
@@ -144,26 +145,30 @@ public class ChatsRepositoryImpl implements ChatsRepository {
     }
 
     private List<Chat> getLocalChats(boolean active, Date inputDate) {
+        return new ArrayList<>(getLocalChatMap(active, inputDate).values());
+    }
+
+    private Map<String, Chat> getLocalChatMap(boolean active, Date inputDate) {
         return active ? getActiveChats(inputDate) : getArchivedChats(inputDate);
     }
 
-    private List<Chat> getActiveChats(Date inputDate) {
+    private Map<String, Chat> getActiveChats(Date inputDate) {
         return dataStore
                 .select(Chat.class)
                 .where(Chat.START_DATE.lessThanOrEqual(inputDate))
                 .and(Chat.END_DATE.greaterThanOrEqual(inputDate))
                 .orderBy(Chat.LAST_MSG_DATE.desc())
                 .get()
-                .toList();
+                .toMap(Chat.ID);
     }
 
-    private List<Chat> getArchivedChats(Date inputDate) {
+    private Map<String, Chat> getArchivedChats(Date inputDate) {
         return dataStore
                 .select(Chat.class)
                 .where(Chat.END_DATE.lessThan(inputDate))
                 .orderBy(Chat.LAST_MSG_DATE.desc())
                 .get()
-                .toList();
+                .toMap(Chat.ID);
     }
 
     private void persistEntities(List<Chat> entities) {

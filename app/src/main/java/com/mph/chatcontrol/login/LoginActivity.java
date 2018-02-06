@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
         mPresenter.onDestroy();
         super.onDestroy();
     }
+
     @Override
     public void onClick(View view) {
         mPresenter.validateCredentials(etEmail.getText().toString(), etPassword.getText().toString());
@@ -98,7 +99,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
         Snackbar.make(mView, getString(R.string.login_error), Snackbar.LENGTH_LONG).show();
     }
 
-    @Override public void navigateToHome() {
+    @Override
+    public void navigateToHome() {
         startActivity(MainActivity.newInstance(this));
         finish();
     }
