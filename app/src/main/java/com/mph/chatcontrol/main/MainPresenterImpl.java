@@ -16,32 +16,21 @@ public class MainPresenterImpl implements MainPresenter {
     @NonNull
     private final Router mRouter;
 
-    //private MainInteractor mainInteractor;
+    @NonNull
+    private MenuOptions.Option mViewOnDisplay;
 
-    public MainPresenterImpl(@NonNull MainView mainView, @NonNull Router router) {
+    MainPresenterImpl(@NonNull MainView mainView, @NonNull Router router) {
         mView = checkNotNull(mainView);
         mRouter = checkNotNull(router);
+        mViewOnDisplay = MenuOptions.Option.ACTIVE;
     }
 
     @Override
     public void onMenuOptionSelected(Integer order) {
         MenuOptions.Option option = MenuOptions.getOption(order);
-        if (option == null)
-            mView.showMenuError();
-        else {
-            switch (option) {
-                case ACTIVE:
-                    mView.showActiveChatView();
-                    break;
-                case ARCHIVED:
-                    mView.showArchivedChatView();
-                    break;
-                case GUESTLIST:
-                    mView.showGuestlistView();
-                    break;
-                case CONFIG:
-                    mView.showConfigView();
-            }
+        if (option != null) {
+            mViewOnDisplay = option;
+            showSelectedOption(mViewOnDisplay);
         }
     }
 
@@ -113,7 +102,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onStart() {
-        mView.showActiveChatView();
+        showSelectedOption(mViewOnDisplay);
     }
 
     @Override
@@ -132,5 +121,26 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void onOpenChat(String chatID) {
         mView.showRoom(chatID);
+    }
+
+
+    private void showSelectedOption(MenuOptions.Option option) {
+        if (option == null)
+            mView.showMenuError();
+        else {
+            switch (option) {
+                case ACTIVE:
+                    mView.showActiveChatView();
+                    break;
+                case ARCHIVED:
+                    mView.showArchivedChatView();
+                    break;
+                case GUESTLIST:
+                    mView.showGuestlistView();
+                    break;
+                case CONFIG:
+                    mView.showConfigView();
+            }
+        }
     }
 }

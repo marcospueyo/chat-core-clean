@@ -33,7 +33,7 @@ public class GetRoomInteractorImpl implements GetRoomInteractor {
     }
 
     @Override
-    public void execute(String roomID, final OnFinishedListener listener) {
+    public void execute(@NonNull String roomID, final OnFinishedListener listener) {
         mChatsRepository.getChat(roomID, new ChatsRepository.GetSingleChatCallback() {
             @Override
             public void onSingleChatLoaded(Chat chat) {
