@@ -1,6 +1,7 @@
 package com.mph.chatcontrol.room;
 /* Created by macmini on 24/07/2017. */
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,7 +48,7 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
     @NonNull
     private final ScreenSupervisor mScreenSupervisor;
 
-    public RoomPresenterImpl(@NonNull RoomView roomView,
+    RoomPresenterImpl(@NonNull RoomView roomView,
                              @NonNull String roomID,
                              @NonNull ChatViewModelToChatMapper chatMapper,
                              @NonNull MessageViewModelToMessageMapper messageMapper,
@@ -121,6 +122,11 @@ public class RoomPresenterImpl implements RoomPresenter, GetRoomInteractor.OnFin
         Log.d(TAG, "onRoomChanged: Chat msg count=" + bundle.first.getMessageCount()
                 + " read count=" + bundle.second.getReadCount());
         setRoom(bundle);
+    }
+
+    @Override
+    public void imageSelected(Bitmap bitmap) {
+
     }
 
     private void setRoom(Pair<Chat, ChatInfo> bundle) {

@@ -1,5 +1,6 @@
 package com.mph.chatcontrol.room;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.mph.chatcontrol.ChatcontrolApplication;
@@ -46,6 +48,7 @@ import com.mph.chatcontrol.room.contract.RoomView;
 import com.mph.chatcontrol.room.viewmodel.MessageViewModel;
 import com.mph.chatcontrol.room.viewmodel.mapper.MessageViewModelToMessageMapper;
 import com.mph.chatcontrol.utils.CCUtils;
+import com.mph.chatcontrol.utils.MPHCamEasy.MPHCameraController;
 import com.mph.chatcontrol.widget.MPHEditText;
 
 import java.util.List;
@@ -55,7 +58,7 @@ import butterknife.ButterKnife;
 
 /* Created by macmini on 24/07/2017. */
 
-public class RoomActivity extends AppCompatActivity implements RoomView {
+public class RoomActivity extends AppCompatActivity implements RoomView, MPHCameraController.MPHCameraCallback {
 
     public static final String ROOM_ID_KEY = "room_id_key";
 
@@ -75,7 +78,12 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
     @BindView(R.id.cl_edit_area) View mInputArea;
 
     private RoomPresenter mPresenter;
+
     private BaseListAdapter mAdapter;
+
+    private MPHCameraController mCameraController;
+
+
 
     public static Intent getIntent(Context context, String roomID) {
         Intent intent = new Intent(context, RoomActivity.class);
@@ -96,6 +104,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
         setupToolbar();
         initializePresenter();
         initializeListView();
+        initCameraController();
         onSendListener();
     }
 
@@ -109,6 +118,11 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
             mPresenter.setNewRoomID(getRoomID());
 
         }
+    }
+
+    private void initCameraController() {
+        final Activity activity = this;
+        mCameraController = new MPHCameraController(activity, this);
     }
 
     private void initializePresenter() {
@@ -231,7 +245,9 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     @Override
     public void showLoadError() {
-        Snackbar.make(findViewById(android.R.id.content), getString(R.string.room_load_error),
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(R.string.room_load_error),
                 Snackbar.LENGTH_SHORT).show();
     }
 
@@ -296,6 +312,7 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
             @Override
             public void onClick(View v) {
                 mPresenter.onMessageSendClick(mMessageInput.getTrimmedText());
+                galleryClicked();
             }
         });
     }
@@ -306,5 +323,29 @@ public class RoomActivity extends AppCompatActivity implements RoomView {
 
     private static String getFormattedRoomTitle(ChatViewModel chat) {
         return chat.description() + " | " + chat.title();
+    }
+
+    private void galleryClicked() {
+        mCameraController.startImageRetrieval();
+    }
+
+    @Override
+    public void onImageRetrievalFinished(MPHCameraController.MPHCameraResponse response) {
+        if (response.isSuccessful() && (response.getBitmap() != null)) {
+            mPresenter.imageSelected(response.getBitmap());
+        }
+        else {
+            Toast.makeText(this,
+                    getString(R.string.error_getting_image), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MPHCameraController.CODE_CAMERA_HANDLER_ACTIVITY) {
+            if (mCameraController != null)
+                mCameraController.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

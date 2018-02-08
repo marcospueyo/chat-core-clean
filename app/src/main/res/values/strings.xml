@@ -46,4 +46,10 @@
     <string name="new_message_in_room">Nuevo mensaje en</string>
 
     <string name="search_hint">Buscar por huésped</string>
+
+    <string name="alert_title_choose_source">Seleccione la fuente</string>
+    <string name="image_source_camera">Cámara</string>
+    <string name="image_source_gallery">Galería</string>
+    <string name="error_getting_image">No ha sido posible acceder a su dispositivo</string>
+    <string name="something_wrong">Algo ha ido mal</string>
 </resources>
